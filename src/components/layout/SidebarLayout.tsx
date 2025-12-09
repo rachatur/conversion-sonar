@@ -69,9 +69,8 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
           {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
         </button>
 
-        {/* Scrollable Navigation */}
-        <ScrollArea className="flex-1 sidebar-scroll" type="always">
-          <nav className="p-3 space-y-6">
+        {/* Navigation */}
+        <nav className="flex-1 p-3 space-y-6 overflow-y-auto">
             {/* Overview Section */}
             <div>
               {!collapsed && (
@@ -140,7 +139,6 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
               </div>
             </div>
           </nav>
-        </ScrollArea>
 
         {/* Footer */}
         {!collapsed && (
