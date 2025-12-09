@@ -142,7 +142,7 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
 
         {/* Footer - directly after nav */}
         {!collapsed && (
-          <div className="p-4 border-t border-sidebar-border mt-auto">
+          <div className="p-4 border-t border-sidebar-border">
             <p className="text-xs text-muted-foreground">Air Control Concepts • UAT</p>
             <p className="text-xs text-muted-foreground">Last Updated: {currentDate}</p>
           </div>
