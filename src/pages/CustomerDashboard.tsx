@@ -11,7 +11,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const stats = [
   { label: "Total Source Records", value: 45892, subtitle: "Customer records received", icon: Users, variant: "primary" as const },
   { label: "Successfully Converted", value: 42150, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "91.8% conversion rate" },
-  { label: "Records Excluded", value: 3742, subtitle: "Failed/filtered records", icon: XCircle, variant: "warning" as const },
+  { label: "Fusion Error Records", value: 1523, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
   { label: "OpCo Count", value: 12, subtitle: "Operating companies", icon: FolderOpen, variant: "accent" as const },
 ];
 
