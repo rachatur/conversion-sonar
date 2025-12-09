@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
@@ -16,7 +15,7 @@ const customerOpCoPerformance = [
   { name: "Dorse DropShip", headersLoad: 20, linesLoad: 20, source: 0, loaded: 0 },
 ];
 
-const opCoList = ["AIRTECH", "ATS", "C&J", "DORSE", "EBS", "EP", "ETARIOS"];
+
 
 // OpCo-specific data extracted from Excel files
 const opCoData: Record<string, {
@@ -196,37 +195,20 @@ const opCoData: Record<string, {
 };
 
 export default function CustomerDashboard() {
-  const [selectedOpCo, setSelectedOpCo] = useState("AIRTECH");
-  const currentData = opCoData[selectedOpCo];
+  // Use AIRTECH as the default display data
+  const currentData = opCoData["AIRTECH"];
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Customer Conversion Dashboard">
-      {/* OpCo Selection Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {opCoList.map((opCo) => (
-          <button
-            key={opCo}
-            onClick={() => setSelectedOpCo(opCo)}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
-              selectedOpCo === opCo
-                ? "bg-primary text-primary-foreground shadow-lg"
-                : "bg-muted text-muted-foreground hover:bg-muted/80"
-            }`}
-          >
-            {opCo}
-          </button>
-        ))}
-      </div>
-
-      {/* OpCo Load Performance */}
-      <OpCoLoadPerformance data={customerOpCoPerformance} />
-
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {currentData.stats.map((stat) => (
           <LargeStatCard key={stat.label} {...stat} />
         ))}
       </div>
+
+      {/* OpCo Load Performance */}
+      <OpCoLoadPerformance data={customerOpCoPerformance} />
 
       {/* Recon Summary Table */}
       <DataTable
