@@ -42,26 +42,26 @@ const opCoData: Record<string, {
   ATS: {
     stats: [
       { label: "Total Source Records", value: 1935, subtitle: "Customer records received", icon: Users, variant: "primary" },
-      { label: "Successfully Converted", value: 1843, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "95.2% conversion rate" },
+      { label: "Successfully Converted", value: 1843, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "95% conversion rate" },
       { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
       { label: "Valid Source Records", value: 1843, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
     ],
     reconSummaryData: [
-      { metric: "Total Source File Records", customer: 1935, customerSitesBillTo: 2602, customerSitesShipTo: 2602 },
-      { metric: "Records Excluded / Not Valid", customer: 92, customerSitesBillTo: 759, customerSitesShipTo: 1933 },
-      { metric: "Valid Source Records", customer: 1843, customerSitesBillTo: 1843, customerSitesShipTo: 669 },
-      { metric: "Total FBDI Records for Upload", customer: 1843, customerSitesBillTo: 1843, customerSitesShipTo: 669 },
+      { metric: "Total Source File Records", customer: 1935, customerSitesBillTo: 2602, customerSitesShipTo: 438 },
+      { metric: "Records Excluded / Not Valid", customer: 90, customerSitesBillTo: 90, customerSitesShipTo: 84 },
+      { metric: "Valid Source Records", customer: 1843, customerSitesBillTo: 2512, customerSitesShipTo: 354 },
+      { metric: "Total FBDI Records for Upload", customer: 1843, customerSitesBillTo: 2512, customerSitesShipTo: 354 },
       { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
-      { metric: "FBDI Records loaded Successful", customer: 1843, customerSitesBillTo: 1843, customerSitesShipTo: 669 },
+      { metric: "FBDI Records loaded Successful", customer: 1843, customerSitesBillTo: 2512, customerSitesShipTo: 354 },
     ],
     loadPercentData: [
-      { metric: "Load Percent (Valid Records)", customer: "95.2%", customerSitesBillTo: "70.8%", customerSitesShipTo: "25.7%" },
-      { metric: "Load Percent (InValid Records)", customer: "4.8%", customerSitesBillTo: "29.2%", customerSitesShipTo: "74.3%" },
+      { metric: "Load Percent (Valid Records)", customer: "95%", customerSitesBillTo: "97%", customerSitesShipTo: "81%" },
+      { metric: "Load Percent (InValid Records)", customer: "5%", customerSitesBillTo: "3%", customerSitesShipTo: "19%" },
     ],
     insights: [
       { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 1,843 valid customer records loaded successfully." },
-      { type: "info", highlight: "Customer Sites", text: "Bill To: 1,843 records, Ship To: 669 records loaded." },
-      { type: "warning", highlight: "92 records excluded", text: "from customer data - review exclusion criteria." },
+      { type: "info", highlight: "Customer Sites", text: "Bill To: 2,512 records, Ship To: 354 records loaded." },
+      { type: "warning", highlight: "90 records excluded", text: "from customer data - review exclusion criteria." },
     ],
   },
   "C&J": {
