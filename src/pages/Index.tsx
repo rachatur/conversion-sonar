@@ -2,38 +2,37 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
-import { Database, TrendingUp, AlertCircle, Building } from "lucide-react";
+import { Database, TrendingUp, AlertCircle, Users } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
 const overallStats = [
-  { label: "Total Source Records", value: 179454, subtitle: "Across all 4 modules", icon: Database, variant: "primary" as const },
-  { label: "Successfully Converted", value: 165326, subtitle: "", icon: TrendingUp, variant: "success" as const, highlightText: "92.1% overall conversion rate" },
-  { label: "Records Excluded", value: 14128, subtitle: "Invalid/filtered records", icon: AlertCircle, variant: "warning" as const },
-  { label: "Total OpCo/Branches", value: 45, subtitle: "12 OpCo + 8 OpCo + 10 OpCo + 15 Branches", icon: Building, variant: "accent" as const },
+  { label: "Total Source Records", value: 78815, subtitle: "Across all 4 modules", icon: Database, variant: "primary" as const },
+  { label: "Successfully Loaded", value: 53374, subtitle: "", icon: TrendingUp, variant: "success" as const, highlightText: "67.72% overall load rate" },
+  { label: "Records Excluded", value: 25441, subtitle: "Invalid/filtered records", icon: AlertCircle, variant: "warning" as const },
+  { label: "Active OpCos", value: 7, subtitle: "All reporting data", icon: Users, variant: "accent" as const },
 ];
 
 const insights = [
-  { type: "success" as const, highlight: "Items module", text: "shows highest volume with 128,459 records processed at 92.2% success rate across 15 branches." },
-  { type: "warning" as const, highlight: "Supplier conversion", text: "has the lowest rate (89.1%) across 10 OpCos - needs investigation on address and bank data quality." },
-  { type: "success" as const, highlight: "Employee module", text: "consistently performs well with 95.5% conversion rate across 8 OpCos." },
-  { type: "info" as const, highlight: "Customer data", text: "shows 91.8% conversion across 12 OpCos with regional variations - Middle East & Africa needs attention." },
+  { type: "success" as const, highlight: "Opportunity module", text: "shows highest load rate at 91.89% with 39,363 records loaded successfully." },
+  { type: "warning" as const, highlight: "Sales Order EP", text: "has low load rate (21.55%) - needs investigation on data quality and exclusion criteria." },
+  { type: "info" as const, highlight: "C&J", text: "consistently performs well across PO (84.13%) and Opportunity (99.72%) with minimal errors." },
 ];
 
 const conversionByModule = [
-  { name: "Customer", converted: 42150, failed: 3742 },
-  { name: "Employee", converted: 3102, failed: 145 },
-  { name: "Supplier", converted: 1654, failed: 202 },
-  { name: "Items", converted: 118420, failed: 10039 },
+  { name: "Sales Order", converted: 15234, failed: 8742 },
+  { name: "Purchase Order", converted: 12456, failed: 3102 },
+  { name: "On-Hand Inventory", converted: 8654, failed: 4202 },
+  { name: "Opportunity", converted: 39363, failed: 3523 },
 ];
 
 const statusDistribution = [
-  { name: "Converted", value: 165326, color: "hsl(160, 84%, 39%)" },
-  { name: "Failed", value: 14128, color: "hsl(32, 95%, 60%)" },
+  { name: "Loaded", value: 53374, color: "hsl(160, 84%, 39%)" },
+  { name: "Excluded", value: 25441, color: "hsl(32, 95%, 60%)" },
 ];
 
 const Index = () => {
   return (
-    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Data Reconciliation Dashboard">
+    <SidebarLayout pageTitle="Reconciliation Dashboard" pageSubtitle="Air Control Concepts UAT Environment">
       {/* Large Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {overallStats.map((stat) => (
@@ -48,12 +47,12 @@ const Index = () => {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChartCard title="Conversion by Module" subtitle="Records processed per module">
+        <ChartCard title="Load Rate by Module" subtitle="Records processed per module">
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={conversionByModule} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis type="number" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
-              <YAxis dataKey="name" type="category" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} width={80} />
+              <YAxis dataKey="name" type="category" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} width={100} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
@@ -62,13 +61,13 @@ const Index = () => {
                 }}
                 formatter={(value: number) => value.toLocaleString()}
               />
-              <Bar dataKey="converted" fill="hsl(var(--success))" name="Converted" radius={[0, 4, 4, 0]} />
-              <Bar dataKey="failed" fill="hsl(var(--warning))" name="Failed" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="converted" fill="hsl(var(--success))" name="Loaded" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="failed" fill="hsl(var(--warning))" name="Excluded" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Overall Status" subtitle="Conversion success distribution">
+        <ChartCard title="Overall Status" subtitle="Load success distribution">
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
