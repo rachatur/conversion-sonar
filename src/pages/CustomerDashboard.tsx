@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
@@ -251,21 +252,51 @@ const opCoData: Record<string, {
   },
 };
 
+// Mapping from breakdown names to opCoData keys
+const opCoNameMapping: Record<string, string> = {
+  "AIRTECH": "AIRTECH",
+  "ATS": "ATS",
+  "C&J": "C&J",
+  "DORSE": "DORSE",
+  "EBS": "EBS",
+  "EP": "EP",
+  "ETARIOS": "ETARIOS",
+};
+
 export default function CustomerDashboard() {
-  // Use AIRTECH as the default display data
-  const currentData = opCoData["AIRTECH"];
+  const [selectedOpCo, setSelectedOpCo] = useState<string>("AIRTECH");
+  
+  // Map the selected breakdown name to the opCoData key
+  const opCoDataKey = opCoNameMapping[selectedOpCo] || selectedOpCo;
+  const currentData = opCoData[opCoDataKey] || opCoData["AIRTECH"];
+
+  const handleOpCoSelect = (opCoName: string) => {
+    setSelectedOpCo(opCoName);
+    // Scroll to top to show updated stats
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Customer Conversion Dashboard">
-      {/* Stats */}
+      {/* Selected OpCo Header */}
+      <div className="mb-4">
+        <span className="text-sm text-muted-foreground">Showing data for: </span>
+        <span className="text-lg font-semibold text-primary">{selectedOpCo}</span>
+      </div>
+
+      {/* Stats - Updates based on selected OpCo */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {currentData.stats.map((stat) => (
-          <LargeStatCard key={stat.label} {...stat} />
+          <LargeStatCard key={`${selectedOpCo}-${stat.label}`} {...stat} />
         ))}
       </div>
 
-      {/* OpCo Load Performance - Detailed Breakdown */}
-      <CustomerDetailedBreakdown data={customerBreakdownData} />
+      {/* OpCo Load Performance - Detailed Breakdown - Clickable */}
+      <CustomerDetailedBreakdown 
+        data={customerBreakdownData}
+        selectedOpCo={selectedOpCo}
+        onOpCoSelect={handleOpCoSelect}
+      />
 
       {/* Customer Recon Summary - All OpCos in One Table */}
       <div className="mb-8">
