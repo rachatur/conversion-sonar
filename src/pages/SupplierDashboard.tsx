@@ -535,10 +535,16 @@ export default function SupplierDashboard() {
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
+      {/* Selected OpCo Header */}
+      <div className="mb-4">
+        <span className="text-sm text-muted-foreground">Showing data for: </span>
+        <span className="text-lg font-semibold text-primary">{selectedOpCo}</span>
+      </div>
+
       {/* Stats - Updates based on selected OpCo */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {currentData.stats.map((stat) => (
-          <LargeStatCard key={stat.label} {...stat} />
+          <LargeStatCard key={`${selectedOpCo}-${stat.label}`} {...stat} />
         ))}
       </div>
 
