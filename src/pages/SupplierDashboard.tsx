@@ -11,7 +11,7 @@ const stats = [
   { label: "Total Source Records", value: 1213, subtitle: "Supplier records received", icon: Package, variant: "primary" as const },
   { label: "Successfully Converted", value: 1101, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "90.8% conversion rate" },
   { label: "Fusion Error Records", value: 87, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
-  { label: "OpCo Count", value: 10, subtitle: "Operating companies", icon: FolderOpen, variant: "accent" as const },
+  { label: "Valid Source Records", value: 1197, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" as const },
 ];
 
 const summaryCards = [

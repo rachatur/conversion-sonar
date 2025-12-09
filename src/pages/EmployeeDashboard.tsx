@@ -12,7 +12,7 @@ const stats = [
   { label: "Total Source Records", value: 3247, subtitle: "Employee records received", icon: Users, variant: "primary" as const },
   { label: "Successfully Converted", value: 3102, subtitle: "", icon: UserCheck, variant: "success" as const, highlightText: "95.5% conversion rate" },
   { label: "Fusion Error Records", value: 89, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
-  { label: "OpCo Count", value: 8, subtitle: "Operating companies", icon: FolderOpen, variant: "accent" as const },
+  { label: "Valid Source Records", value: 3191, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" as const },
 ];
 
 const summaryCards = [
