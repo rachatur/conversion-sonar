@@ -25,19 +25,17 @@ export function LargeStatCard({ label, value, subtitle, icon: Icon, variant = "p
           <Icon className="h-7 w-7" />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
-          <p className="mt-1 text-4xl font-bold text-foreground">{typeof value === 'number' ? value.toLocaleString() : value}</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {subtitle}
-            {highlightText && (
-              <span className={cn(
-                "ml-1 font-medium",
-                variant === "success" ? "text-success" : 
-                variant === "warning" ? "text-warning" : "text-primary"
-              )}>
-                {highlightText}
-              </span>
-            )}
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
+          <p className="mt-2 text-3xl font-bold text-foreground">{typeof value === 'number' ? value.toLocaleString() : value}</p>
+          <p className={cn(
+            "mt-1 text-sm",
+            highlightText ? (
+              variant === "success" ? "text-success" : 
+              variant === "warning" ? "text-warning" : 
+              variant === "accent" ? "text-accent" : "text-primary"
+            ) : "text-muted-foreground"
+          )}>
+            {highlightText || subtitle}
           </p>
         </div>
       </div>
