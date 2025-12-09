@@ -5,19 +5,89 @@ import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { OpCoLoadPerformance } from "@/components/dashboard/OpCoLoadPerformance";
+import { SupplierDetailedBreakdown } from "@/components/dashboard/SupplierDetailedBreakdown";
 import { Package, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 
-// OpCo Load Performance data for Supplier Dashboard
-const supplierOpCoPerformance = [
-  { name: "ATS", headersLoad: 98.3, linesLoad: 96.9, source: 583, loaded: 565 },
-  { name: "EBS", headersLoad: 95.3, linesLoad: 95.0, source: 595, loaded: 567 },
-  { name: "EP (Eng. Products)", headersLoad: 81.1, linesLoad: 25.3, source: 37, loaded: 30 },
-  { name: "Etairos", headersLoad: 93.8, linesLoad: 92.0, source: 1046, loaded: 981 },
-  { name: "Dorse", headersLoad: 95.2, linesLoad: 97.6, source: 1117, loaded: 1063 },
-  { name: "C&J", headersLoad: 98.3, linesLoad: 98.0, source: 482, loaded: 474 },
-  { name: "AIRETECH", headersLoad: 90.8, linesLoad: 97.5, source: 1213, loaded: 1101 },
+// Supplier breakdown data with Suppliers, Address, Sites, Contacts structure
+const supplierBreakdownData = [
+  { 
+    name: "AIRETECH", 
+    suppliersLoad: 92.7, 
+    addressLoad: 97.5, 
+    sitesLoad: 97.5, 
+    contactsLoad: 96.5,
+    suppliers: { source: 1188, loaded: 1101 },
+    address: { source: 1180, loaded: 1150 },
+    sites: { source: 1180, loaded: 1150 },
+    contacts: { source: 1188, loaded: 1147 }
+  },
+  { 
+    name: "ATS", 
+    suppliersLoad: 98.3, 
+    addressLoad: 94.3, 
+    sitesLoad: 71.3, 
+    contactsLoad: 95.5,
+    suppliers: { source: 575, loaded: 565 },
+    address: { source: 565, loaded: 533 },
+    sites: { source: 565, loaded: 403 },
+    contacts: { source: 575, loaded: 549 }
+  },
+  { 
+    name: "EBS", 
+    suppliersLoad: 95.3, 
+    addressLoad: 95.5, 
+    sitesLoad: 95.5, 
+    contactsLoad: 96.7,
+    suppliers: { source: 576, loaded: 549 },
+    address: { source: 575, loaded: 549 },
+    sites: { source: 575, loaded: 549 },
+    contacts: { source: 578, loaded: 559 }
+  },
+  { 
+    name: "EP (Eng. Products)", 
+    suppliersLoad: 81.1, 
+    addressLoad: 90.3, 
+    sitesLoad: 90.3, 
+    contactsLoad: 88.5,
+    suppliers: { source: 37, loaded: 30 },
+    address: { source: 31, loaded: 28 },
+    sites: { source: 31, loaded: 28 },
+    contacts: { source: 35, loaded: 31 }
+  },
+  { 
+    name: "Etairos", 
+    suppliersLoad: 100, 
+    addressLoad: 98.5, 
+    sitesLoad: 98.5, 
+    contactsLoad: 93.7,
+    suppliers: { source: 981, loaded: 981 },
+    address: { source: 927, loaded: 913 },
+    sites: { source: 927, loaded: 913 },
+    contacts: { source: 981, loaded: 919 }
+  },
+  { 
+    name: "Dorse", 
+    suppliersLoad: 98.2, 
+    addressLoad: 98.1, 
+    sitesLoad: 98.1, 
+    contactsLoad: 89.2,
+    suppliers: { source: 1082, loaded: 1063 },
+    address: { source: 1048, loaded: 1028 },
+    sites: { source: 1048, loaded: 1028 },
+    contacts: { source: 1109, loaded: 989 }
+  },
+  { 
+    name: "C&J", 
+    suppliersLoad: 91.5, 
+    addressLoad: 96.7, 
+    sitesLoad: 96.7, 
+    contactsLoad: 96.1,
+    suppliers: { source: 153, loaded: 140 },
+    address: { source: 150, loaded: 145 },
+    sites: { source: 150, loaded: 145 },
+    contacts: { source: 154, loaded: 148 }
+  },
 ];
 
 
@@ -451,8 +521,8 @@ export default function SupplierDashboard() {
         ))}
       </div>
 
-      {/* OpCo Load Performance */}
-      <OpCoLoadPerformance data={supplierOpCoPerformance} />
+      {/* OpCo Load Performance with detailed breakdown */}
+      <SupplierDetailedBreakdown data={supplierBreakdownData} />
 
       {/* Supplier Recon Summary Table */}
       <div className="mb-8">
