@@ -3,6 +3,7 @@ import { Database, Home, Users, UserCheck, Package, Boxes, ChevronLeft, ChevronR
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -174,6 +175,9 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
         <div className="px-8 pb-8">
           <div className="animate-fade-in">{children}</div>
         </div>
+
+        {/* Scroll to top button */}
+        <ScrollToTop />
       </main>
     </div>
   );
