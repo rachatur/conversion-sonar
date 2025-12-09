@@ -2,14 +2,14 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
-import { Database, TrendingUp, AlertCircle, Building } from "lucide-react";
+import { Database, TrendingUp, AlertCircle, Activity } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
 const overallStats = [
   { label: "Total Source Records", value: 152807, subtitle: "Across all 4 modules", icon: Database, variant: "primary" as const },
   { label: "Successfully Converted", value: 136377, subtitle: "", icon: TrendingUp, variant: "success" as const, highlightText: "89.2% overall conversion rate" },
   { label: "Records Excluded", value: 16430, subtitle: "Invalid/filtered records", icon: AlertCircle, variant: "warning" as const },
-  { label: "Total OpCo/Branches", value: 37, subtitle: "7 Customer + 7 Supplier + 8 Employee + 15 Items Branches", icon: Building, variant: "accent" as const },
+  { label: "Active Status", value: "Live", subtitle: "All modules operational", icon: Activity, variant: "success" as const },
 ];
 
 const insights = [
