@@ -41,21 +41,21 @@ export function OpCoLoadPerformance({ data, title = "Detailed Breakdown - Header
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-slate-700 text-white">
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">OPCO</th>
-                <th colSpan={3} className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider border-l border-slate-600">HEADERS</th>
-                <th colSpan={3} className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider border-l border-slate-600">LINES</th>
-                <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider border-l border-slate-600">LOAD RATE (SOURCE)</th>
+              <tr className="border-b border-border">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">OPCO</th>
+                <th colSpan={3} className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">HEADERS</th>
+                <th colSpan={3} className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">LINES</th>
+                <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">LOAD RATE (SOURCE)</th>
               </tr>
-              <tr className="bg-slate-600 text-white">
+              <tr className="border-b border-border">
                 <th className="px-6 py-3"></th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase border-l border-slate-500">SOURCE</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase">VALID</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-cyan-300">LOADED</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase border-l border-slate-500">SOURCE</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase">VALID</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-cyan-300">LOADED</th>
-                <th className="px-6 py-3 border-l border-slate-500"></th>
+                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-muted-foreground">SOURCE</th>
+                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-muted-foreground">VALID</th>
+                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-primary">LOADED</th>
+                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-muted-foreground">SOURCE</th>
+                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-muted-foreground">VALID</th>
+                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-primary">LOADED</th>
+                <th className="px-6 py-3"></th>
               </tr>
             </thead>
             <tbody className="bg-card">
