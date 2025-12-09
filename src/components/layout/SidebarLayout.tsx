@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Database, Home, FileText, ShoppingCart, Package, DollarSign, Folder, ChevronLeft } from "lucide-react";
+import { Database, Home, Users, UserCheck, Package, Boxes, ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -14,32 +14,25 @@ const overviewItems = [
 ];
 
 const moduleItems = [
-  { path: "/customer", label: "Sales Order", icon: FileText, count: 6 },
-  { path: "/supplier", label: "Purchase Order", icon: ShoppingCart, count: 4 },
-  { path: "/items", label: "On-Hand Inventory", icon: Package, count: 5 },
-  { path: "/employee", label: "Opportunity", icon: DollarSign, count: 4 },
-  { path: "/project", label: "Project", icon: Folder, count: 1 },
+  { path: "/customer", label: "Customer", icon: Users, count: 12 },
+  { path: "/employee", label: "Employee", icon: UserCheck, count: 8 },
+  { path: "/supplier", label: "Supplier", icon: Package, count: 10 },
+  { path: "/items", label: "Items", icon: Boxes, count: 15 },
 ];
 
 export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayoutProps) {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
-  
-  const currentDate = new Date().toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "2-digit",
-  });
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Sidebar */}
       <aside className={cn(
-        "flex flex-col border-r border-sidebar-border bg-card transition-all duration-300 relative",
+        "flex flex-col border-r border-sidebar-border bg-card transition-all duration-300 relative h-screen",
         collapsed ? "w-16" : "w-64"
       )}>
         {/* Sidebar Header */}
-        <div className="p-4 flex items-center gap-3">
+        <div className="p-4 flex items-center gap-3 flex-shrink-0">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
             <Database className="h-5 w-5 text-primary-foreground" />
           </div>
@@ -59,7 +52,7 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
           <ChevronLeft className={cn("h-3 w-3 transition-transform", collapsed && "rotate-180")} />
         </button>
 
-        {/* Navigation */}
+        {/* Navigation - Scrollable */}
         <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
           {/* Overview Section */}
           <div>
@@ -141,15 +134,15 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
 
         {/* Footer */}
         {!collapsed && (
-          <div className="p-4 border-t border-sidebar-border">
+          <div className="p-4 border-t border-sidebar-border flex-shrink-0">
             <p className="text-xs text-muted-foreground">ACC • UAT Environment</p>
             <p className="text-xs text-muted-foreground">Last Updated: Dec 04, 2025</p>
           </div>
         )}
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      {/* Main Content - Scrollable */}
+      <main className="flex-1 overflow-y-auto">
         {/* Top Bar */}
         <div className="px-8 py-4 text-sm text-muted-foreground">
           Published: December 04, 2025
