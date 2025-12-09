@@ -11,12 +11,13 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 // OpCo Load Performance data for Supplier Dashboard
 const supplierOpCoPerformance = [
-  { name: "ATS", headersLoad: 9, linesLoad: 1, source: 583, loaded: 565 },
-  { name: "EBS", headersLoad: 47, linesLoad: 40, source: 2305, loaded: 1078 },
-  { name: "EP (Eng. Products)", headersLoad: 22.22, linesLoad: 21.44, source: 99, loaded: 147 },
-  { name: "Etairos", headersLoad: 66, linesLoad: 60, source: 231, loaded: 153 },
-  { name: "Dorse Standard", headersLoad: 33, linesLoad: 40, source: 0, loaded: 0 },
-  { name: "Dorse DropShip", headersLoad: 20, linesLoad: 20, source: 0, loaded: 0 },
+  { name: "ATS", headersLoad: 98.3, linesLoad: 96.9, source: 583, loaded: 565 },
+  { name: "EBS", headersLoad: 95.3, linesLoad: 95.0, source: 595, loaded: 567 },
+  { name: "EP (Eng. Products)", headersLoad: 81.1, linesLoad: 25.3, source: 37, loaded: 30 },
+  { name: "Etairos", headersLoad: 93.8, linesLoad: 92.0, source: 1046, loaded: 981 },
+  { name: "Dorse", headersLoad: 95.2, linesLoad: 97.6, source: 1117, loaded: 1063 },
+  { name: "C&J", headersLoad: 98.3, linesLoad: 98.0, source: 482, loaded: 474 },
+  { name: "AIRETECH", headersLoad: 90.8, linesLoad: 97.5, source: 1213, loaded: 1101 },
 ];
 
 
