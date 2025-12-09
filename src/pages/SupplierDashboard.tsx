@@ -61,10 +61,10 @@ const supplierBreakdownData = [
     addressLoad: 98.5, 
     sitesLoad: 98.5, 
     contactsLoad: 93.7,
-    suppliers: { source: 981, loaded: 981 },
-    address: { source: 927, loaded: 913 },
+    suppliers: { source: 1046, loaded: 981 },
+    address: { source: 992, loaded: 913 },
     sites: { source: 927, loaded: 913 },
-    contacts: { source: 981, loaded: 919 }
+    contacts: { source: 73, loaded: 919 }
   },
   { 
     name: "Dorse", 
