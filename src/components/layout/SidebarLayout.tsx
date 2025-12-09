@@ -152,7 +152,7 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto main-scroll">
         {/* Top Bar */}
         <div className="px-8 py-4 text-sm text-muted-foreground">
           Published: {currentDate}
