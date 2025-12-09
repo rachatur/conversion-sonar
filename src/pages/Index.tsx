@@ -2,21 +2,21 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
-import { Database, TrendingUp, AlertCircle, Users } from "lucide-react";
+import { Database, TrendingUp, AlertCircle, Building } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
 const overallStats = [
   { label: "Total Source Records", value: 179454, subtitle: "Across all 4 modules", icon: Database, variant: "primary" as const },
   { label: "Successfully Converted", value: 165326, subtitle: "", icon: TrendingUp, variant: "success" as const, highlightText: "92.1% overall conversion rate" },
   { label: "Records Excluded", value: 14128, subtitle: "Invalid/filtered records", icon: AlertCircle, variant: "warning" as const },
-  { label: "Active Modules", value: 4, subtitle: "All reporting data", icon: Users, variant: "accent" as const },
+  { label: "Total OpCo/Branches", value: 45, subtitle: "12 OpCo + 8 OpCo + 10 OpCo + 15 Branches", icon: Building, variant: "accent" as const },
 ];
 
 const insights = [
-  { type: "success" as const, highlight: "Items module", text: "shows highest volume with 128,459 records processed at 92.2% success rate." },
-  { type: "warning" as const, highlight: "Supplier conversion", text: "has the lowest rate (89.1%) - needs investigation on address and bank data quality." },
-  { type: "success" as const, highlight: "Employee module", text: "consistently performs well with 95.5% conversion rate and minimal data issues." },
-  { type: "info" as const, highlight: "Customer data", text: "shows 91.8% conversion with regional variations - Middle East & Africa needs attention." },
+  { type: "success" as const, highlight: "Items module", text: "shows highest volume with 128,459 records processed at 92.2% success rate across 15 branches." },
+  { type: "warning" as const, highlight: "Supplier conversion", text: "has the lowest rate (89.1%) across 10 OpCos - needs investigation on address and bank data quality." },
+  { type: "success" as const, highlight: "Employee module", text: "consistently performs well with 95.5% conversion rate across 8 OpCos." },
+  { type: "info" as const, highlight: "Customer data", text: "shows 91.8% conversion across 12 OpCos with regional variations - Middle East & Africa needs attention." },
 ];
 
 const conversionByModule = [
@@ -33,7 +33,7 @@ const statusDistribution = [
 
 const Index = () => {
   return (
-    <SidebarLayout pageTitle="Reconciliation Dashboard" pageSubtitle="RECON Project UAT Environment">
+    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Data Reconciliation Dashboard">
       {/* Large Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {overallStats.map((stat) => (

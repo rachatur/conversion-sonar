@@ -5,21 +5,28 @@ import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { Users, CheckCircle, XCircle, Copy, Building, MapPin, FileText, TrendingUp } from "lucide-react";
+import { Users, CheckCircle, XCircle, Copy, AlertTriangle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area } from "recharts";
 
 const stats = [
   { label: "Total Source Records", value: 45892, subtitle: "Customer records received", icon: Users, variant: "primary" as const },
   { label: "Successfully Converted", value: 42150, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "91.8% conversion rate" },
   { label: "Records Excluded", value: 3742, subtitle: "Failed/filtered records", icon: XCircle, variant: "warning" as const },
-  { label: "Duplicates Found", value: 856, subtitle: "Pending review", icon: Copy, variant: "accent" as const },
+  { label: "OpCo Count", value: 12, subtitle: "Operating companies", icon: FolderOpen, variant: "accent" as const },
+];
+
+const summaryCards = [
+  { label: "Customer Types", value: 8, icon: Users },
+  { label: "Duplicates Found", value: 856, icon: Copy },
+  { label: "Missing Fields", value: 1245, icon: AlertTriangle },
+  { label: "Missing Category", value: 423, icon: FolderOpen },
 ];
 
 const insights = [
-  { type: "success" as const, highlight: "North America region", text: "shows highest conversion rate at 96.7% with 17,890 records loaded successfully." },
+  { type: "success" as const, highlight: "North America region", text: "shows highest conversion rate at 96.7% with 17,890 records loaded successfully across 3 OpCos." },
   { type: "warning" as const, highlight: "Middle East & Africa", text: "has low conversion rate (62.2%) - needs investigation on data quality and address formatting." },
-  { type: "success" as const, highlight: "Corporate customers", text: "consistently perform well with 94.2% conversion rate across all regions." },
-  { type: "info" as const, highlight: "Tax ID validation", text: "improved by 8.5% after implementing new validation rules." },
+  { type: "success" as const, highlight: "Corporate customers", text: "consistently perform well with 94.2% conversion rate across all OpCos." },
+  { type: "info" as const, highlight: "Tax ID validation", text: "improved by 8.5% after implementing new validation rules across 12 OpCos." },
 ];
 
 const errorTrendData = [
@@ -52,29 +59,48 @@ const comparisonData = [
   { field: "Payment Terms", source: 45892, target: 45892, match: true },
 ];
 
-const hierarchyBreakdown = [
-  { region: "North America", total: 18500, converted: 17890, failed: 610, rate: 96.7 },
-  { region: "Europe", total: 12300, converted: 11250, failed: 1050, rate: 91.5 },
-  { region: "Asia Pacific", total: 8900, converted: 8120, failed: 780, rate: 91.2 },
-  { region: "Latin America", total: 4200, converted: 3650, failed: 550, rate: 86.9 },
-  { region: "Middle East & Africa", total: 1992, converted: 1240, failed: 752, rate: 62.2 },
+const opCoBreakdown = [
+  { opCo: "OpCo-NA-01", region: "North America", total: 8500, converted: 8234, failed: 266, rate: 96.9 },
+  { opCo: "OpCo-NA-02", region: "North America", total: 5200, converted: 5012, failed: 188, rate: 96.4 },
+  { opCo: "OpCo-EU-01", region: "Europe", total: 7300, converted: 6680, failed: 620, rate: 91.5 },
+  { opCo: "OpCo-EU-02", region: "Europe", total: 5000, converted: 4570, failed: 430, rate: 91.4 },
+  { opCo: "OpCo-AP-01", region: "Asia Pacific", total: 8900, converted: 8120, failed: 780, rate: 91.2 },
+  { opCo: "OpCo-LA-01", region: "Latin America", total: 4200, converted: 3650, failed: 550, rate: 86.9 },
+  { opCo: "OpCo-LA-02", region: "Latin America", total: 2800, converted: 2456, failed: 344, rate: 87.7 },
+  { opCo: "OpCo-MEA-01", region: "Middle East & Africa", total: 1992, converted: 1240, failed: 752, rate: 62.2 },
+  { opCo: "OpCo-MEA-02", region: "Middle East & Africa", total: 2000, converted: 1188, failed: 812, rate: 59.4 },
 ];
 
 const exceptions = [
-  { id: "CUS-001", name: "Acme Corp", issue: "Duplicate entry", status: "warning" as const },
-  { id: "CUS-002", name: "TechGlobal Inc", issue: "Missing tax ID", status: "error" as const },
-  { id: "CUS-003", name: "Smith & Co", issue: "Invalid address", status: "error" as const },
-  { id: "CUS-004", name: "GlobalTrade Ltd", issue: "Pending review", status: "info" as const },
-  { id: "CUS-005", name: "FastShip LLC", issue: "Under investigation", status: "warning" as const },
+  { id: "CUS-001", opCo: "OpCo-MEA-01", name: "Acme Corp", issue: "Duplicate entry", status: "warning" as const },
+  { id: "CUS-002", opCo: "OpCo-EU-01", name: "TechGlobal Inc", issue: "Missing tax ID", status: "error" as const },
+  { id: "CUS-003", opCo: "OpCo-LA-01", name: "Smith & Co", issue: "Invalid address", status: "error" as const },
+  { id: "CUS-004", opCo: "OpCo-AP-01", name: "GlobalTrade Ltd", issue: "Missing category", status: "warning" as const },
+  { id: "CUS-005", opCo: "OpCo-NA-01", name: "FastShip LLC", issue: "Under investigation", status: "info" as const },
 ];
 
 export default function CustomerDashboard() {
   return (
-    <SidebarLayout pageTitle="Customer Conversion Dashboard" pageSubtitle="Customer data migration and validation">
+    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Customer Conversion Dashboard">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {stats.map((stat) => (
           <LargeStatCard key={stat.label} {...stat} />
+        ))}
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {summaryCards.map((card) => (
+          <div key={card.label} className="stat-card p-4">
+            <div className="flex items-center gap-3">
+              <card.icon className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <p className="text-xs text-muted-foreground">{card.label}</p>
+                <p className="text-xl font-bold">{card.value.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
@@ -161,31 +187,37 @@ export default function CustomerDashboard() {
         data={comparisonData}
       />
 
-      {/* Breakdown Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+      {/* OpCo Breakdown Table */}
+      <div className="mt-6">
         <DataTable
-          title="Regional Breakdown"
+          title="OpCo-wise Breakdown"
           columns={[
+            { key: "opCo", header: "OpCo" },
             { key: "region", header: "Region" },
-            { key: "total", header: "Total", render: (item: typeof hierarchyBreakdown[0]) => item.total.toLocaleString() },
-            { key: "converted", header: "Converted", render: (item: typeof hierarchyBreakdown[0]) => item.converted.toLocaleString() },
+            { key: "total", header: "Total", render: (item: typeof opCoBreakdown[0]) => item.total.toLocaleString() },
+            { key: "converted", header: "Converted", render: (item: typeof opCoBreakdown[0]) => item.converted.toLocaleString() },
+            { key: "failed", header: "Failed", render: (item: typeof opCoBreakdown[0]) => item.failed.toLocaleString() },
             {
               key: "rate",
               header: "Rate",
-              render: (item: typeof hierarchyBreakdown[0]) => (
+              render: (item: typeof opCoBreakdown[0]) => (
                 <StatusBadge status={item.rate >= 90 ? "success" : item.rate >= 80 ? "warning" : "error"}>
                   {item.rate}%
                 </StatusBadge>
               ),
             },
           ]}
-          data={hierarchyBreakdown}
+          data={opCoBreakdown}
         />
+      </div>
 
+      {/* Exceptions Table */}
+      <div className="mt-6">
         <DataTable
-          title="Exceptions & Issues"
+          title="OpCo-wise Exceptions & Issues"
           columns={[
             { key: "id", header: "ID" },
+            { key: "opCo", header: "OpCo" },
             { key: "name", header: "Customer" },
             { key: "issue", header: "Issue" },
             {

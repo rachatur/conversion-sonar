@@ -5,21 +5,28 @@ import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { Package, CheckCircle, XCircle, Copy } from "lucide-react";
+import { Package, CheckCircle, XCircle, Copy, AlertTriangle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area } from "recharts";
 
 const stats = [
   { label: "Total Source Records", value: 1856, subtitle: "Supplier records received", icon: Package, variant: "primary" as const },
   { label: "Successfully Converted", value: 1654, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "89.1% conversion rate" },
   { label: "Records Excluded", value: 202, subtitle: "Rejected/filtered records", icon: XCircle, variant: "warning" as const },
-  { label: "Duplicates Found", value: 45, subtitle: "Pending deduplication", icon: Copy, variant: "accent" as const },
+  { label: "OpCo Count", value: 10, subtitle: "Operating companies", icon: FolderOpen, variant: "accent" as const },
+];
+
+const summaryCards = [
+  { label: "Supplier Types", value: 6, icon: Package },
+  { label: "Duplicates Found", value: 45, icon: Copy },
+  { label: "Missing Fields", value: 89, icon: AlertTriangle },
+  { label: "Missing Category", value: 34, icon: FolderOpen },
 ];
 
 const insights = [
-  { type: "success" as const, highlight: "Domestic suppliers", text: "show excellent conversion rate at 94.2% with 1,172 records loaded successfully." },
-  { type: "warning" as const, highlight: "International suppliers", text: "have lower rate (78.4%) due to bank account format validation issues." },
-  { type: "info" as const, highlight: "Site E - International", text: "needs attention with only 73.4% conversion - investigate address and tax data." },
-  { type: "success" as const, highlight: "Payment terms mapping", text: "completed for 98.9% of suppliers with proper currency alignment." },
+  { type: "success" as const, highlight: "Domestic suppliers", text: "show excellent conversion rate at 94.2% with 1,172 records loaded across 6 OpCos." },
+  { type: "warning" as const, highlight: "International suppliers", text: "have lower rate (78.4%) due to bank account format validation issues in 4 OpCos." },
+  { type: "info" as const, highlight: "OpCo-INT-02", text: "needs attention with only 73.4% conversion - investigate address and tax data." },
+  { type: "success" as const, highlight: "Payment terms mapping", text: "completed for 98.9% of suppliers with proper currency alignment across all OpCos." },
 ];
 
 const conversionRateData = [
@@ -54,6 +61,19 @@ const sourceTargetComparison = [
   { field: "Currency", source: 1856, target: 1856, match: true },
 ];
 
+const opCoBreakdown = [
+  { opCo: "OpCo-DOM-01", region: "Domestic", suppliers: 312, converted: 298, failed: 14, rate: 95.5 },
+  { opCo: "OpCo-DOM-02", region: "Domestic", suppliers: 289, converted: 275, failed: 14, rate: 95.2 },
+  { opCo: "OpCo-DOM-03", region: "Domestic", suppliers: 267, converted: 251, failed: 16, rate: 94.0 },
+  { opCo: "OpCo-DOM-04", region: "Domestic", suppliers: 234, converted: 218, failed: 16, rate: 93.2 },
+  { opCo: "OpCo-DOM-05", region: "Domestic", suppliers: 189, converted: 178, failed: 11, rate: 94.2 },
+  { opCo: "OpCo-DOM-06", region: "Domestic", suppliers: 145, converted: 136, failed: 9, rate: 93.8 },
+  { opCo: "OpCo-INT-01", region: "International", suppliers: 178, converted: 145, failed: 33, rate: 81.5 },
+  { opCo: "OpCo-INT-02", region: "International", suppliers: 134, converted: 98, failed: 36, rate: 73.1 },
+  { opCo: "OpCo-INT-03", region: "International", suppliers: 67, converted: 34, failed: 33, rate: 50.7 },
+  { opCo: "OpCo-INT-04", region: "International", suppliers: 41, converted: 21, failed: 20, rate: 51.2 },
+];
+
 const siteMapping = [
   { site: "Site A - Primary", suppliers: 456, converted: 432, failed: 24, rate: 94.7 },
   { site: "Site B - Warehouse", suppliers: 389, converted: 367, failed: 22, rate: 94.3 },
@@ -63,20 +83,35 @@ const siteMapping = [
 ];
 
 const exceptions = [
-  { id: "SUP-001", name: "Global Parts Inc", issue: "Invalid bank account", status: "error" as const },
-  { id: "SUP-012", name: "Pacific Trading Co", issue: "Missing tax certificate", status: "warning" as const },
-  { id: "SUP-034", name: "Euro Supplies Ltd", issue: "Duplicate entry", status: "warning" as const },
-  { id: "SUP-056", name: "Asia Materials", issue: "Address verification failed", status: "error" as const },
-  { id: "SUP-078", name: "Local Logistics", issue: "Pending approval", status: "info" as const },
+  { id: "SUP-001", opCo: "OpCo-INT-02", name: "Global Parts Inc", issue: "Invalid bank account", status: "error" as const },
+  { id: "SUP-012", opCo: "OpCo-INT-03", name: "Pacific Trading Co", issue: "Missing tax certificate", status: "warning" as const },
+  { id: "SUP-034", opCo: "OpCo-INT-01", name: "Euro Supplies Ltd", issue: "Duplicate entry", status: "warning" as const },
+  { id: "SUP-056", opCo: "OpCo-INT-04", name: "Asia Materials", issue: "Missing category", status: "warning" as const },
+  { id: "SUP-078", opCo: "OpCo-DOM-01", name: "Local Logistics", issue: "Pending approval", status: "info" as const },
 ];
 
 export default function SupplierDashboard() {
   return (
-    <SidebarLayout pageTitle="Supplier Conversion Dashboard" pageSubtitle="Supplier data migration and validation">
+    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {stats.map((stat) => (
           <LargeStatCard key={stat.label} {...stat} />
+        ))}
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {summaryCards.map((card) => (
+          <div key={card.label} className="stat-card p-4">
+            <div className="flex items-center gap-3">
+              <card.icon className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <p className="text-xs text-muted-foreground">{card.label}</p>
+                <p className="text-xl font-bold">{card.value.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
@@ -167,6 +202,30 @@ export default function SupplierDashboard() {
         data={sourceTargetComparison}
       />
 
+      {/* OpCo Breakdown */}
+      <div className="mt-6">
+        <DataTable
+          title="OpCo-wise Breakdown"
+          columns={[
+            { key: "opCo", header: "OpCo" },
+            { key: "region", header: "Region" },
+            { key: "suppliers", header: "Total" },
+            { key: "converted", header: "Converted" },
+            { key: "failed", header: "Failed" },
+            {
+              key: "rate",
+              header: "Rate",
+              render: (item: typeof opCoBreakdown[0]) => (
+                <StatusBadge status={item.rate >= 90 ? "success" : item.rate >= 80 ? "warning" : "error"}>
+                  {item.rate}%
+                </StatusBadge>
+              ),
+            },
+          ]}
+          data={opCoBreakdown}
+        />
+      </div>
+
       {/* Breakdown Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <DataTable
@@ -189,11 +248,11 @@ export default function SupplierDashboard() {
         />
 
         <DataTable
-          title="Exceptions & Issues"
+          title="OpCo-wise Exceptions & Issues"
           columns={[
             { key: "id", header: "ID" },
+            { key: "opCo", header: "OpCo" },
             { key: "name", header: "Supplier" },
-            { key: "issue", header: "Issue" },
             {
               key: "status",
               header: "Status",

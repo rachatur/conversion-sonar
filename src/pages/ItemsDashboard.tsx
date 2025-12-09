@@ -5,21 +5,29 @@ import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { Boxes, CheckCircle, XCircle, Tag } from "lucide-react";
+import { Boxes, CheckCircle, XCircle, Tag, AlertTriangle, Copy, GitBranch } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line } from "recharts";
 
 const stats = [
   { label: "Total Source Records", value: 128459, subtitle: "Item records received", icon: Boxes, variant: "primary" as const },
   { label: "Successfully Converted", value: 118420, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "92.2% conversion rate" },
   { label: "Records Excluded", value: 10039, subtitle: "Failed/filtered records", icon: XCircle, variant: "warning" as const },
-  { label: "Missing Category", value: 2456, subtitle: "Pending categorization", icon: Tag, variant: "accent" as const },
+  { label: "Branch Count", value: 15, subtitle: "Active branches", icon: GitBranch, variant: "accent" as const },
+];
+
+const summaryCards = [
+  { label: "Product Lines", value: 12, icon: Boxes },
+  { label: "Completeness Level", value: "94.5%", icon: CheckCircle },
+  { label: "Missing Fields", value: 3245, icon: AlertTriangle },
+  { label: "Missing Category", value: 2456, icon: Tag },
+  { label: "Duplicates Found", value: 876, icon: Copy },
 ];
 
 const insights = [
-  { type: "success" as const, highlight: "Electronics product line", text: "shows highest conversion rate at 96.3% with 32,450 items loaded successfully." },
-  { type: "warning" as const, highlight: "Consumables category", text: "has lower rate (88.5%) due to UOM mapping issues - needs standardization." },
-  { type: "success" as const, highlight: "BOM mapping", text: "completed for 97.8% of items with proper parent-child relationships." },
-  { type: "info" as const, highlight: "Valuation method", text: "standardized to weighted average for 98.2% of inventory items." },
+  { type: "success" as const, highlight: "Electronics product line", text: "shows highest conversion rate at 96.3% with 32,450 items across 8 branches." },
+  { type: "warning" as const, highlight: "Consumables category", text: "has lower rate (88.5%) due to UOM mapping issues across 5 branches - needs standardization." },
+  { type: "success" as const, highlight: "BOM mapping", text: "completed for 97.8% of items with proper parent-child relationships across all branches." },
+  { type: "info" as const, highlight: "Valuation method", text: "standardized to weighted average for 98.2% of inventory items in 15 branches." },
 ];
 
 const productLineData = [
@@ -63,6 +71,24 @@ const sourceTargetComparison = [
   { field: "Cost", source: 128459, target: 121345, match: false },
 ];
 
+const branchBreakdown = [
+  { branch: "Branch-HQ", region: "Headquarters", total: 15680, converted: 14890, failed: 790, rate: 95.0 },
+  { branch: "Branch-NA-01", region: "North America", total: 12450, converted: 11678, failed: 772, rate: 93.8 },
+  { branch: "Branch-NA-02", region: "North America", total: 9870, converted: 9234, failed: 636, rate: 93.6 },
+  { branch: "Branch-EU-01", region: "Europe", total: 11230, converted: 10456, failed: 774, rate: 93.1 },
+  { branch: "Branch-EU-02", region: "Europe", total: 8760, converted: 8123, failed: 637, rate: 92.7 },
+  { branch: "Branch-EU-03", region: "Europe", total: 7650, converted: 7012, failed: 638, rate: 91.7 },
+  { branch: "Branch-AP-01", region: "Asia Pacific", total: 10980, converted: 10123, failed: 857, rate: 92.2 },
+  { branch: "Branch-AP-02", region: "Asia Pacific", total: 8450, converted: 7789, failed: 661, rate: 92.2 },
+  { branch: "Branch-AP-03", region: "Asia Pacific", total: 7230, converted: 6567, failed: 663, rate: 90.8 },
+  { branch: "Branch-LA-01", region: "Latin America", total: 9870, converted: 8956, failed: 914, rate: 90.7 },
+  { branch: "Branch-LA-02", region: "Latin America", total: 7650, converted: 6890, failed: 760, rate: 90.1 },
+  { branch: "Branch-MEA-01", region: "Middle East", total: 6540, converted: 5678, failed: 862, rate: 86.8 },
+  { branch: "Branch-MEA-02", region: "Middle East", total: 5430, converted: 4623, failed: 807, rate: 85.1 },
+  { branch: "Branch-MEA-03", region: "Africa", total: 4320, converted: 3567, failed: 753, rate: 82.6 },
+  { branch: "Branch-MEA-04", region: "Africa", total: 2349, converted: 1834, failed: 515, rate: 78.1 },
+];
+
 const bomMapping = [
   { type: "Single Level BOM", total: 45230, mapped: 43890, pending: 1340, rate: 97.0 },
   { type: "Multi-Level BOM", total: 28450, mapped: 26780, pending: 1670, rate: 94.1 },
@@ -72,20 +98,35 @@ const bomMapping = [
 ];
 
 const exceptions = [
-  { id: "ITM-00145", name: "Electronic Component A", issue: "Missing category", status: "warning" as const },
-  { id: "ITM-02389", name: "Machine Part B-234", issue: "Invalid UOM", status: "error" as const },
-  { id: "ITM-04567", name: "Raw Material XY-90", issue: "Duplicate SKU", status: "warning" as const },
-  { id: "ITM-06721", name: "Assembly Kit Z-12", issue: "BOM validation failed", status: "error" as const },
-  { id: "ITM-08934", name: "Consumable Pack C", issue: "Price validation", status: "info" as const },
+  { id: "ITM-00145", branch: "Branch-MEA-04", name: "Electronic Component A", issue: "Missing category", status: "warning" as const },
+  { id: "ITM-02389", branch: "Branch-MEA-03", name: "Machine Part B-234", issue: "Invalid UOM", status: "error" as const },
+  { id: "ITM-04567", branch: "Branch-LA-02", name: "Raw Material XY-90", issue: "Duplicate SKU", status: "warning" as const },
+  { id: "ITM-06721", branch: "Branch-AP-03", name: "Assembly Kit Z-12", issue: "BOM validation failed", status: "error" as const },
+  { id: "ITM-08934", branch: "Branch-EU-03", name: "Consumable Pack C", issue: "Price validation", status: "info" as const },
 ];
 
 export default function ItemsDashboard() {
   return (
-    <SidebarLayout pageTitle="Items Conversion Dashboard" pageSubtitle="Item master data migration and validation">
+    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Items Conversion Dashboard">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {stats.map((stat) => (
           <LargeStatCard key={stat.label} {...stat} />
+        ))}
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        {summaryCards.map((card) => (
+          <div key={card.label} className="stat-card p-4">
+            <div className="flex items-center gap-3">
+              <card.icon className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <p className="text-xs text-muted-foreground">{card.label}</p>
+                <p className="text-xl font-bold">{typeof card.value === 'number' ? card.value.toLocaleString() : card.value}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
@@ -193,8 +234,30 @@ export default function ItemsDashboard() {
         />
       </div>
 
+      {/* Branch Breakdown */}
+      <DataTable
+        title="Branch-wise Breakdown"
+        columns={[
+          { key: "branch", header: "Branch" },
+          { key: "region", header: "Region" },
+          { key: "total", header: "Total", render: (item: typeof branchBreakdown[0]) => item.total.toLocaleString() },
+          { key: "converted", header: "Converted", render: (item: typeof branchBreakdown[0]) => item.converted.toLocaleString() },
+          { key: "failed", header: "Failed", render: (item: typeof branchBreakdown[0]) => item.failed.toLocaleString() },
+          {
+            key: "rate",
+            header: "Rate",
+            render: (item: typeof branchBreakdown[0]) => (
+              <StatusBadge status={item.rate >= 92 ? "success" : item.rate >= 85 ? "warning" : "error"}>
+                {item.rate}%
+              </StatusBadge>
+            ),
+          },
+        ]}
+        data={branchBreakdown}
+      />
+
       {/* Breakdown Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <DataTable
           title="BOM Mapping Status"
           columns={[
@@ -215,11 +278,11 @@ export default function ItemsDashboard() {
         />
 
         <DataTable
-          title="Exceptions & Issues"
+          title="Branch-wise Exceptions & Issues"
           columns={[
             { key: "id", header: "ID" },
+            { key: "branch", header: "Branch" },
             { key: "name", header: "Item" },
-            { key: "issue", header: "Issue" },
             {
               key: "status",
               header: "Status",
