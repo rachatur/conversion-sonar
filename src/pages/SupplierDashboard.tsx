@@ -531,6 +531,8 @@ export default function SupplierDashboard() {
 
   const handleOpCoSelect = (opCoName: string) => {
     setSelectedOpCo(opCoName);
+    // Scroll to top to show updated stats
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
