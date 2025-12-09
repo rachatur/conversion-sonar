@@ -41,9 +41,9 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Sidebar */}
+      {/* Sidebar - Fixed */}
       <aside className={cn(
-        "flex flex-col border-r border-sidebar-border bg-card transition-all duration-300 relative",
+        "flex flex-col border-r border-sidebar-border bg-card transition-all duration-300 relative sticky top-0 h-screen",
         collapsed ? "w-16" : "w-64"
       )}>
         {/* Sidebar Header - White with blue icon */}
