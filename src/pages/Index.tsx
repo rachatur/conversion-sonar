@@ -33,7 +33,7 @@ const statusDistribution = [
 
 const Index = () => {
   return (
-    <SidebarLayout pageTitle="Reconciliation Dashboard" pageSubtitle="Air Control Concepts UAT Environment">
+    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Data Reconciliation Dashboard">
       {/* Large Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {overallStats.map((stat) => (

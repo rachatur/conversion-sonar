@@ -1,8 +1,12 @@
+import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+import { ProgressBar } from "./ProgressBar";
+
 interface OpCoPerformanceData {
   name: string;
-  headers: { source: number; valid: number; loaded: number };
-  lines: { source: number; valid: number; loaded: number };
-  loadRate: number;
+  headersLoad: number;
+  linesLoad: number;
+  source: number;
+  loaded: number;
 }
 
 interface OpCoLoadPerformanceProps {
@@ -10,85 +14,92 @@ interface OpCoLoadPerformanceProps {
   title?: string;
 }
 
-const getLoadRateColor = (rate: number) => {
-  if (rate >= 50) return "text-success";
-  if (rate >= 30) return "text-warning";
+const getStatusBadge = (headersLoad: number, linesLoad: number) => {
+  const avg = (headersLoad + linesLoad) / 2;
+  if (avg >= 40) {
+    return { label: "Excellent", color: "bg-success text-white" };
+  } else if (avg >= 20) {
+    return { label: "Needs Review", color: "bg-destructive text-white" };
+  } else {
+    return { label: "Needs Review", color: "bg-destructive text-white" };
+  }
+};
+
+const getPercentColor = (percent: number) => {
+  if (percent >= 40) return "text-success";
+  if (percent >= 20) return "text-warning";
   return "text-destructive";
 };
 
-export function OpCoLoadPerformance({ data, title = "Detailed Breakdown - Headers & Lines" }: OpCoLoadPerformanceProps) {
-  // Calculate totals
-  const totals = data.reduce(
-    (acc, row) => ({
-      headersSource: acc.headersSource + row.headers.source,
-      headersValid: acc.headersValid + row.headers.valid,
-      headersLoaded: acc.headersLoaded + row.headers.loaded,
-      linesSource: acc.linesSource + row.lines.source,
-      linesValid: acc.linesValid + row.lines.valid,
-      linesLoaded: acc.linesLoaded + row.lines.loaded,
-    }),
-    { headersSource: 0, headersValid: 0, headersLoaded: 0, linesSource: 0, linesValid: 0, linesLoaded: 0 }
-  );
+const getProgressVariant = (percent: number): "success" | "warning" | "error" => {
+  if (percent >= 40) return "success";
+  if (percent >= 20) return "warning";
+  return "error";
+};
 
-  const totalLoadRate = totals.headersSource > 0 
-    ? ((totals.headersLoaded / totals.headersSource) * 100).toFixed(2)
-    : "0.00";
+const getPercentIcon = (percent: number) => {
+  if (percent >= 40) return <CheckCircle className="h-4 w-4 text-success" />;
+  if (percent >= 20) return <AlertTriangle className="h-4 w-4 text-warning" />;
+  return <XCircle className="h-4 w-4 text-destructive" />;
+};
 
+export function OpCoLoadPerformance({ data, title = "OpCo Load Performance" }: OpCoLoadPerformanceProps) {
   return (
     <div className="mb-8">
-      <h3 className="text-lg font-semibold text-primary mb-4">{title}</h3>
-      <div className="stat-card overflow-hidden border border-border">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">OPCO</th>
-                <th colSpan={3} className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">HEADERS</th>
-                <th colSpan={3} className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">LINES</th>
-                <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">LOAD RATE (SOURCE)</th>
-              </tr>
-              <tr className="border-b border-border">
-                <th className="px-6 py-3"></th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-muted-foreground">SOURCE</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-muted-foreground">VALID</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-primary">LOADED</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-muted-foreground">SOURCE</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-muted-foreground">VALID</th>
-                <th className="px-6 py-3 text-center text-xs font-medium uppercase text-primary">LOADED</th>
-                <th className="px-6 py-3"></th>
-              </tr>
-            </thead>
-            <tbody className="bg-card">
-              {data.map((row, index) => (
-                <tr key={row.name} className={`border-b border-border hover:bg-muted/20 transition-colors ${index % 2 === 0 ? 'bg-card' : 'bg-muted/5'}`}>
-                  <td className="px-6 py-4 text-sm font-semibold text-foreground">{row.name}</td>
-                  <td className="px-6 py-4 text-sm text-center text-muted-foreground border-l border-border">{row.headers.source.toLocaleString()}</td>
-                  <td className="px-6 py-4 text-sm text-center text-muted-foreground">{row.headers.valid.toLocaleString()}</td>
-                  <td className="px-6 py-4 text-sm text-center font-semibold text-primary">{row.headers.loaded.toLocaleString()}</td>
-                  <td className="px-6 py-4 text-sm text-center text-muted-foreground border-l border-border">{row.lines.source.toLocaleString()}</td>
-                  <td className="px-6 py-4 text-sm text-center text-muted-foreground">{row.lines.valid.toLocaleString()}</td>
-                  <td className="px-6 py-4 text-sm text-center font-semibold text-primary">{row.lines.loaded.toLocaleString()}</td>
-                  <td className={`px-6 py-4 text-sm text-right font-bold border-l border-border ${getLoadRateColor(row.loadRate)}`}>
-                    {row.loadRate.toFixed(2)}%
-                  </td>
-                </tr>
-              ))}
-              {/* Total Row */}
-              <tr className="bg-slate-100 dark:bg-slate-800 border-t-2 border-slate-400">
-                <td className="px-6 py-4 text-sm font-bold text-foreground">TOTAL</td>
-                <td className="px-6 py-4 text-sm text-center font-bold text-muted-foreground border-l border-border">{totals.headersSource.toLocaleString()}</td>
-                <td className="px-6 py-4 text-sm text-center font-bold text-muted-foreground">{totals.headersValid.toLocaleString()}</td>
-                <td className="px-6 py-4 text-sm text-center font-bold text-primary">{totals.headersLoaded.toLocaleString()}</td>
-                <td className="px-6 py-4 text-sm text-center font-bold text-muted-foreground border-l border-border">{totals.linesSource.toLocaleString()}</td>
-                <td className="px-6 py-4 text-sm text-center font-bold text-muted-foreground">{totals.linesValid.toLocaleString()}</td>
-                <td className="px-6 py-4 text-sm text-center font-bold text-primary">{totals.linesLoaded.toLocaleString()}</td>
-                <td className={`px-6 py-4 text-sm text-right font-bold border-l border-border ${getLoadRateColor(parseFloat(totalLoadRate))}`}>
-                  {totalLoadRate}%
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <h3 className="text-lg font-semibold text-foreground mb-4">{title}</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {data.map((opco) => {
+          const status = getStatusBadge(opco.headersLoad, opco.linesLoad);
+          return (
+            <div key={opco.name} className="stat-card p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-base font-semibold text-foreground">{opco.name}</h4>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${status.color}`}>
+                  {status.label}
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-muted-foreground">Headers Load %</span>
+                    <div className="flex items-center gap-1">
+                      {getPercentIcon(opco.headersLoad)}
+                      <span className={`text-sm font-medium ${getPercentColor(opco.headersLoad)}`}>
+                        {opco.headersLoad}%
+                      </span>
+                    </div>
+                  </div>
+                  <ProgressBar value={opco.headersLoad} max={100} variant={getProgressVariant(opco.headersLoad)} showLabel={false} />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-muted-foreground">Lines Load %</span>
+                    <div className="flex items-center gap-1">
+                      {getPercentIcon(opco.linesLoad)}
+                      <span className={`text-sm font-medium ${getPercentColor(opco.linesLoad)}`}>
+                        {opco.linesLoad}%
+                      </span>
+                    </div>
+                  </div>
+                  <ProgressBar value={opco.linesLoad} max={100} variant={getProgressVariant(opco.linesLoad)} showLabel={false} />
+                </div>
+              </div>
+
+              <div className="flex justify-between mt-4 pt-3 border-t border-border">
+                <div className="text-center">
+                  <span className="text-xs text-muted-foreground block">Source</span>
+                  <span className="text-sm font-semibold text-foreground">{opco.source.toLocaleString()}</span>
+                </div>
+                <div className="text-center">
+                  <span className="text-xs text-muted-foreground block">Loaded</span>
+                  <span className="text-sm font-semibold text-foreground">{opco.loaded.toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

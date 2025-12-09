@@ -1,39 +1,208 @@
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
+import { DataTable } from "@/components/dashboard/DataTable";
 import { OpCoLoadPerformance } from "@/components/dashboard/OpCoLoadPerformance";
 import { Users, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 
-// OpCo Load Performance data for Customer Dashboard - matching screenshot format
+// OpCo Load Performance data for Customer Dashboard
 const customerOpCoPerformance = [
-  { name: "ATS", headers: { source: 424, valid: 47, loaded: 37 }, lines: { source: 6289, valid: 73, loaded: 54 }, loadRate: 1.36 },
-  { name: "EBS", headers: { source: 2305, valid: 1078, loaded: 1078 }, lines: { source: 10423, valid: 4166, loaded: 4166 }, loadRate: 41.20 },
-  { name: "EP", headers: { source: 99, valid: 35, loaded: 22 }, lines: { source: 583, valid: 274, loaded: 125 }, loadRate: 21.55 },
-  { name: "Etairos", headers: { source: 231, valid: 153, loaded: 153 }, lines: { source: 608, valid: 362, loaded: 362 }, loadRate: 61.38 },
-  { name: "Dorse Std", headers: { source: 380, valid: 121, loaded: 127 }, lines: { source: 1212, valid: 450, loaded: 489 }, loadRate: 38.69 },
-  { name: "Dorse DS", headers: { source: 484, valid: 98, loaded: 98 }, lines: { source: 895, valid: 182, loaded: 182 }, loadRate: 20.30 },
+  { name: "ATS", headersLoad: 9, linesLoad: 1, source: 424, loaded: 37 },
+  { name: "EBS", headersLoad: 47, linesLoad: 40, source: 2305, loaded: 1078 },
+  { name: "EP (Eng. Products)", headersLoad: 22.22, linesLoad: 21.44, source: 99, loaded: 147 },
+  { name: "Etairos", headersLoad: 66, linesLoad: 60, source: 231, loaded: 153 },
+  { name: "Dorse Standard", headersLoad: 33, linesLoad: 40, source: 0, loaded: 0 },
+  { name: "Dorse DropShip", headersLoad: 20, linesLoad: 20, source: 0, loaded: 0 },
 ];
 
-// Stats data
-const stats = [
-  { label: "Total Source Records", value: 2249, subtitle: "Customer records received", icon: Users, variant: "primary" as const },
-  { label: "Successfully Converted", value: 2158, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "96% conversion rate" },
-  { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
-  { label: "Valid Source Records", value: 2158, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" as const },
-];
 
-const insights = [
-  { type: "success" as const, highlight: "FBDI Upload", text: "completed with 100% success rate - all 2,158 valid customer records loaded successfully." },
-  { type: "info" as const, highlight: "Customer Sites", text: "Bill To: 2,652 records, Ship To: 195 records loaded." },
-  { type: "warning" as const, highlight: "91 records excluded", text: "from customer data - review exclusion criteria." },
-];
+
+// OpCo-specific data extracted from Excel files
+const opCoData: Record<string, {
+  stats: { label: string; value: number; subtitle: string; icon: typeof Users; variant: "primary" | "success" | "warning" | "accent"; highlightText?: string }[];
+  reconSummaryData: { metric: string; customer: number | string; customerSitesBillTo: number | string; customerSitesShipTo: number | string }[];
+  loadPercentData: { metric: string; customer: string; customerSitesBillTo: string; customerSitesShipTo: string }[];
+  insights: { type: "info" | "success" | "warning"; highlight: string; text: string }[];
+}> = {
+  AIRTECH: {
+    stats: [
+      { label: "Total Source Records", value: 2249, subtitle: "Customer records received", icon: Users, variant: "primary" },
+      { label: "Successfully Converted", value: 2158, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "96% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 2158, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", customer: 2249, customerSitesBillTo: 2743, customerSitesShipTo: 328 },
+      { metric: "Records Excluded / Not Valid", customer: 91, customerSitesBillTo: 91, customerSitesShipTo: 133 },
+      { metric: "Valid Source Records", customer: 2158, customerSitesBillTo: 2652, customerSitesShipTo: 195 },
+      { metric: "Total FBDI Records for Upload", customer: 2158, customerSitesBillTo: 2652, customerSitesShipTo: 195 },
+      { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
+      { metric: "FBDI Records loaded Successful", customer: 2158, customerSitesBillTo: 2652, customerSitesShipTo: 195 },
+    ],
+    loadPercentData: [
+      { metric: "Load Percent (Valid Records)", customer: "96%", customerSitesBillTo: "97%", customerSitesShipTo: "59%" },
+    ],
+    insights: [
+      { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 2,158 valid customer records loaded successfully." },
+      { type: "info", highlight: "Customer Sites", text: "Bill To: 2,652 records, Ship To: 195 records loaded." },
+      { type: "warning", highlight: "91 records excluded", text: "from customer data - review exclusion criteria." },
+    ],
+  },
+  ATS: {
+    stats: [
+      { label: "Total Source Records", value: 1935, subtitle: "Customer records received", icon: Users, variant: "primary" },
+      { label: "Successfully Converted", value: 1843, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "95% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 1843, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", customer: 1935, customerSitesBillTo: 2602, customerSitesShipTo: 438 },
+      { metric: "Records Excluded / Not Valid", customer: 90, customerSitesBillTo: 90, customerSitesShipTo: 84 },
+      { metric: "Valid Source Records", customer: 1843, customerSitesBillTo: 2512, customerSitesShipTo: 354 },
+      { metric: "Total FBDI Records for Upload", customer: 1843, customerSitesBillTo: 2512, customerSitesShipTo: 354 },
+      { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
+      { metric: "FBDI Records loaded Successful", customer: 1843, customerSitesBillTo: 2512, customerSitesShipTo: 354 },
+    ],
+    loadPercentData: [
+      { metric: "Load Percent (Valid Records)", customer: "95%", customerSitesBillTo: "97%", customerSitesShipTo: "81%" },
+    ],
+    insights: [
+      { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 1,843 valid customer records loaded successfully." },
+      { type: "info", highlight: "Customer Sites", text: "Bill To: 2,512 records, Ship To: 354 records loaded." },
+      { type: "warning", highlight: "90 records excluded", text: "from customer data - review exclusion criteria." },
+    ],
+  },
+  "C&J": {
+    stats: [
+      { label: "Total Source Records", value: 124, subtitle: "Customer records received", icon: Users, variant: "primary" },
+      { label: "Successfully Converted", value: 119, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "96% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 119, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", customer: 124, customerSitesBillTo: 208, customerSitesShipTo: 0 },
+      { metric: "Records Excluded / Not Valid", customer: 5, customerSitesBillTo: 5, customerSitesShipTo: 0 },
+      { metric: "Valid Source Records", customer: 119, customerSitesBillTo: 203, customerSitesShipTo: 0 },
+      { metric: "Total FBDI Records for Upload", customer: 119, customerSitesBillTo: 203, customerSitesShipTo: 0 },
+      { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
+      { metric: "FBDI Records loaded Successful", customer: 119, customerSitesBillTo: 203, customerSitesShipTo: 0 },
+    ],
+    loadPercentData: [
+      { metric: "Load Percent (Valid Records)", customer: "96%", customerSitesBillTo: "98%", customerSitesShipTo: "0%" },
+    ],
+    insights: [
+      { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 119 valid customer records loaded successfully." },
+      { type: "info", highlight: "Customer Sites", text: "Bill To: 203 records loaded. No Ship To records." },
+      { type: "warning", highlight: "5 records excluded", text: "from customer data - review exclusion criteria." },
+    ],
+  },
+  DORSE: {
+    stats: [
+      { label: "Total Source Records", value: 7572, subtitle: "Customer records received", icon: Users, variant: "primary" },
+      { label: "Successfully Converted", value: 3194, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "42% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 3194, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", customer: 7572, customerSitesBillTo: 7572, customerSitesShipTo: 458 },
+      { metric: "Records Excluded / Not Valid", customer: 4378, customerSitesBillTo: 4378, customerSitesShipTo: 127 },
+      { metric: "Valid Source Records", customer: 3194, customerSitesBillTo: 3194, customerSitesShipTo: 331 },
+      { metric: "Total FBDI Records for Upload", customer: 3194, customerSitesBillTo: 3194, customerSitesShipTo: 331 },
+      { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
+      { metric: "FBDI Records loaded Successful", customer: 3194, customerSitesBillTo: 3194, customerSitesShipTo: 144 },
+    ],
+    loadPercentData: [
+      { metric: "Load Percent (Valid Records)", customer: "42%", customerSitesBillTo: "42%", customerSitesShipTo: "31%" },
+    ],
+    insights: [
+      { type: "success", highlight: "FBDI Upload", text: "completed - 3,194 customer records and 144 Sales Order Customer records loaded." },
+      { type: "warning", highlight: "58% of records excluded", text: "(4,378 records) - review exclusion criteria and data quality for improvement." },
+      { type: "info", highlight: "Customer Sites", text: "3,194 records loaded successfully." },
+    ],
+  },
+  EBS: {
+    stats: [
+      { label: "Total Source Records", value: 1362, subtitle: "Customer records received", icon: Users, variant: "primary" },
+      { label: "Successfully Converted", value: 1330, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "98% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 1330, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", customer: 1362, customerSitesBillTo: 1362, customerSitesShipTo: 3018 },
+      { metric: "Records Excluded / Not Valid", customer: 32, customerSitesBillTo: 32, customerSitesShipTo: 1398 },
+      { metric: "Valid Source Records", customer: 1330, customerSitesBillTo: 1330, customerSitesShipTo: 1620 },
+      { metric: "Total FBDI Records for Upload", customer: 1330, customerSitesBillTo: 1330, customerSitesShipTo: 1620 },
+      { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
+      { metric: "FBDI Records loaded Successful", customer: 1330, customerSitesBillTo: 1330, customerSitesShipTo: 1620 },
+    ],
+    loadPercentData: [
+      { metric: "Load Percent (Valid Records)", customer: "98%", customerSitesBillTo: "98%", customerSitesShipTo: "54%" },
+    ],
+    insights: [
+      { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 1,330 customer records loaded successfully." },
+      { type: "info", highlight: "Sales Order Customer", text: "1,620 records loaded out of 3,018 total." },
+      { type: "warning", highlight: "32 records excluded", text: "from customer data - review exclusion criteria." },
+    ],
+  },
+  EP: {
+    stats: [
+      { label: "Total Source Records", value: 639, subtitle: "Customer records received", icon: Users, variant: "primary" },
+      { label: "Successfully Converted", value: 621, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "97% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 621, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", customer: 639, customerSitesBillTo: 744, customerSitesShipTo: 72 },
+      { metric: "Records Excluded / Not Valid", customer: 18, customerSitesBillTo: 18, customerSitesShipTo: 6 },
+      { metric: "Valid Source Records", customer: 621, customerSitesBillTo: 726, customerSitesShipTo: 66 },
+      { metric: "Total FBDI Records for Upload", customer: 621, customerSitesBillTo: 726, customerSitesShipTo: 66 },
+      { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
+      { metric: "FBDI Records loaded Successful", customer: 621, customerSitesBillTo: 726, customerSitesShipTo: 66 },
+    ],
+    loadPercentData: [
+      { metric: "Load Percent (Valid Records)", customer: "97%", customerSitesBillTo: "98%", customerSitesShipTo: "92%" },
+    ],
+    insights: [
+      { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 621 customer records loaded successfully." },
+      { type: "info", highlight: "Customer Sites", text: "726 records loaded. Sales Order Customer: 66 records." },
+      { type: "warning", highlight: "18 records excluded", text: "from customer data - review exclusion criteria." },
+    ],
+  },
+  ETARIOS: {
+    stats: [
+      { label: "Total Source Records", value: 2172, subtitle: "Customer records received", icon: Users, variant: "primary" },
+      { label: "Successfully Converted", value: 2052, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "94% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 2053, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", customer: 2172, customerSitesBillTo: 2474, customerSitesShipTo: 166 },
+      { metric: "Records Excluded / Not Valid", customer: 120, customerSitesBillTo: 120, customerSitesShipTo: 22 },
+      { metric: "Valid Source Records", customer: 2053, customerSitesBillTo: 2354, customerSitesShipTo: 144 },
+      { metric: "Total FBDI Records for Upload", customer: 2052, customerSitesBillTo: 2354, customerSitesShipTo: 144 },
+      { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
+      { metric: "FBDI Records loaded Successful", customer: 2052, customerSitesBillTo: 2354, customerSitesShipTo: 144 },
+    ],
+    loadPercentData: [
+      { metric: "Load Percent (Valid Records)", customer: "94%", customerSitesBillTo: "95%", customerSitesShipTo: "87%" },
+    ],
+    insights: [
+      { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - 2,052 customer records loaded successfully." },
+      { type: "info", highlight: "Customer Sites", text: "2,354 records loaded. Sales Order Customer: 144 records." },
+      { type: "warning", highlight: "120 records excluded", text: "from customer data - review exclusion criteria." },
+    ],
+  },
+};
 
 export default function CustomerDashboard() {
+  // Use AIRTECH as the default display data
+  const currentData = opCoData["AIRTECH"];
+
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Customer Conversion Dashboard">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {stats.map((stat) => (
+        {currentData.stats.map((stat) => (
           <LargeStatCard key={stat.label} {...stat} />
         ))}
       </div>
@@ -41,9 +210,35 @@ export default function CustomerDashboard() {
       {/* OpCo Load Performance */}
       <OpCoLoadPerformance data={customerOpCoPerformance} />
 
+      {/* Recon Summary Table */}
+      <DataTable
+        title="Recon Summary"
+        columns={[
+          { key: "metric", header: "Metric" },
+          { key: "customer", header: "CUSTOMER", render: (item: typeof currentData.reconSummaryData[0]) => typeof item.customer === 'number' ? item.customer.toLocaleString() : item.customer },
+          { key: "customerSitesBillTo", header: "CUSTOMER_SITES (BILL_TO)", render: (item: typeof currentData.reconSummaryData[0]) => typeof item.customerSitesBillTo === 'number' ? item.customerSitesBillTo.toLocaleString() : item.customerSitesBillTo },
+          { key: "customerSitesShipTo", header: "CUSTOMER_SITES (SHIP_TO)", render: (item: typeof currentData.reconSummaryData[0]) => typeof item.customerSitesShipTo === 'number' ? item.customerSitesShipTo.toLocaleString() : item.customerSitesShipTo },
+        ]}
+        data={currentData.reconSummaryData}
+      />
+
+      {/* Load Percent Table */}
+      <div className="mt-6">
+        <DataTable
+          title="Load Percentage"
+          columns={[
+            { key: "metric", header: "Metric" },
+            { key: "customer", header: "CUSTOMER" },
+            { key: "customerSitesBillTo", header: "CUSTOMER_SITES (BILL_TO)" },
+            { key: "customerSitesShipTo", header: "CUSTOMER_SITES (SHIP_TO)" },
+          ]}
+          data={currentData.loadPercentData}
+        />
+      </div>
+
       {/* Insights */}
       <div className="mt-8">
-        <InsightsSection title="Key Insights & Recommendations" insights={insights} />
+        <InsightsSection title="Key Insights & Recommendations" insights={currentData.insights} />
       </div>
     </SidebarLayout>
   );
