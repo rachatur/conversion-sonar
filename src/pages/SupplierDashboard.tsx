@@ -6,6 +6,7 @@ import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { SupplierDetailedBreakdown } from "@/components/dashboard/SupplierDetailedBreakdown";
+import { ReconSummaryTable } from "@/components/dashboard/ReconSummaryTable";
 import { Package, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 
@@ -524,44 +525,23 @@ export default function SupplierDashboard() {
       {/* OpCo Load Performance with detailed breakdown */}
       <SupplierDetailedBreakdown data={supplierBreakdownData} />
 
-      {/* Supplier Recon Summary Table */}
+      {/* Supplier Recon Summary Tables for All OpCos */}
       <div className="mb-8">
-        <div className="stat-card overflow-hidden">
-          <div className="bg-primary px-4 py-3">
-            <h3 className="text-sm font-semibold text-primary-foreground">Supplier Recon Summary - AIRETECH</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border bg-muted/50">
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground"></th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">Suppliers</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">Supplier Address</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">Supplier Sites</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">Supplier Contacts</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentData.reconSummaryData.map((row, index) => (
-                  <tr key={index} className={`border-b border-border ${index === currentData.reconSummaryData.length - 1 ? 'bg-success/10' : ''}`}>
-                    <td className="px-4 py-3 text-sm font-medium text-foreground">{row.metric}</td>
-                    <td className={`px-4 py-3 text-sm text-center ${row.metric === 'Errored in FBDI Upload' ? 'text-destructive font-medium' : row.metric === 'FBDI Records Loaded Successfully' ? 'text-success font-medium' : 'text-primary font-medium'}`}>
-                      {row.suppliers}
-                    </td>
-                    <td className={`px-4 py-3 text-sm text-center ${row.metric === 'Errored in FBDI Upload' ? 'text-destructive font-medium' : row.metric === 'FBDI Records Loaded Successfully' ? 'text-success font-medium' : 'text-primary font-medium'}`}>
-                      {row.supplierAddress}
-                    </td>
-                    <td className={`px-4 py-3 text-sm text-center ${row.metric === 'Errored in FBDI Upload' ? 'text-destructive font-medium' : row.metric === 'FBDI Records Loaded Successfully' ? 'text-success font-medium' : 'text-primary font-medium'}`}>
-                      {row.supplierSites}
-                    </td>
-                    <td className={`px-4 py-3 text-sm text-center ${row.metric === 'Errored in FBDI Upload' ? 'text-destructive font-medium' : row.metric === 'FBDI Records Loaded Successfully' ? 'text-success font-medium' : 'text-primary font-medium'}`}>
-                      {row.supplierContacts}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Supplier Recon Summary - All OpCos</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {Object.entries(opCoData).map(([opCoName, data]) => (
+            <ReconSummaryTable
+              key={opCoName}
+              title={`Supplier Recon Summary - ${opCoName}`}
+              data={data.reconSummaryData}
+              columns={[
+                { key: "suppliers", label: "Suppliers" },
+                { key: "supplierAddress", label: "Supplier Address" },
+                { key: "supplierSites", label: "Supplier Sites" },
+                { key: "supplierContacts", label: "Supplier Contacts" },
+              ]}
+            />
+          ))}
         </div>
       </div>
 
