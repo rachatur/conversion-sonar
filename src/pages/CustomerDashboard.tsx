@@ -92,26 +92,26 @@ const opCoData: Record<string, {
   DORSE: {
     stats: [
       { label: "Total Source Records", value: 7572, subtitle: "Customer records received", icon: Users, variant: "primary" },
-      { label: "Successfully Converted", value: 3194, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "42.2% conversion rate" },
+      { label: "Successfully Converted", value: 3194, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "42% conversion rate" },
       { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
       { label: "Valid Source Records", value: 3194, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
     ],
     reconSummaryData: [
-      { metric: "Total Source File Records", customer: 7572, customerSitesBillTo: 7572, customerSitesShipTo: 7572 },
-      { metric: "Records Excluded / Not Valid", customer: 4378, customerSitesBillTo: 5268, customerSitesShipTo: 6682 },
-      { metric: "Valid Source Records", customer: 3194, customerSitesBillTo: 2304, customerSitesShipTo: 890 },
-      { metric: "Total FBDI Records for Upload", customer: 3194, customerSitesBillTo: 2304, customerSitesShipTo: 890 },
+      { metric: "Total Source File Records", customer: 7572, customerSitesBillTo: 7572, customerSitesShipTo: 458 },
+      { metric: "Records Excluded / Not Valid", customer: 4378, customerSitesBillTo: 4378, customerSitesShipTo: 127 },
+      { metric: "Valid Source Records", customer: 3194, customerSitesBillTo: 3194, customerSitesShipTo: 331 },
+      { metric: "Total FBDI Records for Upload", customer: 3194, customerSitesBillTo: 3194, customerSitesShipTo: 331 },
       { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
-      { metric: "FBDI Records loaded Successful", customer: 3194, customerSitesBillTo: 2304, customerSitesShipTo: 890 },
+      { metric: "FBDI Records loaded Successful", customer: 3194, customerSitesBillTo: 3194, customerSitesShipTo: 144 },
     ],
     loadPercentData: [
-      { metric: "Load Percent (Valid Records)", customer: "42.2%", customerSitesBillTo: "30.4%", customerSitesShipTo: "11.8%" },
-      { metric: "Load Percent (InValid Records)", customer: "57.8%", customerSitesBillTo: "69.6%", customerSitesShipTo: "88.2%" },
+      { metric: "Load Percent (Valid Records)", customer: "42%", customerSitesBillTo: "42%", customerSitesShipTo: "31%" },
+      { metric: "Load Percent (InValid Records)", customer: "58%", customerSitesBillTo: "58%", customerSitesShipTo: "28%" },
     ],
     insights: [
-      { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 3,194 valid customer records loaded successfully." },
-      { type: "warning", highlight: "57.8% of records excluded", text: "(4,378 records) - review exclusion criteria and data quality for improvement." },
-      { type: "info", highlight: "Customer Sites", text: "Bill To: 2,304 records, Ship To: 890 records loaded." },
+      { type: "success", highlight: "FBDI Upload", text: "completed - 3,194 customer records and 144 Sales Order Customer records loaded." },
+      { type: "warning", highlight: "58% of records excluded", text: "(4,378 records) - review exclusion criteria and data quality for improvement." },
+      { type: "info", highlight: "Customer Sites", text: "3,194 records loaded successfully." },
     ],
   },
   EBS: {
