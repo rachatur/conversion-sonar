@@ -178,14 +178,9 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
 
         {/* Page Header */}
         <div className="px-8 py-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(207,90%,45%)] to-[hsl(207,90%,55%)] shadow-lg shadow-primary/20">
-              <Database className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">{pageTitle}</h1>
-              <p className="text-sm text-muted-foreground">{pageSubtitle}</p>
-            </div>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">{pageTitle}</h1>
+            <p className="text-sm text-primary font-medium">{pageSubtitle}</p>
           </div>
         </div>
 
