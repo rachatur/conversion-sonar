@@ -72,10 +72,10 @@ const supplierBreakdownData = [
     addressLoad: 98.1, 
     sitesLoad: 98.1, 
     contactsLoad: 89.2,
-    suppliers: { source: 1082, loaded: 1063 },
-    address: { source: 1048, loaded: 1028 },
+    suppliers: { source: 1117, loaded: 1063 },
+    address: { source: 1055, loaded: 1028 },
     sites: { source: 1048, loaded: 1028 },
-    contacts: { source: 1109, loaded: 989 }
+    contacts: { source: 73, loaded: 989 }
   },
   { 
     name: "C&J", 
