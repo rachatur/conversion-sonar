@@ -3,7 +3,18 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { DataTable } from "@/components/dashboard/DataTable";
+import { OpCoLoadPerformance } from "@/components/dashboard/OpCoLoadPerformance";
 import { Users, CheckCircle, XCircle, FolderOpen } from "lucide-react";
+
+// OpCo Load Performance data for Customer Dashboard
+const customerOpCoPerformance = [
+  { name: "ATS", headersLoad: 9, linesLoad: 1, source: 424, loaded: 37 },
+  { name: "EBS", headersLoad: 47, linesLoad: 40, source: 2305, loaded: 1078 },
+  { name: "EP (Eng. Products)", headersLoad: 22.22, linesLoad: 21.44, source: 99, loaded: 147 },
+  { name: "Etairos", headersLoad: 66, linesLoad: 60, source: 231, loaded: 153 },
+  { name: "Dorse Standard", headersLoad: 33, linesLoad: 40, source: 0, loaded: 0 },
+  { name: "Dorse DropShip", headersLoad: 20, linesLoad: 20, source: 0, loaded: 0 },
+];
 
 const opCoList = ["AIRTECH", "ATS", "C&J", "DORSE", "EBS", "EP", "ETARIOS"];
 
@@ -31,7 +42,6 @@ const opCoData: Record<string, {
     ],
     loadPercentData: [
       { metric: "Load Percent (Valid Records)", customer: "96%", customerSitesBillTo: "97%", customerSitesShipTo: "59%" },
-      { metric: "Load Percent (InValid Records)", customer: "4%", customerSitesBillTo: "3%", customerSitesShipTo: "41%" },
     ],
     insights: [
       { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 2,158 valid customer records loaded successfully." },
@@ -56,7 +66,6 @@ const opCoData: Record<string, {
     ],
     loadPercentData: [
       { metric: "Load Percent (Valid Records)", customer: "95%", customerSitesBillTo: "97%", customerSitesShipTo: "81%" },
-      { metric: "Load Percent (InValid Records)", customer: "5%", customerSitesBillTo: "3%", customerSitesShipTo: "19%" },
     ],
     insights: [
       { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 1,843 valid customer records loaded successfully." },
@@ -81,7 +90,6 @@ const opCoData: Record<string, {
     ],
     loadPercentData: [
       { metric: "Load Percent (Valid Records)", customer: "96%", customerSitesBillTo: "98%", customerSitesShipTo: "0%" },
-      { metric: "Load Percent (InValid Records)", customer: "4%", customerSitesBillTo: "2%", customerSitesShipTo: "0%" },
     ],
     insights: [
       { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 119 valid customer records loaded successfully." },
@@ -106,7 +114,6 @@ const opCoData: Record<string, {
     ],
     loadPercentData: [
       { metric: "Load Percent (Valid Records)", customer: "42%", customerSitesBillTo: "42%", customerSitesShipTo: "31%" },
-      { metric: "Load Percent (InValid Records)", customer: "58%", customerSitesBillTo: "58%", customerSitesShipTo: "28%" },
     ],
     insights: [
       { type: "success", highlight: "FBDI Upload", text: "completed - 3,194 customer records and 144 Sales Order Customer records loaded." },
@@ -131,7 +138,6 @@ const opCoData: Record<string, {
     ],
     loadPercentData: [
       { metric: "Load Percent (Valid Records)", customer: "98%", customerSitesBillTo: "98%", customerSitesShipTo: "54%" },
-      { metric: "Load Percent (InValid Records)", customer: "2%", customerSitesBillTo: "2%", customerSitesShipTo: "46%" },
     ],
     insights: [
       { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 1,330 customer records loaded successfully." },
@@ -156,7 +162,6 @@ const opCoData: Record<string, {
     ],
     loadPercentData: [
       { metric: "Load Percent (Valid Records)", customer: "97%", customerSitesBillTo: "98%", customerSitesShipTo: "92%" },
-      { metric: "Load Percent (InValid Records)", customer: "3%", customerSitesBillTo: "2%", customerSitesShipTo: "8%" },
     ],
     insights: [
       { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 621 customer records loaded successfully." },
@@ -181,7 +186,6 @@ const opCoData: Record<string, {
     ],
     loadPercentData: [
       { metric: "Load Percent (Valid Records)", customer: "94%", customerSitesBillTo: "95%", customerSitesShipTo: "87%" },
-      { metric: "Load Percent (InValid Records)", customer: "6%", customerSitesBillTo: "5%", customerSitesShipTo: "13%" },
     ],
     insights: [
       { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - 2,052 customer records loaded successfully." },
@@ -213,6 +217,9 @@ export default function CustomerDashboard() {
           </button>
         ))}
       </div>
+
+      {/* OpCo Load Performance */}
+      <OpCoLoadPerformance data={customerOpCoPerformance} />
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

@@ -5,8 +5,19 @@ import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
+import { OpCoLoadPerformance } from "@/components/dashboard/OpCoLoadPerformance";
 import { Package, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
+
+// OpCo Load Performance data for Supplier Dashboard
+const supplierOpCoPerformance = [
+  { name: "ATS", headersLoad: 9, linesLoad: 1, source: 424, loaded: 37 },
+  { name: "EBS", headersLoad: 47, linesLoad: 40, source: 2305, loaded: 1078 },
+  { name: "EP (Eng. Products)", headersLoad: 22.22, linesLoad: 21.44, source: 99, loaded: 147 },
+  { name: "Etairos", headersLoad: 66, linesLoad: 60, source: 231, loaded: 153 },
+  { name: "Dorse Standard", headersLoad: 33, linesLoad: 40, source: 0, loaded: 0 },
+  { name: "Dorse DropShip", headersLoad: 20, linesLoad: 20, source: 0, loaded: 0 },
+];
 
 const opCoList = ["AIRETECH", "ATS", "C&J", "DORSE", "EBS", "EP", "ETARIOS"];
 
@@ -450,6 +461,9 @@ export default function SupplierDashboard() {
           ))}
         </div>
       </div>
+
+      {/* OpCo Load Performance */}
+      <OpCoLoadPerformance data={supplierOpCoPerformance} />
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
