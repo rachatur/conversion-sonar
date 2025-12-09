@@ -34,6 +34,16 @@ const statusDistribution = [
 const Index = () => {
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Data Reconciliation Dashboard">
+      {/* Active Status Banner */}
+      <div className="flex items-center gap-2 mb-6 p-3 bg-success/10 border border-success/20 rounded-lg">
+        <span className="relative flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
+        </span>
+        <span className="text-sm font-medium text-success">System Active</span>
+        <span className="text-sm text-muted-foreground">— All modules operational</span>
+      </div>
+
       {/* Large Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {overallStats.map((stat) => (
