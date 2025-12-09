@@ -46,14 +46,14 @@ const supplierBreakdownData = [
   },
   { 
     name: "EP (Eng. Products)", 
-    suppliersLoad: 81.1, 
-    addressLoad: 90.3, 
-    sitesLoad: 90.3, 
-    contactsLoad: 88.5,
+    suppliersLoad: 100, 
+    addressLoad: 100, 
+    sitesLoad: 100, 
+    contactsLoad: 25.3,
     suppliers: { source: 37, loaded: 30 },
-    address: { source: 31, loaded: 28 },
-    sites: { source: 31, loaded: 28 },
-    contacts: { source: 35, loaded: 31 }
+    address: { source: 30, loaded: 30 },
+    sites: { source: 30, loaded: 30 },
+    contacts: { source: 965, loaded: 244 }
   },
   { 
     name: "Etairos", 
