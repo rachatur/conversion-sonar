@@ -1,19 +1,75 @@
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
-import { DataTable } from "@/components/dashboard/DataTable";
-import { OpCoLoadPerformance } from "@/components/dashboard/OpCoLoadPerformance";
+import { CustomerDetailedBreakdown } from "@/components/dashboard/CustomerDetailedBreakdown";
 import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
 import { Users, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 
-// OpCo Load Performance data for Customer Dashboard
-const customerOpCoPerformance = [
-  { name: "ATS", headersLoad: 9, linesLoad: 1, source: 424, loaded: 37 },
-  { name: "EBS", headersLoad: 47, linesLoad: 40, source: 2305, loaded: 1078 },
-  { name: "EP (Eng. Products)", headersLoad: 22.22, linesLoad: 21.44, source: 99, loaded: 147 },
-  { name: "Etairos", headersLoad: 66, linesLoad: 60, source: 231, loaded: 153 },
-  { name: "Dorse Standard", headersLoad: 33, linesLoad: 40, source: 0, loaded: 0 },
-  { name: "Dorse DropShip", headersLoad: 20, linesLoad: 20, source: 0, loaded: 0 },
+// Customer OpCo detailed breakdown data
+const customerBreakdownData = [
+  {
+    name: "AIRTECH",
+    customerLoad: 96,
+    billToLoad: 97,
+    shipToLoad: 59,
+    customer: { source: 2249, loaded: 2158 },
+    billTo: { source: 2743, loaded: 2652 },
+    shipTo: { source: 328, loaded: 195 },
+  },
+  {
+    name: "ATS",
+    customerLoad: 95,
+    billToLoad: 97,
+    shipToLoad: 81,
+    customer: { source: 1935, loaded: 1843 },
+    billTo: { source: 2602, loaded: 2512 },
+    shipTo: { source: 438, loaded: 354 },
+  },
+  {
+    name: "C&J",
+    customerLoad: 96,
+    billToLoad: 98,
+    shipToLoad: 0,
+    customer: { source: 124, loaded: 119 },
+    billTo: { source: 208, loaded: 203 },
+    shipTo: { source: 0, loaded: 0 },
+  },
+  {
+    name: "DORSE",
+    customerLoad: 42,
+    billToLoad: 42,
+    shipToLoad: 31,
+    customer: { source: 7572, loaded: 3194 },
+    billTo: { source: 7572, loaded: 3194 },
+    shipTo: { source: 458, loaded: 144 },
+  },
+  {
+    name: "EBS",
+    customerLoad: 98,
+    billToLoad: 98,
+    shipToLoad: 54,
+    customer: { source: 1362, loaded: 1330 },
+    billTo: { source: 1362, loaded: 1330 },
+    shipTo: { source: 3018, loaded: 1620 },
+  },
+  {
+    name: "EP",
+    customerLoad: 97,
+    billToLoad: 98,
+    shipToLoad: 92,
+    customer: { source: 639, loaded: 621 },
+    billTo: { source: 744, loaded: 726 },
+    shipTo: { source: 72, loaded: 66 },
+  },
+  {
+    name: "ETARIOS",
+    customerLoad: 94,
+    billToLoad: 95,
+    shipToLoad: 87,
+    customer: { source: 2172, loaded: 2052 },
+    billTo: { source: 2474, loaded: 2354 },
+    shipTo: { source: 166, loaded: 144 },
+  },
 ];
 
 
@@ -208,8 +264,8 @@ export default function CustomerDashboard() {
         ))}
       </div>
 
-      {/* OpCo Load Performance */}
-      <OpCoLoadPerformance data={customerOpCoPerformance} />
+      {/* OpCo Load Performance - Detailed Breakdown */}
+      <CustomerDetailedBreakdown data={customerBreakdownData} />
 
       {/* Customer Recon Summary - All OpCos in One Table */}
       <div className="mb-8">
