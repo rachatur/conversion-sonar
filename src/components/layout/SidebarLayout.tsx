@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Database, Home, Users, UserCheck, Package, Boxes, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
+import { Database, Home, Users, UserCheck, Package, Boxes, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -69,95 +69,80 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
           {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
         </button>
 
-        {/* Navigation with scrollbar */}
-        <div className="flex-1 flex overflow-hidden">
-          <nav className="flex-1 p-3 pr-1 space-y-6 overflow-y-auto">
-            {/* Overview Section */}
-            <div>
-              {!collapsed && (
-                <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
-                  Overview
-                </p>
-              )}
-              <div className="space-y-1">
-                {overviewItems.map((item) => {
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      className={cn(
-                        "sidebar-nav-item",
-                        isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
-                      )}
-                    >
+        {/* Navigation */}
+        <nav className="p-3 space-y-6">
+          {/* Overview Section */}
+          <div>
+            {!collapsed && (
+              <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
+                Overview
+              </p>
+            )}
+            <div className="space-y-1">
+              {overviewItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={cn(
+                      "sidebar-nav-item",
+                      isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
+                    )}
+                  >
+                    <item.icon className="h-5 w-5 flex-shrink-0" />
+                    {!collapsed && <span>{item.label}</span>}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Modules Section */}
+          <div>
+            {!collapsed && (
+              <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
+                Modules
+              </p>
+            )}
+            <div className="space-y-1">
+              {moduleItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={cn(
+                      "sidebar-nav-item justify-between",
+                      isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 flex-shrink-0" />
                       {!collapsed && <span>{item.label}</span>}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Modules Section */}
-            <div>
-              {!collapsed && (
-                <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
-                  Modules
-                </p>
-              )}
-              <div className="space-y-1">
-                {moduleItems.map((item) => {
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      className={cn(
-                        "sidebar-nav-item justify-between",
-                        isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
-                      )}
-                    >
-                      <div className="flex items-center gap-3">
-                        <item.icon className="h-5 w-5 flex-shrink-0" />
-                        {!collapsed && <span>{item.label}</span>}
+                    </div>
+                    {!collapsed && (
+                      <div className="flex flex-col items-end">
+                        <span className={cn(
+                          "badge-count",
+                          isActive && "bg-primary-foreground/20 text-primary-foreground"
+                        )}>{formatCount(item.count)}</span>
+                        <span className={cn(
+                          "text-[10px]",
+                          isActive ? "text-primary-foreground/80" : "text-muted-foreground"
+                        )}>{item.countLabel}</span>
                       </div>
-                      {!collapsed && (
-                        <div className="flex flex-col items-end">
-                          <span className={cn(
-                            "badge-count",
-                            isActive && "bg-primary-foreground/20 text-primary-foreground"
-                          )}>{formatCount(item.count)}</span>
-                          <span className={cn(
-                            "text-[10px]",
-                            isActive ? "text-primary-foreground/80" : "text-muted-foreground"
-                          )}>{item.countLabel}</span>
-                        </div>
-                      )}
-                    </Link>
-                  );
-                })}
-              </div>
+                    )}
+                  </Link>
+                );
+              })}
             </div>
-          </nav>
-          
-          {/* Decorative scrollbar like reference */}
-          <div className="w-4 flex flex-col items-center py-1 pr-1">
-            <button className="w-3 h-3 flex items-center justify-center bg-muted/80 hover:bg-muted rounded-sm">
-              <ChevronUp className="h-2.5 w-2.5 text-muted-foreground" />
-            </button>
-            <div className="w-2 bg-muted/40 my-0.5 relative h-10">
-              <div className="absolute top-0 left-0 right-0 h-4 bg-muted-foreground/50 rounded-sm" />
-            </div>
-            <button className="w-3 h-3 flex items-center justify-center bg-muted/80 hover:bg-muted rounded-sm">
-              <ChevronDown className="h-2.5 w-2.5 text-muted-foreground" />
-            </button>
           </div>
-        </div>
+        </nav>
 
-        {/* Footer */}
+        {/* Footer - directly after nav */}
         {!collapsed && (
-          <div className="p-4 border-t border-sidebar-border">
+          <div className="p-4 border-t border-sidebar-border mt-auto">
             <p className="text-xs text-muted-foreground">Air Control Concepts • UAT</p>
             <p className="text-xs text-muted-foreground">Last Updated: {currentDate}</p>
           </div>
