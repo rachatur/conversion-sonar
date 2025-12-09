@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
@@ -19,7 +19,7 @@ const supplierOpCoPerformance = [
   { name: "Dorse DropShip", headersLoad: 20, linesLoad: 20, source: 0, loaded: 0 },
 ];
 
-const opCoList = ["AIRETECH", "ATS", "C&J", "DORSE", "EBS", "EP", "ETARIOS"];
+
 
 // OpCo-specific data
 const opCoData: Record<string, {
@@ -438,33 +438,11 @@ const opCoData: Record<string, {
 };
 
 export default function SupplierDashboard() {
-  const [selectedOpCo, setSelectedOpCo] = useState("AIRETECH");
-  const currentData = opCoData[selectedOpCo];
+  // Use AIRETECH as the default display data
+  const currentData = opCoData["AIRETECH"];
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
-      {/* OpCo Tabs */}
-      <div className="mb-6">
-        <div className="flex flex-wrap gap-2">
-          {opCoList.map((opCo) => (
-            <button
-              key={opCo}
-              onClick={() => setSelectedOpCo(opCo)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                selectedOpCo === opCo
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
-            >
-              {opCo}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* OpCo Load Performance */}
-      <OpCoLoadPerformance data={supplierOpCoPerformance} />
-
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {currentData.stats.map((stat) => (
@@ -472,11 +450,14 @@ export default function SupplierDashboard() {
         ))}
       </div>
 
+      {/* OpCo Load Performance */}
+      <OpCoLoadPerformance data={supplierOpCoPerformance} />
+
       {/* Supplier Recon Summary Table */}
       <div className="mb-8">
         <div className="stat-card overflow-hidden">
           <div className="bg-primary px-4 py-3">
-            <h3 className="text-sm font-semibold text-primary-foreground">Supplier Recon Summary - {selectedOpCo}</h3>
+            <h3 className="text-sm font-semibold text-primary-foreground">Supplier Recon Summary - AIRETECH</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
