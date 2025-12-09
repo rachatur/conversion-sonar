@@ -3,7 +3,6 @@ import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
-import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { Users, CheckCircle, XCircle, Copy, AlertTriangle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area } from "recharts";
@@ -40,14 +39,6 @@ const errorTrendData = [
 const customerTypeData = [
   { name: "Corporate", value: 12450, color: "hsl(207, 90%, 54%)" },
   { name: "Individual", value: 33442, color: "hsl(160, 84%, 39%)" },
-];
-
-const completenessData = [
-  { field: "Name", complete: 99.8 },
-  { field: "Address", complete: 97.3 },
-  { field: "Phone", complete: 95.2 },
-  { field: "Email", complete: 92.1 },
-  { field: "Tax ID", complete: 88.5 },
 ];
 
 const comparisonData = [
@@ -109,8 +100,8 @@ export default function CustomerDashboard() {
         <InsightsSection title="Key Insights & Recommendations" insights={insights} />
       </div>
 
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      {/* Charts Row - Only 2 charts now */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <ChartCard title="Error Trends" subtitle="Weekly error tracking">
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={errorTrendData}>
@@ -150,20 +141,6 @@ export default function CustomerDashboard() {
               <Tooltip formatter={(value: number) => value.toLocaleString()} />
             </PieChart>
           </ResponsiveContainer>
-        </ChartCard>
-
-        <ChartCard title="Data Completeness" subtitle="Field-level analysis">
-          <div className="space-y-3">
-            {completenessData.map((item) => (
-              <div key={item.field}>
-                <ProgressBar
-                  value={item.complete}
-                  label={item.field}
-                  variant={item.complete >= 95 ? "success" : item.complete >= 90 ? "warning" : "error"}
-                />
-              </div>
-            ))}
-          </div>
         </ChartCard>
       </div>
 
