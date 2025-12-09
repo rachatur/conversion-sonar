@@ -141,13 +141,17 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
             </div>
           </nav>
           
-          {/* Decorative scrollbar */}
-          <div className="w-3 flex flex-col items-center py-3 pr-1">
-            <div className="text-muted-foreground/50 text-[7px]">▲</div>
-            <div className="h-20 w-1 bg-muted/60 rounded-full my-0.5 relative">
-              <div className="absolute top-0 left-0 right-0 h-2/5 bg-muted-foreground/40 rounded-full" />
+          {/* Decorative scrollbar like reference */}
+          <div className="w-4 flex flex-col items-center py-2 pr-1">
+            <button className="w-3 h-3 flex items-center justify-center bg-muted/80 hover:bg-muted rounded-sm">
+              <ChevronUp className="h-2.5 w-2.5 text-muted-foreground" />
+            </button>
+            <div className="flex-1 w-2 bg-muted/40 my-1 relative min-h-[60px]">
+              <div className="absolute top-0 left-0 right-0 h-8 bg-muted-foreground/50 rounded-sm" />
             </div>
-            <div className="text-muted-foreground/50 text-[7px]">▼</div>
+            <button className="w-3 h-3 flex items-center justify-center bg-muted/80 hover:bg-muted rounded-sm">
+              <ChevronDown className="h-2.5 w-2.5 text-muted-foreground" />
+            </button>
           </div>
         </div>
 
