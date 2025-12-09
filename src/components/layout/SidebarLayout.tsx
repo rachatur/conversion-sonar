@@ -142,12 +142,12 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
           </nav>
           
           {/* Decorative scrollbar */}
-          <div className="w-3 flex flex-col items-center py-4 pr-1">
-            <div className="text-muted-foreground/50 text-[8px]">▲</div>
-            <div className="h-32 w-1.5 bg-muted/60 rounded-full my-0.5 relative">
-              <div className="absolute top-0 left-0 right-0 h-1/2 bg-muted-foreground/40 rounded-full" />
+          <div className="w-3 flex flex-col items-center py-3 pr-1">
+            <div className="text-muted-foreground/50 text-[7px]">▲</div>
+            <div className="h-20 w-1 bg-muted/60 rounded-full my-0.5 relative">
+              <div className="absolute top-0 left-0 right-0 h-2/5 bg-muted-foreground/40 rounded-full" />
             </div>
-            <div className="text-muted-foreground/50 text-[8px]">▼</div>
+            <div className="text-muted-foreground/50 text-[7px]">▼</div>
           </div>
         </div>
 
