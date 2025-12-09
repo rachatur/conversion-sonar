@@ -1,24 +1,25 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { StatCard } from "@/components/dashboard/StatCard";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
+import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { UserCheck, Users, UserX, AlertTriangle, Building2, GitBranch, Mail, Phone } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
+import { UserCheck, Users, UserX, AlertTriangle } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
 const stats = [
-  { title: "Total Employees", value: 3247, icon: Users, variant: "info" as const },
-  { title: "Active Employees", value: 2891, icon: UserCheck, variant: "success" as const },
-  { title: "Inactive Employees", value: 356, icon: UserX, variant: "warning" as const },
-  { title: "Missing Fields", value: 178, icon: AlertTriangle, variant: "error" as const },
+  { label: "Total Source Records", value: 3247, subtitle: "Employee records received", icon: Users, variant: "primary" as const },
+  { label: "Successfully Converted", value: 3102, subtitle: "", icon: UserCheck, variant: "success" as const, highlightText: "95.5% conversion rate" },
+  { label: "Inactive Employees", value: 356, subtitle: "Archived records", icon: UserX, variant: "warning" as const },
+  { label: "Missing Fields", value: 178, subtitle: "Data gaps identified", icon: AlertTriangle, variant: "accent" as const },
 ];
 
-const summaryCards = [
-  { title: "Departments", value: 24, icon: Building2 },
-  { title: "Manager Mappings", value: 312, icon: GitBranch },
-  { title: "Missing Email", value: 45, icon: Mail },
-  { title: "Missing Phone", value: 89, icon: Phone },
+const insights = [
+  { type: "success" as const, highlight: "Engineering department", text: "shows highest data quality with 99.2% field completeness and 98.7% conversion rate." },
+  { type: "warning" as const, highlight: "Sales department", text: "has 12 employees with missing manager mappings - needs HR review." },
+  { type: "success" as const, highlight: "Role mapping", text: "completed successfully for 437 unique job titles across all departments." },
+  { type: "info" as const, highlight: "Hierarchy validation", text: "passed for 97.3% of employee records with proper reporting structure." },
 ];
 
 const departmentData = [
@@ -31,7 +32,7 @@ const departmentData = [
 ];
 
 const employeeStatusData = [
-  { name: "Active", value: 2891, color: "hsl(142, 71%, 45%)" },
+  { name: "Active", value: 2891, color: "hsl(160, 84%, 39%)" },
   { name: "Inactive", value: 356, color: "hsl(215, 16%, 47%)" },
 ];
 
@@ -71,34 +72,21 @@ const exceptions = [
 
 export default function EmployeeDashboard() {
   return (
-    <DashboardLayout title="Employee Conversion" subtitle="Employee Conversion Dashboard">
+    <SidebarLayout pageTitle="Employee Conversion Dashboard" pageSubtitle="Employee data migration and validation">
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {stats.map((stat) => (
-          <StatCard key={stat.title} {...stat} />
+          <LargeStatCard key={stat.label} {...stat} />
         ))}
       </div>
 
-      {/* Summary Cards */}
-      <h2 className="section-title mb-4">Employee Summary</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {summaryCards.map((card) => (
-          <div key={card.title} className="stat-card">
-            <div className="flex items-center gap-3">
-              <div className="stat-card-icon bg-secondary text-primary">
-                <card.icon className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">{card.value.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">{card.title}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Insights */}
+      <div className="mb-8">
+        <InsightsSection title="Key Insights & Recommendations" insights={insights} />
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <ChartCard title="Conversion by Department" subtitle="Records by department">
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={departmentData} layout="vertical">
@@ -113,7 +101,7 @@ export default function EmployeeDashboard() {
                 }}
               />
               <Bar dataKey="converted" fill="hsl(var(--success))" name="Converted" radius={[0, 4, 4, 0]} />
-              <Bar dataKey="failed" fill="hsl(var(--destructive))" name="Failed" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="failed" fill="hsl(var(--warning))" name="Failed" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -212,6 +200,6 @@ export default function EmployeeDashboard() {
           data={exceptions}
         />
       </div>
-    </DashboardLayout>
+    </SidebarLayout>
   );
 }

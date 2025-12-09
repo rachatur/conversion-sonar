@@ -1,24 +1,25 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { StatCard } from "@/components/dashboard/StatCard";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
+import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { Boxes, CheckCircle, XCircle, AlertTriangle, Layers, Scale, Tag, Package } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area, LineChart, Line } from "recharts";
+import { Boxes, CheckCircle, XCircle, Tag } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line } from "recharts";
 
 const stats = [
-  { title: "Items Received", value: 128459, icon: Boxes, variant: "info" as const },
-  { title: "Successfully Converted", value: 118420, icon: CheckCircle, variant: "success" as const },
-  { title: "Failed Conversion", value: 10039, icon: XCircle, variant: "error" as const },
-  { title: "Missing Category", value: 2456, icon: Tag, variant: "warning" as const },
+  { label: "Total Source Records", value: 128459, subtitle: "Item records received", icon: Boxes, variant: "primary" as const },
+  { label: "Successfully Converted", value: 118420, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "92.2% conversion rate" },
+  { label: "Records Excluded", value: 10039, subtitle: "Failed/filtered records", icon: XCircle, variant: "warning" as const },
+  { label: "Missing Category", value: 2456, subtitle: "Pending categorization", icon: Tag, variant: "accent" as const },
 ];
 
-const summaryCards = [
-  { title: "Product Lines", value: 48, icon: Layers },
-  { title: "Missing UOM", value: 1823, icon: Scale },
-  { title: "Complete Items", value: 115964, icon: Package },
-  { title: "Pending Review", value: 2495, icon: AlertTriangle },
+const insights = [
+  { type: "success" as const, highlight: "Electronics product line", text: "shows highest conversion rate at 96.3% with 32,450 items loaded successfully." },
+  { type: "warning" as const, highlight: "Consumables category", text: "has lower rate (88.5%) due to UOM mapping issues - needs standardization." },
+  { type: "success" as const, highlight: "BOM mapping", text: "completed for 97.8% of items with proper parent-child relationships." },
+  { type: "info" as const, highlight: "Valuation method", text: "standardized to weighted average for 98.2% of inventory items." },
 ];
 
 const productLineData = [
@@ -30,9 +31,9 @@ const productLineData = [
 ];
 
 const categoryDistribution = [
-  { name: "Finished Goods", value: 45230, color: "hsl(210, 100%, 45%)" },
-  { name: "Raw Materials", value: 38450, color: "hsl(172, 66%, 40%)" },
-  { name: "WIP", value: 24560, color: "hsl(38, 92%, 50%)" },
+  { name: "Finished Goods", value: 45230, color: "hsl(207, 90%, 54%)" },
+  { name: "Raw Materials", value: 38450, color: "hsl(160, 84%, 39%)" },
+  { name: "WIP", value: 24560, color: "hsl(32, 95%, 60%)" },
   { name: "Services", value: 20219, color: "hsl(280, 65%, 60%)" },
 ];
 
@@ -80,34 +81,21 @@ const exceptions = [
 
 export default function ItemsDashboard() {
   return (
-    <DashboardLayout title="Items Conversion" subtitle="Items Conversion Dashboard">
+    <SidebarLayout pageTitle="Items Conversion Dashboard" pageSubtitle="Item master data migration and validation">
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {stats.map((stat) => (
-          <StatCard key={stat.title} {...stat} />
+          <LargeStatCard key={stat.label} {...stat} />
         ))}
       </div>
 
-      {/* Summary Cards */}
-      <h2 className="section-title mb-4">Items Summary</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {summaryCards.map((card) => (
-          <div key={card.title} className="stat-card">
-            <div className="flex items-center gap-3">
-              <div className="stat-card-icon bg-secondary text-primary">
-                <card.icon className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">{card.value.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">{card.title}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Insights */}
+      <div className="mb-8">
+        <InsightsSection title="Key Insights & Recommendations" insights={insights} />
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <ChartCard title="Conversion by Product Line" subtitle="Top 5 product lines">
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={productLineData} layout="vertical">
@@ -122,7 +110,7 @@ export default function ItemsDashboard() {
                 }}
               />
               <Bar dataKey="converted" fill="hsl(var(--success))" name="Converted" radius={[0, 4, 4, 0]} />
-              <Bar dataKey="failed" fill="hsl(var(--destructive))" name="Failed" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="failed" fill="hsl(var(--warning))" name="Failed" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -162,15 +150,15 @@ export default function ItemsDashboard() {
                   borderRadius: "8px",
                 }}
               />
-              <Line type="monotone" dataKey="issues" stroke="hsl(var(--destructive))" strokeWidth={2} dot={{ fill: "hsl(var(--destructive))" }} />
+              <Line type="monotone" dataKey="issues" stroke="hsl(var(--warning))" strokeWidth={2} dot={{ fill: "hsl(var(--warning))" }} />
               <Line type="monotone" dataKey="resolved" stroke="hsl(var(--success))" strokeWidth={2} dot={{ fill: "hsl(var(--success))" }} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
 
-      {/* Data Completeness */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      {/* Data Completeness & Comparison */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <ChartCard title="Data Completeness" subtitle="Field-level analysis">
           <div className="space-y-3">
             {completenessData.map((item) => (
@@ -241,6 +229,6 @@ export default function ItemsDashboard() {
           data={exceptions}
         />
       </div>
-    </DashboardLayout>
+    </SidebarLayout>
   );
 }
