@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Database, Home, Users, UserCheck, Package, Boxes, ChevronLeft, ChevronRight, FileText, ShoppingCart, ClipboardList, DollarSign, FolderKanban } from "lucide-react";
+import { Database, Home, ClipboardCheck, ShoppingCart, Boxes, DollarSign, FolderKanban, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,10 +15,11 @@ const overviewItems = [
 ];
 
 const moduleItems = [
-  { path: "/customer", label: "Customer", icon: Users, count: 6 },
-  { path: "/supplier", label: "Supplier", icon: Package, count: 4 },
-  { path: "/employee", label: "Employee", icon: UserCheck, count: 5 },
-  { path: "/items", label: "Items", icon: Boxes, count: 4 },
+  { path: "/customer", label: "Sales Order", icon: ClipboardCheck, count: 6 },
+  { path: "/supplier", label: "Purchase Order", icon: ShoppingCart, count: 4 },
+  { path: "/employee", label: "On-Hand Inventory", icon: Boxes, count: 5 },
+  { path: "/items", label: "Opportunity", icon: DollarSign, count: 4 },
+  { path: "/project", label: "Project", icon: FolderKanban, count: 1 },
 ];
 
 const opcosList = ["AirTech", "ATS", "C&J", "Dorse", "EBS", "EP", "Etairos"];
@@ -37,39 +38,49 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
       <aside className={cn(
-        "relative flex flex-col bg-card border-r border-border transition-all duration-300",
+        "relative flex flex-col bg-card transition-all duration-300 shadow-sm",
         collapsed ? "w-16" : "w-72"
       )}>
-        {/* Sidebar Header - Blue gradient */}
-        <div className="bg-gradient-to-r from-[hsl(207,90%,45%)] to-[hsl(207,90%,55%)] p-4">
+        {/* Sidebar Header */}
+        <div className="p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[hsl(200,85%,55%)] to-[hsl(200,85%,65%)] shadow-md">
               <Database className="h-5 w-5 text-white" />
             </div>
             {!collapsed && (
               <div className="animate-fade-in">
-                <h1 className="text-sm font-bold text-white">Reconciliation Dashboard</h1>
-                <p className="text-xs text-white/80">Air Control Concepts UAT Environment</p>
+                <h1 className="text-sm font-bold text-foreground">Air Control Concepts</h1>
+                <p className="text-xs text-primary">Data Reconciliation</p>
               </div>
             )}
           </div>
+          {!collapsed && (
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4 text-muted-foreground" />
+            </button>
+          )}
         </div>
 
-        {/* Collapse Button */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-[72px] flex h-6 w-6 items-center justify-center rounded-full border border-border bg-card shadow-md hover:bg-muted transition-colors z-20"
-        >
-          {collapsed ? <ChevronRight className="h-3 w-3 text-muted-foreground" /> : <ChevronLeft className="h-3 w-3 text-muted-foreground" />}
-        </button>
+        {/* Collapse Button when collapsed */}
+        {collapsed && (
+          <button
+            onClick={() => setCollapsed(false)}
+            className="mx-auto mb-2 flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted transition-colors"
+          >
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </button>
+        )}
 
         {/* Scrollable Navigation */}
-        <ScrollArea className="flex-1">
-          <nav className="p-3 space-y-6">
+        <ScrollArea className="flex-1 px-3">
+          <nav className="space-y-6 py-2">
             {/* Overview Section */}
             <div>
               {!collapsed && (
-                <p className="px-3 text-[11px] font-semibold uppercase text-muted-foreground tracking-wider mb-2">
+                <p className="px-3 text-[11px] font-semibold uppercase text-muted-foreground tracking-wider mb-3">
                   Overview
                 </p>
               )}
@@ -81,16 +92,13 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
                       key={item.path}
                       to={item.path}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all relative",
+                        "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all",
                         isActive 
-                          ? "text-primary bg-primary/5" 
+                          ? "text-primary bg-primary/10" 
                           : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                        collapsed && "justify-center"
+                        collapsed && "justify-center px-2"
                       )}
                     >
-                      {isActive && (
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full" />
-                      )}
                       <item.icon className="h-5 w-5 flex-shrink-0" />
                       {!collapsed && <span>{item.label}</span>}
                     </Link>
@@ -102,7 +110,7 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
             {/* Modules Section */}
             <div>
               {!collapsed && (
-                <p className="px-3 text-[11px] font-semibold uppercase text-muted-foreground tracking-wider mb-2">
+                <p className="px-3 text-[11px] font-semibold uppercase text-muted-foreground tracking-wider mb-3">
                   Modules
                 </p>
               )}
@@ -114,22 +122,19 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
                       key={item.path}
                       to={item.path}
                       className={cn(
-                        "flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-lg transition-all relative",
+                        "flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl transition-all",
                         isActive 
-                          ? "text-primary bg-primary/5" 
+                          ? "text-primary bg-primary/10" 
                           : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                        collapsed && "justify-center"
+                        collapsed && "justify-center px-2"
                       )}
                     >
-                      {isActive && (
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full" />
-                      )}
                       <div className="flex items-center gap-3">
                         <item.icon className="h-5 w-5 flex-shrink-0" />
                         {!collapsed && <span>{item.label}</span>}
                       </div>
                       {!collapsed && (
-                        <span className="flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-medium rounded-full bg-muted text-muted-foreground">
+                        <span className="flex items-center justify-center min-w-[28px] h-7 px-2.5 text-xs font-medium rounded-full bg-muted text-muted-foreground">
                           {item.count}
                         </span>
                       )}
@@ -142,7 +147,7 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
             {/* OpCos Section */}
             {!collapsed && (
               <div>
-                <p className="px-3 text-[11px] font-semibold uppercase text-muted-foreground tracking-wider mb-2">
+                <p className="px-3 text-[11px] font-semibold uppercase text-muted-foreground tracking-wider mb-3">
                   OpCos
                 </p>
                 <div className="px-3 py-2">
@@ -158,8 +163,8 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
 
         {/* Footer */}
         {!collapsed && (
-          <div className="p-4 border-t border-border bg-muted/30">
-            <p className="text-xs text-muted-foreground font-medium">ACC • UAT Environment</p>
+          <div className="p-4 border-t border-border">
+            <p className="text-xs text-primary font-medium">ACC • UAT Environment</p>
             <p className="text-xs text-muted-foreground">Last Updated: Dec 04, 2025</p>
           </div>
         )}
