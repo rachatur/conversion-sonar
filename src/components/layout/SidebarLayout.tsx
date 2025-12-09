@@ -48,8 +48,8 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
             </div>
             {!collapsed && (
               <div className="animate-fade-in">
-                <h1 className="text-sm font-bold text-white">Air Control Concepts</h1>
-                <p className="text-xs text-white/80">Data Reconciliation</p>
+                <h1 className="text-sm font-bold text-white">Reconciliation Dashboard</h1>
+                <p className="text-xs text-white/80">Air Control Concepts UAT Environment</p>
               </div>
             )}
           </div>
