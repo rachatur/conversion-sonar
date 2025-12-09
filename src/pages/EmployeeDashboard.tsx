@@ -5,20 +5,27 @@ import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { UserCheck, Users, UserX, AlertTriangle } from "lucide-react";
+import { UserCheck, Users, UserX, AlertTriangle, Copy, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
 const stats = [
   { label: "Total Source Records", value: 3247, subtitle: "Employee records received", icon: Users, variant: "primary" as const },
   { label: "Successfully Converted", value: 3102, subtitle: "", icon: UserCheck, variant: "success" as const, highlightText: "95.5% conversion rate" },
   { label: "Inactive Employees", value: 356, subtitle: "Archived records", icon: UserX, variant: "warning" as const },
-  { label: "Missing Fields", value: 178, subtitle: "Data gaps identified", icon: AlertTriangle, variant: "accent" as const },
+  { label: "OpCo Count", value: 8, subtitle: "Operating companies", icon: FolderOpen, variant: "accent" as const },
+];
+
+const summaryCards = [
+  { label: "Departments", value: 24, icon: Users },
+  { label: "Manager Mapping", value: 312, icon: UserCheck },
+  { label: "Missing Fields", value: 178, icon: AlertTriangle },
+  { label: "Duplicates Found", value: 45, icon: Copy },
 ];
 
 const insights = [
-  { type: "success" as const, highlight: "Engineering department", text: "shows highest data quality with 99.2% field completeness and 98.7% conversion rate." },
-  { type: "warning" as const, highlight: "Sales department", text: "has 12 employees with missing manager mappings - needs HR review." },
-  { type: "success" as const, highlight: "Role mapping", text: "completed successfully for 437 unique job titles across all departments." },
+  { type: "success" as const, highlight: "Engineering department", text: "shows highest data quality with 99.2% field completeness across all OpCos." },
+  { type: "warning" as const, highlight: "Sales department", text: "has 12 employees with missing manager mappings - needs HR review across 3 OpCos." },
+  { type: "success" as const, highlight: "Role mapping", text: "completed successfully for 437 unique job titles across 8 OpCos." },
   { type: "info" as const, highlight: "Hierarchy validation", text: "passed for 97.3% of employee records with proper reporting structure." },
 ];
 
@@ -54,6 +61,17 @@ const roleMapping = [
   { sourceRole: "Unknown", targetRole: "Pending Assignment", count: 12, status: "error" as const },
 ];
 
+const opCoBreakdown = [
+  { opCo: "OpCo-HQ", total: 856, converted: 832, failed: 24, rate: 97.2 },
+  { opCo: "OpCo-NA-01", total: 523, converted: 498, failed: 25, rate: 95.2 },
+  { opCo: "OpCo-EU-01", total: 445, converted: 426, failed: 19, rate: 95.7 },
+  { opCo: "OpCo-AP-01", total: 389, converted: 372, failed: 17, rate: 95.6 },
+  { opCo: "OpCo-LA-01", total: 312, converted: 298, failed: 14, rate: 95.5 },
+  { opCo: "OpCo-MEA-01", total: 289, converted: 267, failed: 22, rate: 92.4 },
+  { opCo: "OpCo-NA-02", total: 245, converted: 234, failed: 11, rate: 95.5 },
+  { opCo: "OpCo-EU-02", total: 188, converted: 175, failed: 13, rate: 93.1 },
+];
+
 const hierarchyValidation = [
   { level: "Executive", total: 12, valid: 12, invalid: 0, rate: 100 },
   { level: "Director", total: 45, valid: 44, invalid: 1, rate: 97.8 },
@@ -63,20 +81,35 @@ const hierarchyValidation = [
 ];
 
 const exceptions = [
-  { id: "EMP-1001", name: "John Smith", issue: "Missing manager", status: "warning" as const },
-  { id: "EMP-1042", name: "Sarah Johnson", issue: "Invalid department", status: "error" as const },
-  { id: "EMP-1089", name: "Mike Brown", issue: "Duplicate entry", status: "warning" as const },
-  { id: "EMP-1156", name: "Emily Davis", issue: "Terminated - still active", status: "error" as const },
-  { id: "EMP-1203", name: "Robert Wilson", issue: "Review pending", status: "info" as const },
+  { id: "EMP-1001", opCo: "OpCo-MEA-01", name: "John Smith", issue: "Missing manager", status: "warning" as const },
+  { id: "EMP-1042", opCo: "OpCo-EU-02", name: "Sarah Johnson", issue: "Invalid department", status: "error" as const },
+  { id: "EMP-1089", opCo: "OpCo-LA-01", name: "Mike Brown", issue: "Duplicate entry", status: "warning" as const },
+  { id: "EMP-1156", opCo: "OpCo-NA-01", name: "Emily Davis", issue: "Terminated - still active", status: "error" as const },
+  { id: "EMP-1203", opCo: "OpCo-AP-01", name: "Robert Wilson", issue: "Review pending", status: "info" as const },
 ];
 
 export default function EmployeeDashboard() {
   return (
-    <SidebarLayout pageTitle="Employee Conversion Dashboard" pageSubtitle="Employee data migration and validation">
+    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Employee Conversion Dashboard">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {stats.map((stat) => (
           <LargeStatCard key={stat.label} {...stat} />
+        ))}
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {summaryCards.map((card) => (
+          <div key={card.label} className="stat-card p-4">
+            <div className="flex items-center gap-3">
+              <card.icon className="h-5 w-5 text-muted-foreground" />
+              <div>
+                <p className="text-xs text-muted-foreground">{card.label}</p>
+                <p className="text-xl font-bold">{card.value.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
@@ -163,6 +196,29 @@ export default function EmployeeDashboard() {
         data={roleMapping}
       />
 
+      {/* OpCo Breakdown */}
+      <div className="mt-6">
+        <DataTable
+          title="OpCo-wise Breakdown"
+          columns={[
+            { key: "opCo", header: "OpCo" },
+            { key: "total", header: "Total" },
+            { key: "converted", header: "Converted" },
+            { key: "failed", header: "Failed" },
+            {
+              key: "rate",
+              header: "Rate",
+              render: (item: typeof opCoBreakdown[0]) => (
+                <StatusBadge status={item.rate >= 95 ? "success" : item.rate >= 90 ? "warning" : "error"}>
+                  {item.rate}%
+                </StatusBadge>
+              ),
+            },
+          ]}
+          data={opCoBreakdown}
+        />
+      </div>
+
       {/* Breakdown Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <DataTable
@@ -186,11 +242,11 @@ export default function EmployeeDashboard() {
         />
 
         <DataTable
-          title="Exceptions & Issues"
+          title="OpCo-wise Exceptions & Issues"
           columns={[
             { key: "id", header: "ID" },
+            { key: "opCo", header: "OpCo" },
             { key: "name", header: "Employee" },
-            { key: "issue", header: "Issue" },
             {
               key: "status",
               header: "Status",

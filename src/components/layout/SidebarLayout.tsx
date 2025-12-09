@@ -14,10 +14,10 @@ const overviewItems = [
 ];
 
 const moduleItems = [
-  { path: "/customer", label: "Customer", icon: Users, count: 45892 },
-  { path: "/employee", label: "Employee", icon: UserCheck, count: 3247 },
-  { path: "/supplier", label: "Supplier", icon: Package, count: 1856 },
-  { path: "/items", label: "Items", icon: Boxes, count: 128459 },
+  { path: "/customer", label: "Customer", icon: Users, count: 45892, countLabel: "OpCo: 12" },
+  { path: "/employee", label: "Employee", icon: UserCheck, count: 3247, countLabel: "OpCo: 8" },
+  { path: "/supplier", label: "Supplier", icon: Package, count: 1856, countLabel: "OpCo: 10" },
+  { path: "/items", label: "Items", icon: Boxes, count: 128459, countLabel: "Branches: 15" },
 ];
 
 export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayoutProps) {
@@ -52,8 +52,8 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
             </div>
             {!collapsed && (
               <div className="animate-fade-in">
-                <h1 className="text-sm font-bold">RECON Project</h1>
-                <p className="text-xs text-sidebar-header-foreground/70">Data Conversion</p>
+                <h1 className="text-sm font-bold">Air Control Concepts</h1>
+                <p className="text-xs text-sidebar-header-foreground/70">Data Reconciliation</p>
               </div>
             )}
           </div>
@@ -120,7 +120,10 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
                       {!collapsed && <span>{item.label}</span>}
                     </div>
                     {!collapsed && (
-                      <span className="badge-count">{formatCount(item.count)}</span>
+                      <div className="flex flex-col items-end">
+                        <span className="badge-count">{formatCount(item.count)}</span>
+                        <span className="text-[10px] text-muted-foreground">{item.countLabel}</span>
+                      </div>
                     )}
                   </Link>
                 );
@@ -132,7 +135,7 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
         {/* Footer */}
         {!collapsed && (
           <div className="p-4 border-t border-sidebar-border">
-            <p className="text-xs text-muted-foreground">RECON • UAT Environment</p>
+            <p className="text-xs text-muted-foreground">Air Control Concepts • UAT</p>
             <p className="text-xs text-muted-foreground">Last Updated: {currentDate}</p>
           </div>
         )}
