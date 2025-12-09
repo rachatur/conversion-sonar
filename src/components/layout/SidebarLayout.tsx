@@ -69,7 +69,7 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
         </button>
 
         {/* Scrollable Navigation */}
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 sidebar-scroll" type="always">
           <nav className="p-3 space-y-6">
             {/* Overview Section */}
             <div>
