@@ -5,13 +5,13 @@ import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { UserCheck, Users, UserX, AlertTriangle, Copy, FolderOpen } from "lucide-react";
+import { UserCheck, Users, XCircle, AlertTriangle, Copy, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
 const stats = [
   { label: "Total Source Records", value: 3247, subtitle: "Employee records received", icon: Users, variant: "primary" as const },
   { label: "Successfully Converted", value: 3102, subtitle: "", icon: UserCheck, variant: "success" as const, highlightText: "95.5% conversion rate" },
-  { label: "Inactive Employees", value: 356, subtitle: "Archived records", icon: UserX, variant: "warning" as const },
+  { label: "Fusion Error Records", value: 89, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
   { label: "OpCo Count", value: 8, subtitle: "Operating companies", icon: FolderOpen, variant: "accent" as const },
 ];
 

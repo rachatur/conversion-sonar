@@ -11,7 +11,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const stats = [
   { label: "Total Source Records", value: 128459, subtitle: "Item records received", icon: Boxes, variant: "primary" as const },
   { label: "Successfully Converted", value: 118420, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "92.2% conversion rate" },
-  { label: "Records Excluded", value: 10039, subtitle: "Failed/filtered records", icon: XCircle, variant: "warning" as const },
+  { label: "Fusion Error Records", value: 4567, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
   { label: "Branch Count", value: 15, subtitle: "Active branches", icon: GitBranch, variant: "accent" as const },
 ];
 
