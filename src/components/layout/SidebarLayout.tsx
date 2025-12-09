@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Database, Home, Users, UserCheck, Package, Boxes, ChevronLeft, ChevronRight } from "lucide-react";
+import { Database, Home, Users, UserCheck, Package, Boxes, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -69,8 +69,9 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
           {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
         </button>
 
-        {/* Navigation with custom scrollbar */}
-        <nav className="flex-1 p-3 pr-1 space-y-6 overflow-y-auto sidebar-custom-scroll">
+        {/* Navigation with always-visible scroll track */}
+        <div className="flex-1 flex relative">
+          <nav className="flex-1 p-3 pr-4 space-y-6 overflow-y-auto">
             {/* Overview Section */}
             <div>
               {!collapsed && (
@@ -139,6 +140,20 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
               </div>
             </div>
           </nav>
+          
+          {/* Always visible scroll track */}
+          <div className="w-2 bg-muted/50 rounded-full my-4 mr-1 flex flex-col">
+            <div className="w-full h-3 bg-muted-foreground/30 rounded-t-full flex items-center justify-center">
+              <ChevronUp className="h-2 w-2 text-muted-foreground" />
+            </div>
+            <div className="flex-1 relative">
+              <div className="absolute top-0 left-0 right-0 h-1/3 bg-muted-foreground/40 rounded-full mx-0.5" />
+            </div>
+            <div className="w-full h-3 bg-muted-foreground/30 rounded-b-full flex items-center justify-center">
+              <ChevronDown className="h-2 w-2 text-muted-foreground" />
+            </div>
+          </div>
+        </div>
 
         {/* Footer */}
         {!collapsed && (
