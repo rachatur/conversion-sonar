@@ -69,76 +69,87 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
           {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
         </button>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-3 space-y-6 overflow-y-auto">
-          {/* Overview Section */}
-          <div>
-            {!collapsed && (
-              <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
-                Overview
-              </p>
-            )}
-            <div className="space-y-1">
-              {overviewItems.map((item) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      "sidebar-nav-item",
-                      isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
-                    )}
-                  >
-                    <item.icon className="h-5 w-5 flex-shrink-0" />
-                    {!collapsed && <span>{item.label}</span>}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Modules Section */}
-          <div>
-            {!collapsed && (
-              <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
-                Modules
-              </p>
-            )}
-            <div className="space-y-1">
-              {moduleItems.map((item) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      "sidebar-nav-item justify-between",
-                      isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
+        {/* Navigation with scrollbar */}
+        <div className="flex-1 flex overflow-hidden">
+          <nav className="flex-1 p-3 pr-1 space-y-6 overflow-y-auto">
+            {/* Overview Section */}
+            <div>
+              {!collapsed && (
+                <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
+                  Overview
+                </p>
+              )}
+              <div className="space-y-1">
+                {overviewItems.map((item) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={cn(
+                        "sidebar-nav-item",
+                        isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
+                      )}
+                    >
                       <item.icon className="h-5 w-5 flex-shrink-0" />
                       {!collapsed && <span>{item.label}</span>}
-                    </div>
-                    {!collapsed && (
-                      <div className="flex flex-col items-end">
-                        <span className={cn(
-                          "badge-count",
-                          isActive && "bg-primary-foreground/20 text-primary-foreground"
-                        )}>{formatCount(item.count)}</span>
-                        <span className={cn(
-                          "text-[10px]",
-                          isActive ? "text-primary-foreground/80" : "text-muted-foreground"
-                        )}>{item.countLabel}</span>
-                      </div>
-                    )}
-                  </Link>
-                );
-              })}
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
+
+            {/* Modules Section */}
+            <div>
+              {!collapsed && (
+                <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
+                  Modules
+                </p>
+              )}
+              <div className="space-y-1">
+                {moduleItems.map((item) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={cn(
+                        "sidebar-nav-item justify-between",
+                        isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
+                      )}
+                    >
+                      <div className="flex items-center gap-3">
+                        <item.icon className="h-5 w-5 flex-shrink-0" />
+                        {!collapsed && <span>{item.label}</span>}
+                      </div>
+                      {!collapsed && (
+                        <div className="flex flex-col items-end">
+                          <span className={cn(
+                            "badge-count",
+                            isActive && "bg-primary-foreground/20 text-primary-foreground"
+                          )}>{formatCount(item.count)}</span>
+                          <span className={cn(
+                            "text-[10px]",
+                            isActive ? "text-primary-foreground/80" : "text-muted-foreground"
+                          )}>{item.countLabel}</span>
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </nav>
+          
+          {/* Decorative scrollbar */}
+          <div className="w-3 flex flex-col items-center py-2 pr-1">
+            <div className="text-muted-foreground/50 text-[8px]">▲</div>
+            <div className="flex-1 w-1.5 bg-muted/60 rounded-full my-1 relative">
+              <div className="absolute top-0 left-0 right-0 h-1/3 bg-muted-foreground/40 rounded-full" />
+            </div>
+            <div className="text-muted-foreground/50 text-[8px]">▼</div>
           </div>
-        </nav>
+        </div>
 
         {/* Footer */}
         {!collapsed && (
