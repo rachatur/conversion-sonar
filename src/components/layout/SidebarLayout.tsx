@@ -23,6 +23,12 @@ const moduleItems = [
 export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayoutProps) {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+  });
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
@@ -145,7 +151,7 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
       <main className="flex-1 overflow-y-auto">
         {/* Top Bar */}
         <div className="px-8 py-4 text-sm text-muted-foreground">
-          Published: December 04, 2025
+          Published: {currentDate}
         </div>
 
         {/* Page Header */}
