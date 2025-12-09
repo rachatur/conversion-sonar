@@ -3,6 +3,7 @@ import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { OpCoLoadPerformance } from "@/components/dashboard/OpCoLoadPerformance";
+import { ReconSummaryTable } from "@/components/dashboard/ReconSummaryTable";
 import { Users, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 
 // OpCo Load Performance data for Customer Dashboard
@@ -210,30 +211,23 @@ export default function CustomerDashboard() {
       {/* OpCo Load Performance */}
       <OpCoLoadPerformance data={customerOpCoPerformance} />
 
-      {/* Recon Summary Table */}
-      <DataTable
-        title="Recon Summary"
-        columns={[
-          { key: "metric", header: "Metric" },
-          { key: "customer", header: "CUSTOMER", render: (item: typeof currentData.reconSummaryData[0]) => typeof item.customer === 'number' ? item.customer.toLocaleString() : item.customer },
-          { key: "customerSitesBillTo", header: "CUSTOMER_SITES (BILL_TO)", render: (item: typeof currentData.reconSummaryData[0]) => typeof item.customerSitesBillTo === 'number' ? item.customerSitesBillTo.toLocaleString() : item.customerSitesBillTo },
-          { key: "customerSitesShipTo", header: "CUSTOMER_SITES (SHIP_TO)", render: (item: typeof currentData.reconSummaryData[0]) => typeof item.customerSitesShipTo === 'number' ? item.customerSitesShipTo.toLocaleString() : item.customerSitesShipTo },
-        ]}
-        data={currentData.reconSummaryData}
-      />
-
-      {/* Load Percent Table */}
-      <div className="mt-6">
-        <DataTable
-          title="Load Percentage"
-          columns={[
-            { key: "metric", header: "Metric" },
-            { key: "customer", header: "CUSTOMER" },
-            { key: "customerSitesBillTo", header: "CUSTOMER_SITES (BILL_TO)" },
-            { key: "customerSitesShipTo", header: "CUSTOMER_SITES (SHIP_TO)" },
-          ]}
-          data={currentData.loadPercentData}
-        />
+      {/* Customer Recon Summary Tables for All OpCos */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Customer Recon Summary - All OpCos</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {Object.entries(opCoData).map(([opCoName, data]) => (
+            <ReconSummaryTable
+              key={opCoName}
+              title={`Customer Recon Summary - ${opCoName}`}
+              data={data.reconSummaryData}
+              columns={[
+                { key: "customer", label: "Customer" },
+                { key: "customerSitesBillTo", label: "Customer Sites (Bill To)" },
+                { key: "customerSitesShipTo", label: "Customer Sites (Ship To)" },
+              ]}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Insights */}
