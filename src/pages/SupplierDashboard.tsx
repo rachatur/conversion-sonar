@@ -79,14 +79,14 @@ const supplierBreakdownData = [
   },
   { 
     name: "C&J", 
-    suppliersLoad: 91.5, 
-    addressLoad: 96.7, 
-    sitesLoad: 96.7, 
-    contactsLoad: 96.1,
-    suppliers: { source: 153, loaded: 140 },
-    address: { source: 150, loaded: 145 },
-    sites: { source: 150, loaded: 145 },
-    contacts: { source: 154, loaded: 148 }
+    suppliersLoad: 99.6, 
+    addressLoad: 98.0, 
+    sitesLoad: 98.0, 
+    contactsLoad: 26.1,
+    suppliers: { source: 482, loaded: 474 },
+    address: { source: 99, loaded: 97 },
+    sites: { source: 99, loaded: 97 },
+    contacts: { source: 49, loaded: 124 }
   },
 ];
 
@@ -223,10 +223,10 @@ const opCoData: Record<string, {
   },
   "C&J": {
     stats: [
-      { label: "Total Source Records", value: 156, subtitle: "Supplier records received", icon: Package, variant: "primary" },
-      { label: "Successfully Converted", value: 140, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "89.7% conversion rate" },
-      { label: "Fusion Error Records", value: 13, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
-      { label: "Valid Source Records", value: 153, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+      { label: "Total Source Records", value: 482, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 474, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "99.6% conversion rate" },
+      { label: "Fusion Error Records", value: 2, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 476, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
     ],
     conversionRateData: [
       { week: "W1", rate: 82.5 },
@@ -265,12 +265,12 @@ const opCoData: Record<string, {
       { id: "SUP-302", opCo: "C&J-WEST", name: "Western Parts Co", issue: "Missing tax certificate", status: "warning" },
     ],
     reconSummaryData: [
-      { metric: "Total Source File Records", suppliers: 156, supplierAddress: 150, supplierSites: "-", supplierContacts: 95 },
-      { metric: "Records Excluded / Not Valid", suppliers: 3, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
-      { metric: "Valid Source Records", suppliers: 153, supplierAddress: 150, supplierSites: "-", supplierContacts: 95 },
-      { metric: "Total FBDI Records for Upload", suppliers: 153, supplierAddress: 150, supplierSites: 150, supplierContacts: 154 },
-      { metric: "Errored in FBDI Upload", suppliers: 13, supplierAddress: 5, supplierSites: 5, supplierContacts: 6 },
-      { metric: "FBDI Records Loaded Successfully", suppliers: 140, supplierAddress: 145, supplierSites: 145, supplierContacts: 148 },
+      { metric: "Total Source File Records", suppliers: 482, supplierAddress: 99, supplierSites: "-", supplierContacts: 49 },
+      { metric: "Records Excluded / Not Valid", suppliers: 6, supplierAddress: 383, supplierSites: "-", supplierContacts: "-" },
+      { metric: "Valid Source Records", suppliers: 476, supplierAddress: 99, supplierSites: "-", supplierContacts: 476 },
+      { metric: "Total FBDI Records for Upload", suppliers: 476, supplierAddress: 99, supplierSites: 99, supplierContacts: 476 },
+      { metric: "Errored in FBDI Upload", suppliers: 2, supplierAddress: 2, supplierSites: 2, supplierContacts: 352 },
+      { metric: "FBDI Records Loaded Successfully", suppliers: 474, supplierAddress: 97, supplierSites: 97, supplierContacts: 124 },
     ],
     insights: [
       { type: "info", highlight: "C&J source data count is 153", text: "after excluding 3 duplicate records." },
