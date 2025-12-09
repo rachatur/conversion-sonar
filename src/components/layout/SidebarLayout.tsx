@@ -142,16 +142,12 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
           </nav>
           
           {/* Always visible scroll track */}
-          <div className="w-2 bg-muted/50 rounded-full my-4 mr-1 flex flex-col">
-            <div className="w-full h-3 bg-muted-foreground/30 rounded-t-full flex items-center justify-center">
-              <ChevronUp className="h-2 w-2 text-muted-foreground" />
-            </div>
+          <div className="w-1.5 bg-muted/40 rounded-full my-6 mr-0.5 flex flex-col">
+            <div className="w-full h-2 bg-muted-foreground/20 rounded-t-full" />
             <div className="flex-1 relative">
-              <div className="absolute top-0 left-0 right-0 h-1/3 bg-muted-foreground/40 rounded-full mx-0.5" />
+              <div className="absolute top-0 left-0 right-0 h-1/4 bg-muted-foreground/30 rounded-full" />
             </div>
-            <div className="w-full h-3 bg-muted-foreground/30 rounded-b-full flex items-center justify-center">
-              <ChevronDown className="h-2 w-2 text-muted-foreground" />
-            </div>
+            <div className="w-full h-2 bg-muted-foreground/20 rounded-b-full" />
           </div>
         </div>
 
