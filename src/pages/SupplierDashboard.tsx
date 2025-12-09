@@ -24,10 +24,10 @@ const opCoData: Record<string, {
 }> = {
   AIRETECH: {
     stats: [
-      { label: "Total Source Records", value: 245, subtitle: "Supplier records received", icon: Package, variant: "primary" },
-      { label: "Successfully Converted", value: 228, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "93.1% conversion rate" },
-      { label: "Fusion Error Records", value: 12, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
-      { label: "Valid Source Records", value: 240, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+      { label: "Total Source Records", value: 1213, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 1101, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "90.8% conversion rate" },
+      { label: "Fusion Error Records", value: 87, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 1197, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
     ],
     conversionRateData: [
       { week: "W1", rate: 88.5 },
@@ -83,10 +83,10 @@ const opCoData: Record<string, {
   },
   ATS: {
     stats: [
-      { label: "Total Source Records", value: 189, subtitle: "Supplier records received", icon: Package, variant: "primary" },
-      { label: "Successfully Converted", value: 172, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "91.0% conversion rate" },
-      { label: "Fusion Error Records", value: 14, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
-      { label: "Valid Source Records", value: 186, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+      { label: "Total Source Records", value: 583, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 565, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "98.3% conversion rate" },
+      { label: "Fusion Error Records", value: 10, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 575, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
     ],
     conversionRateData: [
       { week: "W1", rate: 84.2 },
@@ -198,10 +198,10 @@ const opCoData: Record<string, {
   },
   DORSE: {
     stats: [
-      { label: "Total Source Records", value: 178, subtitle: "Supplier records received", icon: Package, variant: "primary" },
-      { label: "Successfully Converted", value: 162, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "91.0% conversion rate" },
-      { label: "Fusion Error Records", value: 12, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
-      { label: "Valid Source Records", value: 174, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+      { label: "Total Source Records", value: 1117, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 1063, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "98.2% conversion rate" },
+      { label: "Fusion Error Records", value: 19, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 1109, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
     ],
     conversionRateData: [
       { week: "W1", rate: 85.5 },
@@ -255,10 +255,10 @@ const opCoData: Record<string, {
   },
   EBS: {
     stats: [
-      { label: "Total Source Records", value: 145, subtitle: "Supplier records received", icon: Package, variant: "primary" },
-      { label: "Successfully Converted", value: 128, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "88.3% conversion rate" },
-      { label: "Fusion Error Records", value: 14, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
-      { label: "Valid Source Records", value: 142, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+      { label: "Total Source Records", value: 595, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 567, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "98.4% conversion rate" },
+      { label: "Fusion Error Records", value: 9, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 576, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
     ],
     conversionRateData: [
       { week: "W1", rate: 80.5 },
@@ -312,10 +312,10 @@ const opCoData: Record<string, {
   },
   EP: {
     stats: [
-      { label: "Total Source Records", value: 165, subtitle: "Supplier records received", icon: Package, variant: "primary" },
-      { label: "Successfully Converted", value: 150, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "90.9% conversion rate" },
-      { label: "Fusion Error Records", value: 11, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
-      { label: "Valid Source Records", value: 161, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+      { label: "Total Source Records", value: 37, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 30, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "100% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 30, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
     ],
     conversionRateData: [
       { week: "W1", rate: 84.8 },
@@ -369,10 +369,10 @@ const opCoData: Record<string, {
   },
   ETARIOS: {
     stats: [
-      { label: "Total Source Records", value: 135, subtitle: "Supplier records received", icon: Package, variant: "primary" },
-      { label: "Successfully Converted", value: 121, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "89.6% conversion rate" },
-      { label: "Fusion Error Records", value: 11, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
-      { label: "Valid Source Records", value: 132, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+      { label: "Total Source Records", value: 1046, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 981, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "100% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 981, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
     ],
     conversionRateData: [
       { week: "W1", rate: 82.5 },
