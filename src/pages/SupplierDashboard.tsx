@@ -1,120 +1,460 @@
+import { useState } from "react";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { Package, CheckCircle, XCircle, Copy, AlertTriangle, FolderOpen } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area } from "recharts";
+import { Package, CheckCircle, XCircle, FolderOpen } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 
-const stats = [
-  { label: "Total Source Records", value: 1213, subtitle: "Supplier records received", icon: Package, variant: "primary" as const },
-  { label: "Successfully Converted", value: 1101, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "90.8% conversion rate" },
-  { label: "Fusion Error Records", value: 87, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
-  { label: "Valid Source Records", value: 1197, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" as const },
-];
+const opCoList = ["AIRETECH", "ATS", "C&J", "DORSE", "EBS", "EP", "ETARIOS"];
 
-const summaryCards = [
-  { label: "Supplier Types", value: 6, icon: Package },
-  { label: "Duplicates Found", value: 9, icon: Copy },
-  { label: "Missing Fields", value: 89, icon: AlertTriangle },
-  { label: "Missing Category", value: 34, icon: FolderOpen },
-];
-
-const insights = [
-  { type: "info" as const, highlight: "Source data count is 1,197", text: "and the actual load count is 1,188. The difference of 9 records is due to duplicate suppliers in the source data." },
-  { type: "success" as const, highlight: "Only unique records", text: "were considered for the load. For details, please refer to the attached Duplicate Supplier List." },
-  { type: "warning" as const, highlight: "FBDI Upload errors", text: "87 supplier records, 30 address records, 30 site records, and 41 contact records failed during upload." },
-  { type: "success" as const, highlight: "Successfully loaded", text: "1,101 suppliers, 1,150 addresses, 1,150 sites, and 1,147 contacts into the system." },
-];
-
-const reconSummaryData = [
-  { metric: "Total Source File Records", suppliers: 1213, supplierAddress: 1180, supplierSites: "-", supplierContacts: 717 },
-  { metric: "Records Excluded / Not Valid", suppliers: 16, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
-  { metric: "Valid Source Records", suppliers: 1197, supplierAddress: 1180, supplierSites: "-", supplierContacts: 717 },
-  { metric: "Total FBDI Records for Upload", suppliers: 1188, supplierAddress: 1180, supplierSites: 1180, supplierContacts: 1188 },
-  { metric: "Errored in FBDI Upload", suppliers: 87, supplierAddress: 30, supplierSites: 30, supplierContacts: 41 },
-  { metric: "FBDI Records Loaded Successfully", suppliers: 1101, supplierAddress: 1150, supplierSites: 1150, supplierContacts: 1147 },
-];
-
-const conversionRateData = [
-  { week: "W1", rate: 85.2 },
-  { week: "W2", rate: 87.5 },
-  { week: "W3", rate: 89.1 },
-  { week: "W4", rate: 88.4 },
-  { week: "W5", rate: 90.8 },
-];
-
-const supplierTypeData = [
-  { name: "Manufacturing", value: 345, color: "hsl(207, 90%, 54%)" },
-  { name: "Distribution", value: 289, color: "hsl(160, 84%, 39%)" },
-  { name: "Services", value: 234, color: "hsl(32, 95%, 60%)" },
-  { name: "Raw Materials", value: 345, color: "hsl(280, 65%, 60%)" },
-];
-
-const issueBreakdown = [
-  { type: "Address Issues", count: 30 },
-  { type: "Site Issues", count: 30 },
-  { type: "Contact Issues", count: 41 },
-  { type: "Supplier Issues", count: 87 },
-];
-
-const sourceTargetComparison = [
-  { field: "Supplier Name", source: 1213, target: 1101, match: false },
-  { field: "Supplier Address", source: 1180, target: 1150, match: false },
-  { field: "Supplier Sites", source: 1180, target: 1150, match: false },
-  { field: "Supplier Contacts", source: 717, target: 1147, match: false },
-  { field: "Bank Account", source: 1100, target: 1078, match: false },
-  { field: "Payment Terms", source: 1213, target: 1101, match: false },
-];
-
-const opCoBreakdown = [
-  { opCo: "OpCo-DOM-01", region: "Domestic", suppliers: 312, converted: 298, failed: 14, rate: 95.5 },
-  { opCo: "OpCo-DOM-02", region: "Domestic", suppliers: 289, converted: 275, failed: 14, rate: 95.2 },
-  { opCo: "OpCo-DOM-03", region: "Domestic", suppliers: 167, converted: 151, failed: 16, rate: 90.4 },
-  { opCo: "OpCo-DOM-04", region: "Domestic", suppliers: 134, converted: 118, failed: 16, rate: 88.1 },
-  { opCo: "OpCo-INT-01", region: "International", suppliers: 178, converted: 145, failed: 33, rate: 81.5 },
-  { opCo: "OpCo-INT-02", region: "International", suppliers: 133, converted: 114, failed: 19, rate: 85.7 },
-];
-
-const siteMapping = [
-  { site: "Site A - Primary", suppliers: 356, converted: 332, failed: 24, rate: 93.3 },
-  { site: "Site B - Warehouse", suppliers: 289, converted: 267, failed: 22, rate: 92.4 },
-  { site: "Site C - Distribution", suppliers: 234, converted: 212, failed: 22, rate: 90.6 },
-  { site: "Site D - Regional", suppliers: 212, converted: 189, failed: 23, rate: 89.2 },
-  { site: "Site E - International", suppliers: 122, converted: 101, failed: 21, rate: 82.8 },
-];
-
-const exceptions = [
-  { id: "SUP-001", opCo: "OpCo-INT-02", name: "Global Parts Inc", issue: "Invalid bank account", status: "error" as const },
-  { id: "SUP-012", opCo: "OpCo-INT-01", name: "Pacific Trading Co", issue: "Missing tax certificate", status: "warning" as const },
-  { id: "SUP-034", opCo: "OpCo-DOM-03", name: "Euro Supplies Ltd", issue: "Duplicate entry", status: "warning" as const },
-  { id: "SUP-056", opCo: "OpCo-DOM-04", name: "Asia Materials", issue: "Missing category", status: "warning" as const },
-  { id: "SUP-078", opCo: "OpCo-DOM-01", name: "Local Logistics", issue: "Pending approval", status: "info" as const },
-];
+// OpCo-specific data
+const opCoData: Record<string, {
+  stats: { label: string; value: number; subtitle: string; icon: typeof Package; variant: "primary" | "success" | "warning" | "accent"; highlightText?: string }[];
+  conversionRateData: { week: string; rate: number }[];
+  issueBreakdown: { type: string; count: number }[];
+  sourceTargetComparison: { field: string; source: number; target: number; match: boolean }[];
+  opCoBreakdown: { opCo: string; region: string; suppliers: number; converted: number; failed: number; rate: number }[];
+  siteMapping: { site: string; suppliers: number; converted: number; failed: number; rate: number }[];
+  exceptions: { id: string; opCo: string; name: string; issue: string; status: "error" | "warning" | "info" }[];
+  reconSummaryData: { metric: string; suppliers: number | string; supplierAddress: number | string; supplierSites: number | string; supplierContacts: number | string }[];
+  insights: { type: "info" | "success" | "warning"; highlight: string; text: string }[];
+}> = {
+  AIRETECH: {
+    stats: [
+      { label: "Total Source Records", value: 245, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 228, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "93.1% conversion rate" },
+      { label: "Fusion Error Records", value: 12, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 240, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    conversionRateData: [
+      { week: "W1", rate: 88.5 },
+      { week: "W2", rate: 90.2 },
+      { week: "W3", rate: 91.8 },
+      { week: "W4", rate: 92.4 },
+      { week: "W5", rate: 93.1 },
+    ],
+    issueBreakdown: [
+      { type: "Address Issues", count: 8 },
+      { type: "Site Issues", count: 6 },
+      { type: "Contact Issues", count: 10 },
+      { type: "Supplier Issues", count: 12 },
+    ],
+    sourceTargetComparison: [
+      { field: "Supplier Name", source: 245, target: 228, match: false },
+      { field: "Supplier Address", source: 238, target: 232, match: false },
+      { field: "Supplier Sites", source: 238, target: 232, match: false },
+      { field: "Supplier Contacts", source: 156, target: 248, match: false },
+      { field: "Bank Account", source: 220, target: 215, match: false },
+      { field: "Payment Terms", source: 245, target: 228, match: false },
+    ],
+    opCoBreakdown: [
+      { opCo: "AIRETECH-HQ", region: "Domestic", suppliers: 85, converted: 82, failed: 3, rate: 96.5 },
+      { opCo: "AIRETECH-WEST", region: "Domestic", suppliers: 72, converted: 68, failed: 4, rate: 94.4 },
+      { opCo: "AIRETECH-EAST", region: "Domestic", suppliers: 48, converted: 44, failed: 4, rate: 91.7 },
+      { opCo: "AIRETECH-INTL", region: "International", suppliers: 40, converted: 34, failed: 6, rate: 85.0 },
+    ],
+    siteMapping: [
+      { site: "Site A - Primary", suppliers: 78, converted: 74, failed: 4, rate: 94.9 },
+      { site: "Site B - Warehouse", suppliers: 62, converted: 58, failed: 4, rate: 93.5 },
+      { site: "Site C - Distribution", suppliers: 55, converted: 51, failed: 4, rate: 92.7 },
+      { site: "Site D - Regional", suppliers: 50, converted: 45, failed: 5, rate: 90.0 },
+    ],
+    exceptions: [
+      { id: "SUP-101", opCo: "AIRETECH-INTL", name: "Global Parts Inc", issue: "Invalid bank account", status: "error" },
+      { id: "SUP-102", opCo: "AIRETECH-EAST", name: "Pacific Trading Co", issue: "Missing tax certificate", status: "warning" },
+      { id: "SUP-103", opCo: "AIRETECH-WEST", name: "Euro Supplies Ltd", issue: "Duplicate entry", status: "warning" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", suppliers: 245, supplierAddress: 238, supplierSites: "-", supplierContacts: 156 },
+      { metric: "Records Excluded / Not Valid", suppliers: 5, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
+      { metric: "Valid Source Records", suppliers: 240, supplierAddress: 238, supplierSites: "-", supplierContacts: 156 },
+      { metric: "Total FBDI Records for Upload", suppliers: 240, supplierAddress: 238, supplierSites: 238, supplierContacts: 258 },
+      { metric: "Errored in FBDI Upload", suppliers: 12, supplierAddress: 6, supplierSites: 6, supplierContacts: 10 },
+      { metric: "FBDI Records Loaded Successfully", suppliers: 228, supplierAddress: 232, supplierSites: 232, supplierContacts: 248 },
+    ],
+    insights: [
+      { type: "info", highlight: "AIRETECH source data count is 240", text: "and the actual load count is 240. The difference of 5 records is due to duplicate suppliers." },
+      { type: "success", highlight: "93.1% conversion rate", text: "achieved for AIRETECH suppliers with minimal errors." },
+      { type: "warning", highlight: "12 FBDI upload errors", text: "require attention for complete data migration." },
+    ],
+  },
+  ATS: {
+    stats: [
+      { label: "Total Source Records", value: 189, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 172, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "91.0% conversion rate" },
+      { label: "Fusion Error Records", value: 14, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 186, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    conversionRateData: [
+      { week: "W1", rate: 84.2 },
+      { week: "W2", rate: 86.5 },
+      { week: "W3", rate: 88.1 },
+      { week: "W4", rate: 89.8 },
+      { week: "W5", rate: 91.0 },
+    ],
+    issueBreakdown: [
+      { type: "Address Issues", count: 6 },
+      { type: "Site Issues", count: 5 },
+      { type: "Contact Issues", count: 8 },
+      { type: "Supplier Issues", count: 14 },
+    ],
+    sourceTargetComparison: [
+      { field: "Supplier Name", source: 189, target: 172, match: false },
+      { field: "Supplier Address", source: 182, target: 176, match: false },
+      { field: "Supplier Sites", source: 182, target: 176, match: false },
+      { field: "Supplier Contacts", source: 112, target: 178, match: false },
+      { field: "Bank Account", source: 170, target: 165, match: false },
+      { field: "Payment Terms", source: 189, target: 172, match: false },
+    ],
+    opCoBreakdown: [
+      { opCo: "ATS-MAIN", region: "Domestic", suppliers: 68, converted: 64, failed: 4, rate: 94.1 },
+      { opCo: "ATS-SOUTH", region: "Domestic", suppliers: 55, converted: 50, failed: 5, rate: 90.9 },
+      { opCo: "ATS-NORTH", region: "Domestic", suppliers: 42, converted: 38, failed: 4, rate: 90.5 },
+      { opCo: "ATS-INTL", region: "International", suppliers: 24, converted: 20, failed: 4, rate: 83.3 },
+    ],
+    siteMapping: [
+      { site: "Site A - Primary", suppliers: 58, converted: 54, failed: 4, rate: 93.1 },
+      { site: "Site B - Warehouse", suppliers: 48, converted: 44, failed: 4, rate: 91.7 },
+      { site: "Site C - Distribution", suppliers: 45, converted: 40, failed: 5, rate: 88.9 },
+      { site: "Site D - Regional", suppliers: 38, converted: 34, failed: 4, rate: 89.5 },
+    ],
+    exceptions: [
+      { id: "SUP-201", opCo: "ATS-INTL", name: "Tech Components Ltd", issue: "Invalid bank account", status: "error" },
+      { id: "SUP-202", opCo: "ATS-SOUTH", name: "Southern Materials", issue: "Missing category", status: "warning" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", suppliers: 189, supplierAddress: 182, supplierSites: "-", supplierContacts: 112 },
+      { metric: "Records Excluded / Not Valid", suppliers: 3, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
+      { metric: "Valid Source Records", suppliers: 186, supplierAddress: 182, supplierSites: "-", supplierContacts: 112 },
+      { metric: "Total FBDI Records for Upload", suppliers: 186, supplierAddress: 182, supplierSites: 182, supplierContacts: 186 },
+      { metric: "Errored in FBDI Upload", suppliers: 14, supplierAddress: 6, supplierSites: 6, supplierContacts: 8 },
+      { metric: "FBDI Records Loaded Successfully", suppliers: 172, supplierAddress: 176, supplierSites: 176, supplierContacts: 178 },
+    ],
+    insights: [
+      { type: "info", highlight: "ATS source data count is 186", text: "with 3 duplicate records excluded from processing." },
+      { type: "success", highlight: "91.0% conversion rate", text: "achieved for ATS suppliers." },
+      { type: "warning", highlight: "14 FBDI upload errors", text: "identified in supplier records." },
+    ],
+  },
+  "C&J": {
+    stats: [
+      { label: "Total Source Records", value: 156, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 140, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "89.7% conversion rate" },
+      { label: "Fusion Error Records", value: 13, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 153, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    conversionRateData: [
+      { week: "W1", rate: 82.5 },
+      { week: "W2", rate: 85.2 },
+      { week: "W3", rate: 87.1 },
+      { week: "W4", rate: 88.4 },
+      { week: "W5", rate: 89.7 },
+    ],
+    issueBreakdown: [
+      { type: "Address Issues", count: 4 },
+      { type: "Site Issues", count: 5 },
+      { type: "Contact Issues", count: 6 },
+      { type: "Supplier Issues", count: 13 },
+    ],
+    sourceTargetComparison: [
+      { field: "Supplier Name", source: 156, target: 140, match: false },
+      { field: "Supplier Address", source: 150, target: 145, match: false },
+      { field: "Supplier Sites", source: 150, target: 145, match: false },
+      { field: "Supplier Contacts", source: 95, target: 148, match: false },
+      { field: "Bank Account", source: 142, target: 138, match: false },
+      { field: "Payment Terms", source: 156, target: 140, match: false },
+    ],
+    opCoBreakdown: [
+      { opCo: "C&J-CENTRAL", region: "Domestic", suppliers: 58, converted: 54, failed: 4, rate: 93.1 },
+      { opCo: "C&J-WEST", region: "Domestic", suppliers: 48, converted: 43, failed: 5, rate: 89.6 },
+      { opCo: "C&J-EAST", region: "Domestic", suppliers: 50, converted: 43, failed: 7, rate: 86.0 },
+    ],
+    siteMapping: [
+      { site: "Site A - Primary", suppliers: 52, converted: 48, failed: 4, rate: 92.3 },
+      { site: "Site B - Warehouse", suppliers: 42, converted: 38, failed: 4, rate: 90.5 },
+      { site: "Site C - Distribution", suppliers: 35, converted: 30, failed: 5, rate: 85.7 },
+      { site: "Site D - Regional", suppliers: 27, converted: 24, failed: 3, rate: 88.9 },
+    ],
+    exceptions: [
+      { id: "SUP-301", opCo: "C&J-EAST", name: "Eastern Supplies", issue: "Duplicate entry", status: "warning" },
+      { id: "SUP-302", opCo: "C&J-WEST", name: "Western Parts Co", issue: "Missing tax certificate", status: "warning" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", suppliers: 156, supplierAddress: 150, supplierSites: "-", supplierContacts: 95 },
+      { metric: "Records Excluded / Not Valid", suppliers: 3, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
+      { metric: "Valid Source Records", suppliers: 153, supplierAddress: 150, supplierSites: "-", supplierContacts: 95 },
+      { metric: "Total FBDI Records for Upload", suppliers: 153, supplierAddress: 150, supplierSites: 150, supplierContacts: 154 },
+      { metric: "Errored in FBDI Upload", suppliers: 13, supplierAddress: 5, supplierSites: 5, supplierContacts: 6 },
+      { metric: "FBDI Records Loaded Successfully", suppliers: 140, supplierAddress: 145, supplierSites: 145, supplierContacts: 148 },
+    ],
+    insights: [
+      { type: "info", highlight: "C&J source data count is 153", text: "after excluding 3 duplicate records." },
+      { type: "success", highlight: "89.7% conversion rate", text: "achieved for C&J suppliers." },
+      { type: "warning", highlight: "13 FBDI upload errors", text: "need resolution." },
+    ],
+  },
+  DORSE: {
+    stats: [
+      { label: "Total Source Records", value: 178, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 162, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "91.0% conversion rate" },
+      { label: "Fusion Error Records", value: 12, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 174, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    conversionRateData: [
+      { week: "W1", rate: 85.5 },
+      { week: "W2", rate: 87.8 },
+      { week: "W3", rate: 89.2 },
+      { week: "W4", rate: 90.1 },
+      { week: "W5", rate: 91.0 },
+    ],
+    issueBreakdown: [
+      { type: "Address Issues", count: 4 },
+      { type: "Site Issues", count: 4 },
+      { type: "Contact Issues", count: 6 },
+      { type: "Supplier Issues", count: 12 },
+    ],
+    sourceTargetComparison: [
+      { field: "Supplier Name", source: 178, target: 162, match: false },
+      { field: "Supplier Address", source: 172, target: 166, match: false },
+      { field: "Supplier Sites", source: 172, target: 166, match: false },
+      { field: "Supplier Contacts", source: 105, target: 168, match: false },
+      { field: "Bank Account", source: 160, target: 156, match: false },
+      { field: "Payment Terms", source: 178, target: 162, match: false },
+    ],
+    opCoBreakdown: [
+      { opCo: "DORSE-MAIN", region: "Domestic", suppliers: 65, converted: 61, failed: 4, rate: 93.8 },
+      { opCo: "DORSE-SOUTH", region: "Domestic", suppliers: 55, converted: 50, failed: 5, rate: 90.9 },
+      { opCo: "DORSE-NORTH", region: "Domestic", suppliers: 58, converted: 51, failed: 7, rate: 87.9 },
+    ],
+    siteMapping: [
+      { site: "Site A - Primary", suppliers: 58, converted: 54, failed: 4, rate: 93.1 },
+      { site: "Site B - Warehouse", suppliers: 48, converted: 44, failed: 4, rate: 91.7 },
+      { site: "Site C - Distribution", suppliers: 42, converted: 38, failed: 4, rate: 90.5 },
+      { site: "Site D - Regional", suppliers: 30, converted: 26, failed: 4, rate: 86.7 },
+    ],
+    exceptions: [
+      { id: "SUP-401", opCo: "DORSE-NORTH", name: "Northern Materials", issue: "Invalid bank account", status: "error" },
+      { id: "SUP-402", opCo: "DORSE-SOUTH", name: "Southern Logistics", issue: "Pending approval", status: "info" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", suppliers: 178, supplierAddress: 172, supplierSites: "-", supplierContacts: 105 },
+      { metric: "Records Excluded / Not Valid", suppliers: 4, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
+      { metric: "Valid Source Records", suppliers: 174, supplierAddress: 172, supplierSites: "-", supplierContacts: 105 },
+      { metric: "Total FBDI Records for Upload", suppliers: 174, supplierAddress: 172, supplierSites: 172, supplierContacts: 174 },
+      { metric: "Errored in FBDI Upload", suppliers: 12, supplierAddress: 6, supplierSites: 6, supplierContacts: 6 },
+      { metric: "FBDI Records Loaded Successfully", suppliers: 162, supplierAddress: 166, supplierSites: 166, supplierContacts: 168 },
+    ],
+    insights: [
+      { type: "info", highlight: "DORSE source data count is 174", text: "with 4 duplicate records excluded." },
+      { type: "success", highlight: "91.0% conversion rate", text: "achieved for DORSE suppliers." },
+      { type: "warning", highlight: "12 FBDI upload errors", text: "identified." },
+    ],
+  },
+  EBS: {
+    stats: [
+      { label: "Total Source Records", value: 145, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 128, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "88.3% conversion rate" },
+      { label: "Fusion Error Records", value: 14, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 142, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    conversionRateData: [
+      { week: "W1", rate: 80.5 },
+      { week: "W2", rate: 83.2 },
+      { week: "W3", rate: 85.8 },
+      { week: "W4", rate: 87.1 },
+      { week: "W5", rate: 88.3 },
+    ],
+    issueBreakdown: [
+      { type: "Address Issues", count: 5 },
+      { type: "Site Issues", count: 5 },
+      { type: "Contact Issues", count: 6 },
+      { type: "Supplier Issues", count: 14 },
+    ],
+    sourceTargetComparison: [
+      { field: "Supplier Name", source: 145, target: 128, match: false },
+      { field: "Supplier Address", source: 140, target: 132, match: false },
+      { field: "Supplier Sites", source: 140, target: 132, match: false },
+      { field: "Supplier Contacts", source: 88, target: 135, match: false },
+      { field: "Bank Account", source: 130, target: 125, match: false },
+      { field: "Payment Terms", source: 145, target: 128, match: false },
+    ],
+    opCoBreakdown: [
+      { opCo: "EBS-CENTRAL", region: "Domestic", suppliers: 55, converted: 50, failed: 5, rate: 90.9 },
+      { opCo: "EBS-WEST", region: "Domestic", suppliers: 48, converted: 42, failed: 6, rate: 87.5 },
+      { opCo: "EBS-EAST", region: "Domestic", suppliers: 42, converted: 36, failed: 6, rate: 85.7 },
+    ],
+    siteMapping: [
+      { site: "Site A - Primary", suppliers: 48, converted: 44, failed: 4, rate: 91.7 },
+      { site: "Site B - Warehouse", suppliers: 40, converted: 35, failed: 5, rate: 87.5 },
+      { site: "Site C - Distribution", suppliers: 32, converted: 28, failed: 4, rate: 87.5 },
+      { site: "Site D - Regional", suppliers: 25, converted: 21, failed: 4, rate: 84.0 },
+    ],
+    exceptions: [
+      { id: "SUP-501", opCo: "EBS-EAST", name: "Eastern Components", issue: "Missing category", status: "warning" },
+      { id: "SUP-502", opCo: "EBS-WEST", name: "Western Trading", issue: "Invalid bank account", status: "error" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", suppliers: 145, supplierAddress: 140, supplierSites: "-", supplierContacts: 88 },
+      { metric: "Records Excluded / Not Valid", suppliers: 3, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
+      { metric: "Valid Source Records", suppliers: 142, supplierAddress: 140, supplierSites: "-", supplierContacts: 88 },
+      { metric: "Total FBDI Records for Upload", suppliers: 142, supplierAddress: 140, supplierSites: 140, supplierContacts: 141 },
+      { metric: "Errored in FBDI Upload", suppliers: 14, supplierAddress: 8, supplierSites: 8, supplierContacts: 6 },
+      { metric: "FBDI Records Loaded Successfully", suppliers: 128, supplierAddress: 132, supplierSites: 132, supplierContacts: 135 },
+    ],
+    insights: [
+      { type: "info", highlight: "EBS source data count is 142", text: "after excluding duplicates." },
+      { type: "success", highlight: "88.3% conversion rate", text: "achieved for EBS suppliers." },
+      { type: "warning", highlight: "14 FBDI upload errors", text: "require attention." },
+    ],
+  },
+  EP: {
+    stats: [
+      { label: "Total Source Records", value: 165, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 150, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "90.9% conversion rate" },
+      { label: "Fusion Error Records", value: 11, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 161, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    conversionRateData: [
+      { week: "W1", rate: 84.8 },
+      { week: "W2", rate: 87.2 },
+      { week: "W3", rate: 88.9 },
+      { week: "W4", rate: 90.1 },
+      { week: "W5", rate: 90.9 },
+    ],
+    issueBreakdown: [
+      { type: "Address Issues", count: 4 },
+      { type: "Site Issues", count: 3 },
+      { type: "Contact Issues", count: 5 },
+      { type: "Supplier Issues", count: 11 },
+    ],
+    sourceTargetComparison: [
+      { field: "Supplier Name", source: 165, target: 150, match: false },
+      { field: "Supplier Address", source: 158, target: 153, match: false },
+      { field: "Supplier Sites", source: 158, target: 153, match: false },
+      { field: "Supplier Contacts", source: 98, target: 156, match: false },
+      { field: "Bank Account", source: 148, target: 144, match: false },
+      { field: "Payment Terms", source: 165, target: 150, match: false },
+    ],
+    opCoBreakdown: [
+      { opCo: "EP-MAIN", region: "Domestic", suppliers: 62, converted: 58, failed: 4, rate: 93.5 },
+      { opCo: "EP-SOUTH", region: "Domestic", suppliers: 52, converted: 48, failed: 4, rate: 92.3 },
+      { opCo: "EP-NORTH", region: "Domestic", suppliers: 51, converted: 44, failed: 7, rate: 86.3 },
+    ],
+    siteMapping: [
+      { site: "Site A - Primary", suppliers: 55, converted: 52, failed: 3, rate: 94.5 },
+      { site: "Site B - Warehouse", suppliers: 45, converted: 41, failed: 4, rate: 91.1 },
+      { site: "Site C - Distribution", suppliers: 38, converted: 34, failed: 4, rate: 89.5 },
+      { site: "Site D - Regional", suppliers: 27, converted: 23, failed: 4, rate: 85.2 },
+    ],
+    exceptions: [
+      { id: "SUP-601", opCo: "EP-NORTH", name: "Northern Supplies", issue: "Duplicate entry", status: "warning" },
+      { id: "SUP-602", opCo: "EP-MAIN", name: "Main Distribution", issue: "Pending approval", status: "info" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", suppliers: 165, supplierAddress: 158, supplierSites: "-", supplierContacts: 98 },
+      { metric: "Records Excluded / Not Valid", suppliers: 4, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
+      { metric: "Valid Source Records", suppliers: 161, supplierAddress: 158, supplierSites: "-", supplierContacts: 98 },
+      { metric: "Total FBDI Records for Upload", suppliers: 161, supplierAddress: 158, supplierSites: 158, supplierContacts: 161 },
+      { metric: "Errored in FBDI Upload", suppliers: 11, supplierAddress: 5, supplierSites: 5, supplierContacts: 5 },
+      { metric: "FBDI Records Loaded Successfully", suppliers: 150, supplierAddress: 153, supplierSites: 153, supplierContacts: 156 },
+    ],
+    insights: [
+      { type: "info", highlight: "EP source data count is 161", text: "after excluding 4 duplicate records." },
+      { type: "success", highlight: "90.9% conversion rate", text: "achieved for EP suppliers." },
+      { type: "warning", highlight: "11 FBDI upload errors", text: "identified." },
+    ],
+  },
+  ETARIOS: {
+    stats: [
+      { label: "Total Source Records", value: 135, subtitle: "Supplier records received", icon: Package, variant: "primary" },
+      { label: "Successfully Converted", value: 121, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "89.6% conversion rate" },
+      { label: "Fusion Error Records", value: 11, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 132, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    conversionRateData: [
+      { week: "W1", rate: 82.5 },
+      { week: "W2", rate: 85.1 },
+      { week: "W3", rate: 87.2 },
+      { week: "W4", rate: 88.5 },
+      { week: "W5", rate: 89.6 },
+    ],
+    issueBreakdown: [
+      { type: "Address Issues", count: 4 },
+      { type: "Site Issues", count: 4 },
+      { type: "Contact Issues", count: 5 },
+      { type: "Supplier Issues", count: 11 },
+    ],
+    sourceTargetComparison: [
+      { field: "Supplier Name", source: 135, target: 121, match: false },
+      { field: "Supplier Address", source: 130, target: 125, match: false },
+      { field: "Supplier Sites", source: 130, target: 125, match: false },
+      { field: "Supplier Contacts", source: 82, target: 128, match: false },
+      { field: "Bank Account", source: 120, target: 116, match: false },
+      { field: "Payment Terms", source: 135, target: 121, match: false },
+    ],
+    opCoBreakdown: [
+      { opCo: "ETARIOS-MAIN", region: "Domestic", suppliers: 52, converted: 48, failed: 4, rate: 92.3 },
+      { opCo: "ETARIOS-SOUTH", region: "Domestic", suppliers: 45, converted: 40, failed: 5, rate: 88.9 },
+      { opCo: "ETARIOS-INTL", region: "International", suppliers: 38, converted: 33, failed: 5, rate: 86.8 },
+    ],
+    siteMapping: [
+      { site: "Site A - Primary", suppliers: 45, converted: 42, failed: 3, rate: 93.3 },
+      { site: "Site B - Warehouse", suppliers: 38, converted: 34, failed: 4, rate: 89.5 },
+      { site: "Site C - Distribution", suppliers: 30, converted: 26, failed: 4, rate: 86.7 },
+      { site: "Site D - Regional", suppliers: 22, converted: 19, failed: 3, rate: 86.4 },
+    ],
+    exceptions: [
+      { id: "SUP-701", opCo: "ETARIOS-INTL", name: "Global Materials", issue: "Invalid bank account", status: "error" },
+      { id: "SUP-702", opCo: "ETARIOS-SOUTH", name: "Southern Parts", issue: "Missing category", status: "warning" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", suppliers: 135, supplierAddress: 130, supplierSites: "-", supplierContacts: 82 },
+      { metric: "Records Excluded / Not Valid", suppliers: 3, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
+      { metric: "Valid Source Records", suppliers: 132, supplierAddress: 130, supplierSites: "-", supplierContacts: 82 },
+      { metric: "Total FBDI Records for Upload", suppliers: 132, supplierAddress: 130, supplierSites: 130, supplierContacts: 133 },
+      { metric: "Errored in FBDI Upload", suppliers: 11, supplierAddress: 5, supplierSites: 5, supplierContacts: 5 },
+      { metric: "FBDI Records Loaded Successfully", suppliers: 121, supplierAddress: 125, supplierSites: 125, supplierContacts: 128 },
+    ],
+    insights: [
+      { type: "info", highlight: "ETARIOS source data count is 132", text: "after excluding 3 duplicate records." },
+      { type: "success", highlight: "89.6% conversion rate", text: "achieved for ETARIOS suppliers." },
+      { type: "warning", highlight: "11 FBDI upload errors", text: "identified." },
+    ],
+  },
+};
 
 export default function SupplierDashboard() {
+  const [selectedOpCo, setSelectedOpCo] = useState("AIRETECH");
+  const currentData = opCoData[selectedOpCo];
+
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {stats.map((stat) => (
-          <LargeStatCard key={stat.label} {...stat} />
-        ))}
+      {/* OpCo Tabs */}
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-2">
+          {opCoList.map((opCo) => (
+            <button
+              key={opCo}
+              onClick={() => setSelectedOpCo(opCo)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                selectedOpCo === opCo
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              {opCo}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {summaryCards.map((card) => (
-          <div key={card.label} className="stat-card p-4">
-            <div className="flex items-center gap-3">
-              <card.icon className="h-5 w-5 text-muted-foreground" />
-              <div>
-                <p className="text-xs text-muted-foreground">{card.label}</p>
-                <p className="text-xl font-bold">{card.value.toLocaleString()}</p>
-              </div>
-            </div>
-          </div>
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {currentData.stats.map((stat) => (
+          <LargeStatCard key={stat.label} {...stat} />
         ))}
       </div>
 
@@ -122,7 +462,7 @@ export default function SupplierDashboard() {
       <div className="mb-8">
         <div className="stat-card overflow-hidden">
           <div className="bg-primary px-4 py-3">
-            <h3 className="text-sm font-semibold text-primary-foreground">Supplier Recon Summary</h3>
+            <h3 className="text-sm font-semibold text-primary-foreground">Supplier Recon Summary - {selectedOpCo}</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -136,8 +476,8 @@ export default function SupplierDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {reconSummaryData.map((row, index) => (
-                  <tr key={index} className={`border-b border-border ${index === reconSummaryData.length - 1 ? 'bg-success/10' : ''}`}>
+                {currentData.reconSummaryData.map((row, index) => (
+                  <tr key={index} className={`border-b border-border ${index === currentData.reconSummaryData.length - 1 ? 'bg-success/10' : ''}`}>
                     <td className="px-4 py-3 text-sm font-medium text-foreground">{row.metric}</td>
                     <td className={`px-4 py-3 text-sm text-center ${row.metric === 'Errored in FBDI Upload' ? 'text-destructive font-medium' : row.metric === 'FBDI Records Loaded Successfully' ? 'text-success font-medium' : 'text-primary font-medium'}`}>
                       {row.suppliers}
@@ -156,25 +496,19 @@ export default function SupplierDashboard() {
               </tbody>
             </table>
           </div>
-          <div className="px-4 py-3 bg-warning/10 border-t border-warning/30">
-            <p className="text-xs text-warning-foreground">
-              <span className="font-semibold">**Note:</span> The source data count is 1,197, and the actual load count is 1,188. 
-              The difference of 9 records is due to duplicate suppliers in the source data. Only unique records were considered for the load.
-            </p>
-          </div>
         </div>
       </div>
 
       {/* Insights */}
       <div className="mb-8">
-        <InsightsSection title="Key Insights & Recommendations" insights={insights} />
+        <InsightsSection title="Key Insights & Recommendations" insights={currentData.insights} />
       </div>
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <ChartCard title="Conversion Rate Trend" subtitle="Weekly performance">
           <ResponsiveContainer width="100%" height={220}>
-            <AreaChart data={conversionRateData}>
+            <AreaChart data={currentData.conversionRateData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="week" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
               <YAxis domain={[80, 100]} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
@@ -193,7 +527,7 @@ export default function SupplierDashboard() {
 
         <ChartCard title="Issue Breakdown" subtitle="By category">
           <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={issueBreakdown} layout="vertical">
+            <BarChart data={currentData.issueBreakdown} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis type="number" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
               <YAxis dataKey="type" type="category" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} width={100} />
@@ -215,25 +549,25 @@ export default function SupplierDashboard() {
         title="Source vs Target Comparison"
         columns={[
           { key: "field", header: "Field" },
-          { key: "source", header: "Source Count", render: (item: typeof sourceTargetComparison[0]) => item.source.toLocaleString() },
-          { key: "target", header: "Target Count", render: (item: typeof sourceTargetComparison[0]) => item.target.toLocaleString() },
+          { key: "source", header: "Source Count", render: (item: typeof currentData.sourceTargetComparison[0]) => item.source.toLocaleString() },
+          { key: "target", header: "Target Count", render: (item: typeof currentData.sourceTargetComparison[0]) => item.target.toLocaleString() },
           {
             key: "match",
             header: "Status",
-            render: (item: typeof sourceTargetComparison[0]) => (
+            render: (item: typeof currentData.sourceTargetComparison[0]) => (
               <StatusBadge status={item.match ? "success" : "warning"}>
                 {item.match ? "Match" : "Mismatch"}
               </StatusBadge>
             ),
           },
         ]}
-        data={sourceTargetComparison}
+        data={currentData.sourceTargetComparison}
       />
 
       {/* OpCo Breakdown */}
       <div className="mt-6">
         <DataTable
-          title="OpCo-wise Breakdown"
+          title={`${selectedOpCo} Breakdown`}
           columns={[
             { key: "opCo", header: "OpCo" },
             { key: "region", header: "Region" },
@@ -243,14 +577,14 @@ export default function SupplierDashboard() {
             {
               key: "rate",
               header: "Rate",
-              render: (item: typeof opCoBreakdown[0]) => (
+              render: (item: typeof currentData.opCoBreakdown[0]) => (
                 <StatusBadge status={item.rate >= 90 ? "success" : item.rate >= 80 ? "warning" : "error"}>
                   {item.rate}%
                 </StatusBadge>
               ),
             },
           ]}
-          data={opCoBreakdown}
+          data={currentData.opCoBreakdown}
         />
       </div>
 
@@ -265,18 +599,18 @@ export default function SupplierDashboard() {
             {
               key: "rate",
               header: "Rate",
-              render: (item: typeof siteMapping[0]) => (
+              render: (item: typeof currentData.siteMapping[0]) => (
                 <StatusBadge status={item.rate >= 90 ? "success" : item.rate >= 80 ? "warning" : "error"}>
                   {item.rate}%
                 </StatusBadge>
               ),
             },
           ]}
-          data={siteMapping}
+          data={currentData.siteMapping}
         />
 
         <DataTable
-          title="OpCo-wise Exceptions & Issues"
+          title={`${selectedOpCo} Exceptions & Issues`}
           columns={[
             { key: "id", header: "ID" },
             { key: "opCo", header: "OpCo" },
@@ -284,10 +618,10 @@ export default function SupplierDashboard() {
             {
               key: "status",
               header: "Status",
-              render: (item: typeof exceptions[0]) => <StatusBadge status={item.status}>{item.issue}</StatusBadge>,
+              render: (item: typeof currentData.exceptions[0]) => <StatusBadge status={item.status}>{item.issue}</StatusBadge>,
             },
           ]}
-          data={exceptions}
+          data={currentData.exceptions}
         />
       </div>
     </SidebarLayout>
