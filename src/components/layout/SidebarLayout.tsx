@@ -61,25 +61,16 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
           </div>
         </div>
 
-        {/* Collapse Button with vertical scroll line */}
-        <div className="absolute right-0 top-0 h-full flex flex-col items-center z-10">
-          {/* Top scroll indicator */}
-          <div className="w-px h-16 bg-muted-foreground/20 mt-2" />
-          
-          {/* Collapse button */}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="flex h-6 w-6 items-center justify-center rounded-full border border-border bg-card shadow-sm hover:bg-muted my-1"
-          >
-            {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
-          </button>
-          
-          {/* Bottom scroll indicator */}
-          <div className="w-px flex-1 bg-muted-foreground/20 mb-2" />
-        </div>
+        {/* Collapse Button */}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="absolute -right-3 top-6 flex h-6 w-6 items-center justify-center rounded-full border border-border bg-card shadow-sm hover:bg-muted z-20"
+        >
+          {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+        </button>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-3 space-y-6 overflow-y-auto">
+        {/* Navigation with custom scrollbar */}
+        <nav className="flex-1 p-3 pr-1 space-y-6 overflow-y-auto sidebar-custom-scroll">
             {/* Overview Section */}
             <div>
               {!collapsed && (

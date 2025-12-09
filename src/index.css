@@ -230,23 +230,47 @@
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-info/10 text-info;
   }
 
-  /* Sidebar scrollbar */
-  .sidebar-scroll [data-radix-scroll-area-viewport] {
+  /* Sidebar custom scrollbar */
+  .sidebar-custom-scroll {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--border)) transparent;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.4) hsl(var(--muted) / 0.5);
   }
 
-  .sidebar-scroll [data-radix-scroll-area-viewport]::-webkit-scrollbar {
-    width: 6px;
+  .sidebar-custom-scroll::-webkit-scrollbar {
+    width: 8px;
   }
 
-  .sidebar-scroll [data-radix-scroll-area-viewport]::-webkit-scrollbar-track {
-    background: transparent;
+  .sidebar-custom-scroll::-webkit-scrollbar-track {
+    background: hsl(var(--muted) / 0.5);
+    border-radius: 4px;
+    margin: 8px 0;
   }
 
-  .sidebar-scroll [data-radix-scroll-area-viewport]::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--muted-foreground) / 0.3);
-    border-radius: 3px;
+  .sidebar-custom-scroll::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.4);
+    border-radius: 4px;
+    border: 1px solid hsl(var(--muted) / 0.5);
+  }
+
+  .sidebar-custom-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.6);
+  }
+
+  .sidebar-custom-scroll::-webkit-scrollbar-button:start:decrement,
+  .sidebar-custom-scroll::-webkit-scrollbar-button:end:increment {
+    display: block;
+    height: 12px;
+    background-color: hsl(var(--muted));
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .sidebar-custom-scroll::-webkit-scrollbar-button:start:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M18 15l-6-6-6 6'/%3E%3C/svg%3E");
+  }
+
+  .sidebar-custom-scroll::-webkit-scrollbar-button:end:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   }
 
   .sidebar-scroll [data-radix-scroll-area-viewport]::-webkit-scrollbar-thumb:hover {
