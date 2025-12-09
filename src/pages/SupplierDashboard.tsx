@@ -7,6 +7,7 @@ import { DataTable } from "@/components/dashboard/DataTable";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { SupplierDetailedBreakdown } from "@/components/dashboard/SupplierDetailedBreakdown";
 import { ReconSummaryTable } from "@/components/dashboard/ReconSummaryTable";
+import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
 import { Package, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 
@@ -525,24 +526,21 @@ export default function SupplierDashboard() {
       {/* OpCo Load Performance with detailed breakdown */}
       <SupplierDetailedBreakdown data={supplierBreakdownData} />
 
-      {/* Supplier Recon Summary Tables for All OpCos */}
+      {/* Supplier Recon Summary - All OpCos in One Table */}
       <div className="mb-8">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Supplier Recon Summary - All OpCos</h3>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {Object.entries(opCoData).map(([opCoName, data]) => (
-            <ReconSummaryTable
-              key={opCoName}
-              title={`Supplier Recon Summary - ${opCoName}`}
-              data={data.reconSummaryData}
-              columns={[
-                { key: "suppliers", label: "Suppliers" },
-                { key: "supplierAddress", label: "Supplier Address" },
-                { key: "supplierSites", label: "Supplier Sites" },
-                { key: "supplierContacts", label: "Supplier Contacts" },
-              ]}
-            />
-          ))}
-        </div>
+        <ConsolidatedReconTable
+          title="Supplier Recon Summary - All OpCos"
+          opCoDataList={Object.entries(opCoData).map(([name, data]) => ({
+            name,
+            data: data.reconSummaryData
+          }))}
+          dataColumns={[
+            { key: "suppliers", label: "Suppliers" },
+            { key: "supplierAddress", label: "Supplier Address" },
+            { key: "supplierSites", label: "Supplier Sites" },
+            { key: "supplierContacts", label: "Supplier Contacts" },
+          ]}
+        />
       </div>
 
       {/* Insights */}
