@@ -11,7 +11,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 // OpCo Load Performance data for Supplier Dashboard
 const supplierOpCoPerformance = [
-  { name: "ATS", headersLoad: 9, linesLoad: 1, source: 424, loaded: 37 },
+  { name: "ATS", headersLoad: 9, linesLoad: 1, source: 583, loaded: 565 },
   { name: "EBS", headersLoad: 47, linesLoad: 40, source: 2305, loaded: 1078 },
   { name: "EP (Eng. Products)", headersLoad: 22.22, linesLoad: 21.44, source: 99, loaded: 147 },
   { name: "Etairos", headersLoad: 66, linesLoad: 60, source: 231, loaded: 153 },
