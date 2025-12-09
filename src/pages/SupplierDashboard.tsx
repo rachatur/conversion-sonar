@@ -3,30 +3,38 @@ import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
-import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { Package, CheckCircle, XCircle, Copy, AlertTriangle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area } from "recharts";
 
 const stats = [
-  { label: "Total Source Records", value: 1856, subtitle: "Supplier records received", icon: Package, variant: "primary" as const },
-  { label: "Successfully Converted", value: 1654, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "89.1% conversion rate" },
-  { label: "Fusion Error Records", value: 156, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
+  { label: "Total Source Records", value: 1213, subtitle: "Supplier records received", icon: Package, variant: "primary" as const },
+  { label: "Successfully Converted", value: 1101, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "90.8% conversion rate" },
+  { label: "Fusion Error Records", value: 87, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
   { label: "OpCo Count", value: 10, subtitle: "Operating companies", icon: FolderOpen, variant: "accent" as const },
 ];
 
 const summaryCards = [
   { label: "Supplier Types", value: 6, icon: Package },
-  { label: "Duplicates Found", value: 45, icon: Copy },
+  { label: "Duplicates Found", value: 9, icon: Copy },
   { label: "Missing Fields", value: 89, icon: AlertTriangle },
   { label: "Missing Category", value: 34, icon: FolderOpen },
 ];
 
 const insights = [
-  { type: "success" as const, highlight: "Domestic suppliers", text: "show excellent conversion rate at 94.2% with 1,172 records loaded across 6 OpCos." },
-  { type: "warning" as const, highlight: "International suppliers", text: "have lower rate (78.4%) due to bank account format validation issues in 4 OpCos." },
-  { type: "info" as const, highlight: "OpCo-INT-02", text: "needs attention with only 73.4% conversion - investigate address and tax data." },
-  { type: "success" as const, highlight: "Payment terms mapping", text: "completed for 98.9% of suppliers with proper currency alignment across all OpCos." },
+  { type: "info" as const, highlight: "Source data count is 1,197", text: "and the actual load count is 1,188. The difference of 9 records is due to duplicate suppliers in the source data." },
+  { type: "success" as const, highlight: "Only unique records", text: "were considered for the load. For details, please refer to the attached Duplicate Supplier List." },
+  { type: "warning" as const, highlight: "FBDI Upload errors", text: "87 supplier records, 30 address records, 30 site records, and 41 contact records failed during upload." },
+  { type: "success" as const, highlight: "Successfully loaded", text: "1,101 suppliers, 1,150 addresses, 1,150 sites, and 1,147 contacts into the system." },
+];
+
+const reconSummaryData = [
+  { metric: "Total Source File Records", suppliers: 1213, supplierAddress: 1180, supplierSites: "-", supplierContacts: 717 },
+  { metric: "Records Excluded / Not Valid", suppliers: 16, supplierAddress: "-", supplierSites: "-", supplierContacts: "-" },
+  { metric: "Valid Source Records", suppliers: 1197, supplierAddress: 1180, supplierSites: "-", supplierContacts: 717 },
+  { metric: "Total FBDI Records for Upload", suppliers: 1188, supplierAddress: 1180, supplierSites: 1180, supplierContacts: 1188 },
+  { metric: "Errored in FBDI Upload", suppliers: 87, supplierAddress: 30, supplierSites: 30, supplierContacts: 41 },
+  { metric: "FBDI Records Loaded Successfully", suppliers: 1101, supplierAddress: 1150, supplierSites: 1150, supplierContacts: 1147 },
 ];
 
 const conversionRateData = [
@@ -34,59 +42,54 @@ const conversionRateData = [
   { week: "W2", rate: 87.5 },
   { week: "W3", rate: 89.1 },
   { week: "W4", rate: 88.4 },
-  { week: "W5", rate: 89.1 },
+  { week: "W5", rate: 90.8 },
 ];
 
 const supplierTypeData = [
-  { name: "Manufacturing", value: 645, color: "hsl(207, 90%, 54%)" },
-  { name: "Distribution", value: 423, color: "hsl(160, 84%, 39%)" },
-  { name: "Services", value: 356, color: "hsl(32, 95%, 60%)" },
-  { name: "Raw Materials", value: 432, color: "hsl(280, 65%, 60%)" },
+  { name: "Manufacturing", value: 345, color: "hsl(207, 90%, 54%)" },
+  { name: "Distribution", value: 289, color: "hsl(160, 84%, 39%)" },
+  { name: "Services", value: 234, color: "hsl(32, 95%, 60%)" },
+  { name: "Raw Materials", value: 345, color: "hsl(280, 65%, 60%)" },
 ];
 
 const issueBreakdown = [
-  { type: "Address Issues", count: 89 },
-  { type: "Bank Details", count: 78 },
-  { type: "Tax Information", count: 56 },
-  { type: "Contact Info", count: 34 },
-  { type: "Payment Terms", count: 23 },
+  { type: "Address Issues", count: 30 },
+  { type: "Site Issues", count: 30 },
+  { type: "Contact Issues", count: 41 },
+  { type: "Supplier Issues", count: 87 },
 ];
 
 const sourceTargetComparison = [
-  { field: "Supplier Name", source: 1856, target: 1856, match: true },
-  { field: "Address", source: 1856, target: 1767, match: false },
-  { field: "Bank Account", source: 1756, target: 1678, match: false },
-  { field: "Tax ID", source: 1800, target: 1744, match: false },
-  { field: "Payment Terms", source: 1856, target: 1845, match: false },
-  { field: "Currency", source: 1856, target: 1856, match: true },
+  { field: "Supplier Name", source: 1213, target: 1101, match: false },
+  { field: "Supplier Address", source: 1180, target: 1150, match: false },
+  { field: "Supplier Sites", source: 1180, target: 1150, match: false },
+  { field: "Supplier Contacts", source: 717, target: 1147, match: false },
+  { field: "Bank Account", source: 1100, target: 1078, match: false },
+  { field: "Payment Terms", source: 1213, target: 1101, match: false },
 ];
 
 const opCoBreakdown = [
   { opCo: "OpCo-DOM-01", region: "Domestic", suppliers: 312, converted: 298, failed: 14, rate: 95.5 },
   { opCo: "OpCo-DOM-02", region: "Domestic", suppliers: 289, converted: 275, failed: 14, rate: 95.2 },
-  { opCo: "OpCo-DOM-03", region: "Domestic", suppliers: 267, converted: 251, failed: 16, rate: 94.0 },
-  { opCo: "OpCo-DOM-04", region: "Domestic", suppliers: 234, converted: 218, failed: 16, rate: 93.2 },
-  { opCo: "OpCo-DOM-05", region: "Domestic", suppliers: 189, converted: 178, failed: 11, rate: 94.2 },
-  { opCo: "OpCo-DOM-06", region: "Domestic", suppliers: 145, converted: 136, failed: 9, rate: 93.8 },
+  { opCo: "OpCo-DOM-03", region: "Domestic", suppliers: 167, converted: 151, failed: 16, rate: 90.4 },
+  { opCo: "OpCo-DOM-04", region: "Domestic", suppliers: 134, converted: 118, failed: 16, rate: 88.1 },
   { opCo: "OpCo-INT-01", region: "International", suppliers: 178, converted: 145, failed: 33, rate: 81.5 },
-  { opCo: "OpCo-INT-02", region: "International", suppliers: 134, converted: 98, failed: 36, rate: 73.1 },
-  { opCo: "OpCo-INT-03", region: "International", suppliers: 67, converted: 34, failed: 33, rate: 50.7 },
-  { opCo: "OpCo-INT-04", region: "International", suppliers: 41, converted: 21, failed: 20, rate: 51.2 },
+  { opCo: "OpCo-INT-02", region: "International", suppliers: 133, converted: 114, failed: 19, rate: 85.7 },
 ];
 
 const siteMapping = [
-  { site: "Site A - Primary", suppliers: 456, converted: 432, failed: 24, rate: 94.7 },
-  { site: "Site B - Warehouse", suppliers: 389, converted: 367, failed: 22, rate: 94.3 },
-  { site: "Site C - Distribution", suppliers: 334, converted: 298, failed: 36, rate: 89.2 },
-  { site: "Site D - Regional", suppliers: 312, converted: 289, failed: 23, rate: 92.6 },
-  { site: "Site E - International", suppliers: 365, converted: 268, failed: 97, rate: 73.4 },
+  { site: "Site A - Primary", suppliers: 356, converted: 332, failed: 24, rate: 93.3 },
+  { site: "Site B - Warehouse", suppliers: 289, converted: 267, failed: 22, rate: 92.4 },
+  { site: "Site C - Distribution", suppliers: 234, converted: 212, failed: 22, rate: 90.6 },
+  { site: "Site D - Regional", suppliers: 212, converted: 189, failed: 23, rate: 89.2 },
+  { site: "Site E - International", suppliers: 122, converted: 101, failed: 21, rate: 82.8 },
 ];
 
 const exceptions = [
   { id: "SUP-001", opCo: "OpCo-INT-02", name: "Global Parts Inc", issue: "Invalid bank account", status: "error" as const },
-  { id: "SUP-012", opCo: "OpCo-INT-03", name: "Pacific Trading Co", issue: "Missing tax certificate", status: "warning" as const },
-  { id: "SUP-034", opCo: "OpCo-INT-01", name: "Euro Supplies Ltd", issue: "Duplicate entry", status: "warning" as const },
-  { id: "SUP-056", opCo: "OpCo-INT-04", name: "Asia Materials", issue: "Missing category", status: "warning" as const },
+  { id: "SUP-012", opCo: "OpCo-INT-01", name: "Pacific Trading Co", issue: "Missing tax certificate", status: "warning" as const },
+  { id: "SUP-034", opCo: "OpCo-DOM-03", name: "Euro Supplies Ltd", issue: "Duplicate entry", status: "warning" as const },
+  { id: "SUP-056", opCo: "OpCo-DOM-04", name: "Asia Materials", issue: "Missing category", status: "warning" as const },
   { id: "SUP-078", opCo: "OpCo-DOM-01", name: "Local Logistics", issue: "Pending approval", status: "info" as const },
 ];
 
@@ -115,13 +118,60 @@ export default function SupplierDashboard() {
         ))}
       </div>
 
+      {/* Supplier Recon Summary Table */}
+      <div className="mb-8">
+        <div className="stat-card overflow-hidden">
+          <div className="bg-primary px-4 py-3">
+            <h3 className="text-sm font-semibold text-primary-foreground">Supplier Recon Summary</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border bg-muted/50">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground"></th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">Suppliers</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">Supplier Address</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">Supplier Sites</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">Supplier Contacts</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reconSummaryData.map((row, index) => (
+                  <tr key={index} className={`border-b border-border ${index === reconSummaryData.length - 1 ? 'bg-success/10' : ''}`}>
+                    <td className="px-4 py-3 text-sm font-medium text-foreground">{row.metric}</td>
+                    <td className={`px-4 py-3 text-sm text-center ${row.metric === 'Errored in FBDI Upload' ? 'text-destructive font-medium' : row.metric === 'FBDI Records Loaded Successfully' ? 'text-success font-medium' : 'text-primary font-medium'}`}>
+                      {row.suppliers}
+                    </td>
+                    <td className={`px-4 py-3 text-sm text-center ${row.metric === 'Errored in FBDI Upload' ? 'text-destructive font-medium' : row.metric === 'FBDI Records Loaded Successfully' ? 'text-success font-medium' : 'text-primary font-medium'}`}>
+                      {row.supplierAddress}
+                    </td>
+                    <td className={`px-4 py-3 text-sm text-center ${row.metric === 'Errored in FBDI Upload' ? 'text-destructive font-medium' : row.metric === 'FBDI Records Loaded Successfully' ? 'text-success font-medium' : 'text-primary font-medium'}`}>
+                      {row.supplierSites}
+                    </td>
+                    <td className={`px-4 py-3 text-sm text-center ${row.metric === 'Errored in FBDI Upload' ? 'text-destructive font-medium' : row.metric === 'FBDI Records Loaded Successfully' ? 'text-success font-medium' : 'text-primary font-medium'}`}>
+                      {row.supplierContacts}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="px-4 py-3 bg-warning/10 border-t border-warning/30">
+            <p className="text-xs text-warning-foreground">
+              <span className="font-semibold">**Note:</span> The source data count is 1,197, and the actual load count is 1,188. 
+              The difference of 9 records is due to duplicate suppliers in the source data. Only unique records were considered for the load.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Insights */}
       <div className="mb-8">
         <InsightsSection title="Key Insights & Recommendations" insights={insights} />
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <ChartCard title="Conversion Rate Trend" subtitle="Weekly performance">
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={conversionRateData}>
@@ -141,34 +191,12 @@ export default function SupplierDashboard() {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Supplier Types" subtitle="Category distribution">
-          <ResponsiveContainer width="100%" height={220}>
-            <PieChart>
-              <Pie
-                data={supplierTypeData}
-                cx="50%"
-                cy="50%"
-                innerRadius={45}
-                outerRadius={75}
-                paddingAngle={2}
-                dataKey="value"
-              >
-                {supplierTypeData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Legend />
-              <Tooltip formatter={(value: number) => value.toLocaleString()} />
-            </PieChart>
-          </ResponsiveContainer>
-        </ChartCard>
-
         <ChartCard title="Issue Breakdown" subtitle="By category">
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={issueBreakdown} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis type="number" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <YAxis dataKey="type" type="category" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} width={90} />
+              <YAxis dataKey="type" type="category" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} width={100} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
@@ -182,7 +210,7 @@ export default function SupplierDashboard() {
         </ChartCard>
       </div>
 
-      {/* Comparison Table */}
+      {/* Source vs Target Comparison */}
       <DataTable
         title="Source vs Target Comparison"
         columns={[
