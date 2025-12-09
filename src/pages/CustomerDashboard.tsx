@@ -1,37 +1,38 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { StatCard } from "@/components/dashboard/StatCard";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
+import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { Users, CheckCircle, XCircle, AlertTriangle, Building, MapPin, FileText, Copy } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, Legend, AreaChart, Area } from "recharts";
+import { Users, CheckCircle, XCircle, Copy, Building, MapPin, FileText, TrendingUp } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area } from "recharts";
 
 const stats = [
-  { title: "Customers Received", value: 45892, icon: Users, variant: "info" as const },
-  { title: "Successfully Converted", value: 42150, icon: CheckCircle, variant: "success" as const },
-  { title: "Failed Conversion", value: 3742, icon: XCircle, variant: "error" as const },
-  { title: "Duplicates Found", value: 856, icon: Copy, variant: "warning" as const },
+  { label: "Total Source Records", value: 45892, subtitle: "Customer records received", icon: Users, variant: "primary" as const },
+  { label: "Successfully Converted", value: 42150, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "91.8% conversion rate" },
+  { label: "Records Excluded", value: 3742, subtitle: "Failed/filtered records", icon: XCircle, variant: "warning" as const },
+  { label: "Duplicates Found", value: 856, subtitle: "Pending review", icon: Copy, variant: "accent" as const },
 ];
 
-const summaryCards = [
-  { title: "Corporate Customers", value: 12450, icon: Building },
-  { title: "Individual Customers", value: 33442, icon: Users },
-  { title: "Missing Address Data", value: 1245, icon: MapPin },
-  { title: "Missing Tax Info", value: 892, icon: FileText },
+const insights = [
+  { type: "success" as const, highlight: "North America region", text: "shows highest conversion rate at 96.7% with 17,890 records loaded successfully." },
+  { type: "warning" as const, highlight: "Middle East & Africa", text: "has low conversion rate (62.2%) - needs investigation on data quality and address formatting." },
+  { type: "success" as const, highlight: "Corporate customers", text: "consistently perform well with 94.2% conversion rate across all regions." },
+  { type: "info" as const, highlight: "Tax ID validation", text: "improved by 8.5% after implementing new validation rules." },
 ];
 
 const errorTrendData = [
-  { date: "Week 1", errors: 1250, resolved: 980 },
-  { date: "Week 2", errors: 890, resolved: 820 },
-  { date: "Week 3", errors: 650, resolved: 610 },
-  { date: "Week 4", errors: 520, resolved: 490 },
-  { date: "Week 5", errors: 432, resolved: 410 },
+  { week: "Week 1", errors: 1250, resolved: 980 },
+  { week: "Week 2", errors: 890, resolved: 820 },
+  { week: "Week 3", errors: 650, resolved: 610 },
+  { week: "Week 4", errors: 520, resolved: 490 },
+  { week: "Week 5", errors: 432, resolved: 410 },
 ];
 
 const customerTypeData = [
-  { name: "Corporate", value: 12450, color: "hsl(210, 100%, 45%)" },
-  { name: "Individual", value: 33442, color: "hsl(172, 66%, 40%)" },
+  { name: "Corporate", value: 12450, color: "hsl(207, 90%, 54%)" },
+  { name: "Individual", value: 33442, color: "hsl(160, 84%, 39%)" },
 ];
 
 const completenessData = [
@@ -69,39 +70,26 @@ const exceptions = [
 
 export default function CustomerDashboard() {
   return (
-    <DashboardLayout title="Customer Conversion" subtitle="Customer Conversion Dashboard">
+    <SidebarLayout pageTitle="Customer Conversion Dashboard" pageSubtitle="Customer data migration and validation">
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {stats.map((stat) => (
-          <StatCard key={stat.title} {...stat} />
+          <LargeStatCard key={stat.label} {...stat} />
         ))}
       </div>
 
-      {/* Summary Cards */}
-      <h2 className="section-title mb-4">Customer Summary</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {summaryCards.map((card) => (
-          <div key={card.title} className="stat-card">
-            <div className="flex items-center gap-3">
-              <div className="stat-card-icon bg-secondary text-primary">
-                <card.icon className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">{card.value.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">{card.title}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Insights */}
+      <div className="mb-8">
+        <InsightsSection title="Key Insights & Recommendations" insights={insights} />
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <ChartCard title="Error Trends" subtitle="Weekly error tracking">
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={errorTrendData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="date" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+              <XAxis dataKey="week" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
               <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
               <Tooltip
                 contentStyle={{
@@ -110,7 +98,7 @@ export default function CustomerDashboard() {
                   borderRadius: "8px",
                 }}
               />
-              <Area type="monotone" dataKey="errors" fill="hsl(var(--destructive) / 0.2)" stroke="hsl(var(--destructive))" />
+              <Area type="monotone" dataKey="errors" fill="hsl(var(--warning) / 0.2)" stroke="hsl(var(--warning))" />
               <Area type="monotone" dataKey="resolved" fill="hsl(var(--success) / 0.2)" stroke="hsl(var(--success))" />
             </AreaChart>
           </ResponsiveContainer>
@@ -209,6 +197,6 @@ export default function CustomerDashboard() {
           data={exceptions}
         />
       </div>
-    </DashboardLayout>
+    </SidebarLayout>
   );
 }

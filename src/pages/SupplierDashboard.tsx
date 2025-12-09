@@ -1,24 +1,25 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { StatCard } from "@/components/dashboard/StatCard";
+import { SidebarLayout } from "@/components/layout/SidebarLayout";
+import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
+import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { Package, CheckCircle, XCircle, AlertTriangle, Landmark, MapPin, FileText, Copy } from "lucide-react";
+import { Package, CheckCircle, XCircle, Copy } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, AreaChart, Area } from "recharts";
 
 const stats = [
-  { title: "Suppliers Received", value: 1856, icon: Package, variant: "info" as const },
-  { title: "Approved", value: 1654, icon: CheckCircle, variant: "success" as const },
-  { title: "Rejected", value: 202, icon: XCircle, variant: "error" as const },
-  { title: "Duplicates Found", value: 45, icon: Copy, variant: "warning" as const },
+  { label: "Total Source Records", value: 1856, subtitle: "Supplier records received", icon: Package, variant: "primary" as const },
+  { label: "Successfully Converted", value: 1654, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "89.1% conversion rate" },
+  { label: "Records Excluded", value: 202, subtitle: "Rejected/filtered records", icon: XCircle, variant: "warning" as const },
+  { label: "Duplicates Found", value: 45, subtitle: "Pending deduplication", icon: Copy, variant: "accent" as const },
 ];
 
-const summaryCards = [
-  { title: "Domestic Suppliers", value: 1245, icon: Package },
-  { title: "International Suppliers", value: 611, icon: Package },
-  { title: "Missing Bank Info", value: 78, icon: Landmark },
-  { title: "Missing Tax Info", value: 56, icon: FileText },
+const insights = [
+  { type: "success" as const, highlight: "Domestic suppliers", text: "show excellent conversion rate at 94.2% with 1,172 records loaded successfully." },
+  { type: "warning" as const, highlight: "International suppliers", text: "have lower rate (78.4%) due to bank account format validation issues." },
+  { type: "info" as const, highlight: "Site E - International", text: "needs attention with only 73.4% conversion - investigate address and tax data." },
+  { type: "success" as const, highlight: "Payment terms mapping", text: "completed for 98.9% of suppliers with proper currency alignment." },
 ];
 
 const conversionRateData = [
@@ -30,9 +31,9 @@ const conversionRateData = [
 ];
 
 const supplierTypeData = [
-  { name: "Manufacturing", value: 645, color: "hsl(210, 100%, 45%)" },
-  { name: "Distribution", value: 423, color: "hsl(172, 66%, 40%)" },
-  { name: "Services", value: 356, color: "hsl(38, 92%, 50%)" },
+  { name: "Manufacturing", value: 645, color: "hsl(207, 90%, 54%)" },
+  { name: "Distribution", value: 423, color: "hsl(160, 84%, 39%)" },
+  { name: "Services", value: 356, color: "hsl(32, 95%, 60%)" },
   { name: "Raw Materials", value: 432, color: "hsl(280, 65%, 60%)" },
 ];
 
@@ -71,34 +72,21 @@ const exceptions = [
 
 export default function SupplierDashboard() {
   return (
-    <DashboardLayout title="Supplier Conversion" subtitle="Supplier Conversion Dashboard">
+    <SidebarLayout pageTitle="Supplier Conversion Dashboard" pageSubtitle="Supplier data migration and validation">
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {stats.map((stat) => (
-          <StatCard key={stat.title} {...stat} />
+          <LargeStatCard key={stat.label} {...stat} />
         ))}
       </div>
 
-      {/* Summary Cards */}
-      <h2 className="section-title mb-4">Supplier Summary</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {summaryCards.map((card) => (
-          <div key={card.title} className="stat-card">
-            <div className="flex items-center gap-3">
-              <div className="stat-card-icon bg-secondary text-primary">
-                <card.icon className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-foreground">{card.value.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">{card.title}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Insights */}
+      <div className="mb-8">
+        <InsightsSection title="Key Insights & Recommendations" insights={insights} />
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <ChartCard title="Conversion Rate Trend" subtitle="Weekly performance">
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={conversionRateData}>
@@ -215,6 +203,6 @@ export default function SupplierDashboard() {
           data={exceptions}
         />
       </div>
-    </DashboardLayout>
+    </SidebarLayout>
   );
 }
