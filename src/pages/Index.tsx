@@ -6,10 +6,10 @@ import { Database, TrendingUp, AlertCircle, Building } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
 const overallStats = [
-  { label: "Total Source Records", value: 179454, subtitle: "Across all 4 modules", icon: Database, variant: "primary" as const },
-  { label: "Successfully Converted", value: 165326, subtitle: "", icon: TrendingUp, variant: "success" as const, highlightText: "92.1% overall conversion rate" },
-  { label: "Records Excluded", value: 14128, subtitle: "Invalid/filtered records", icon: AlertCircle, variant: "warning" as const },
-  { label: "Total OpCo/Branches", value: 45, subtitle: "12 OpCo + 8 OpCo + 10 OpCo + 15 Branches", icon: Building, variant: "accent" as const },
+  { label: "Total Source Records", value: 152807, subtitle: "Across all 4 modules", icon: Database, variant: "primary" as const },
+  { label: "Successfully Converted", value: 136377, subtitle: "", icon: TrendingUp, variant: "success" as const, highlightText: "89.2% overall conversion rate" },
+  { label: "Records Excluded", value: 16430, subtitle: "Invalid/filtered records", icon: AlertCircle, variant: "warning" as const },
+  { label: "Total OpCo/Branches", value: 37, subtitle: "7 Customer + 7 Supplier + 8 Employee + 15 Items Branches", icon: Building, variant: "accent" as const },
 ];
 
 const insights = [
