@@ -5,7 +5,7 @@ import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { Users, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 
-const opCoList = ["ATS", "C&J", "DORSE", "EBS", "EP", "ETARIOS"];
+const opCoList = ["AIRTECH", "ATS", "C&J", "DORSE", "EBS", "EP", "ETARIOS"];
 
 // OpCo-specific data extracted from Excel files
 const opCoData: Record<string, {
@@ -14,6 +14,31 @@ const opCoData: Record<string, {
   loadPercentData: { metric: string; customer: string; customerSitesBillTo: string; customerSitesShipTo: string }[];
   insights: { type: "info" | "success" | "warning"; highlight: string; text: string }[];
 }> = {
+  AIRTECH: {
+    stats: [
+      { label: "Total Source Records", value: 850, subtitle: "Customer records received", icon: Users, variant: "primary" },
+      { label: "Successfully Converted", value: 812, subtitle: "", icon: CheckCircle, variant: "success", highlightText: "95.5% conversion rate" },
+      { label: "Fusion Error Records", value: 0, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" },
+      { label: "Valid Source Records", value: 812, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" },
+    ],
+    reconSummaryData: [
+      { metric: "Total Source File Records", customer: 850, customerSitesBillTo: 920, customerSitesShipTo: 920 },
+      { metric: "Records Excluded / Not Valid", customer: 38, customerSitesBillTo: 108, customerSitesShipTo: 485 },
+      { metric: "Valid Source Records", customer: 812, customerSitesBillTo: 812, customerSitesShipTo: 435 },
+      { metric: "Total FBDI Records for Upload", customer: 812, customerSitesBillTo: 812, customerSitesShipTo: 435 },
+      { metric: "Errored in FBDI Upload", customer: 0, customerSitesBillTo: 0, customerSitesShipTo: 0 },
+      { metric: "FBDI Records loaded Successful", customer: 812, customerSitesBillTo: 812, customerSitesShipTo: 435 },
+    ],
+    loadPercentData: [
+      { metric: "Load Percent (Valid Records)", customer: "95.5%", customerSitesBillTo: "88.3%", customerSitesShipTo: "47.3%" },
+      { metric: "Load Percent (InValid Records)", customer: "4.5%", customerSitesBillTo: "11.7%", customerSitesShipTo: "52.7%" },
+    ],
+    insights: [
+      { type: "success", highlight: "FBDI Upload", text: "completed with 100% success rate - all 812 valid customer records loaded successfully." },
+      { type: "info", highlight: "Customer Sites", text: "Bill To: 812 records, Ship To: 435 records loaded." },
+      { type: "warning", highlight: "38 records excluded", text: "from customer data - review exclusion criteria." },
+    ],
+  },
   ATS: {
     stats: [
       { label: "Total Source Records", value: 1935, subtitle: "Customer records received", icon: Users, variant: "primary" },
@@ -167,7 +192,7 @@ const opCoData: Record<string, {
 };
 
 export default function CustomerDashboard() {
-  const [selectedOpCo, setSelectedOpCo] = useState("ATS");
+  const [selectedOpCo, setSelectedOpCo] = useState("AIRTECH");
   const currentData = opCoData[selectedOpCo];
 
   return (
