@@ -5,14 +5,14 @@ import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { Boxes, CheckCircle, XCircle, Tag, AlertTriangle, Copy, GitBranch } from "lucide-react";
+import { Boxes, CheckCircle, XCircle, Tag, AlertTriangle, Copy, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line } from "recharts";
 
 const stats = [
   { label: "Total Source Records", value: 128459, subtitle: "Item records received", icon: Boxes, variant: "primary" as const },
   { label: "Successfully Converted", value: 118420, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "92.2% conversion rate" },
   { label: "Fusion Error Records", value: 4567, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
-  { label: "Branch Count", value: 15, subtitle: "Active branches", icon: GitBranch, variant: "accent" as const },
+  { label: "Valid Source Records", value: 123892, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" as const },
 ];
 
 const summaryCards = [
