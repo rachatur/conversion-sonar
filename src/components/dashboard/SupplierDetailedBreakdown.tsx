@@ -15,6 +15,8 @@ interface SupplierBreakdownData {
 interface SupplierDetailedBreakdownProps {
   data: SupplierBreakdownData[];
   title?: string;
+  selectedOpCo?: string;
+  onOpCoSelect?: (opCoName: string) => void;
 }
 
 const getStatusBadge = (avgLoad: number) => {
@@ -78,7 +80,12 @@ function LoadRow({ label, loadPercent, source, loaded }: LoadRowProps) {
   );
 }
 
-export function SupplierDetailedBreakdown({ data, title = "OpCo Load Performance" }: SupplierDetailedBreakdownProps) {
+export function SupplierDetailedBreakdown({ 
+  data, 
+  title = "OpCo Load Performance",
+  selectedOpCo,
+  onOpCoSelect 
+}: SupplierDetailedBreakdownProps) {
   return (
     <div className="mb-8">
       <h3 className="text-lg font-semibold text-foreground mb-4">{title}</h3>
@@ -86,8 +93,15 @@ export function SupplierDetailedBreakdown({ data, title = "OpCo Load Performance
         {data.map((opco) => {
           const avgLoad = (opco.suppliersLoad + opco.addressLoad + opco.sitesLoad + opco.contactsLoad) / 4;
           const status = getStatusBadge(avgLoad);
+          const isSelected = selectedOpCo === opco.name;
           return (
-            <div key={opco.name} className="bg-card rounded-lg border border-border p-5 shadow-sm">
+            <div 
+              key={opco.name} 
+              className={`bg-card rounded-lg border p-5 shadow-sm cursor-pointer transition-all hover:shadow-md hover:border-primary/50 ${
+                isSelected ? 'border-primary ring-2 ring-primary/20' : 'border-border'
+              }`}
+              onClick={() => onOpCoSelect?.(opco.name)}
+            >
               <div className="flex items-center justify-between mb-5">
                 <h4 className="text-xl font-bold text-foreground">{opco.name}</h4>
                 <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${status.color}`}>

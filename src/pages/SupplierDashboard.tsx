@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
@@ -510,21 +511,43 @@ const opCoData: Record<string, {
   },
 };
 
+// Map breakdown data names to opCoData keys
+const opCoNameMapping: Record<string, string> = {
+  "AIRETECH": "AIRETECH",
+  "ATS": "ATS",
+  "EBS": "EBS",
+  "EP (Eng. Products)": "EP",
+  "Etairos": "ETARIOS",
+  "Dorse": "DORSE",
+  "C&J": "C&J",
+};
+
 export default function SupplierDashboard() {
-  // Use AIRETECH as the default display data
-  const currentData = opCoData["AIRETECH"];
+  const [selectedOpCo, setSelectedOpCo] = useState<string>("AIRETECH");
+  
+  // Map the selected breakdown name to the opCoData key
+  const opCoDataKey = opCoNameMapping[selectedOpCo] || selectedOpCo;
+  const currentData = opCoData[opCoDataKey] || opCoData["AIRETECH"];
+
+  const handleOpCoSelect = (opCoName: string) => {
+    setSelectedOpCo(opCoName);
+  };
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
-      {/* Stats */}
+      {/* Stats - Updates based on selected OpCo */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {currentData.stats.map((stat) => (
           <LargeStatCard key={stat.label} {...stat} />
         ))}
       </div>
 
-      {/* OpCo Load Performance with detailed breakdown */}
-      <SupplierDetailedBreakdown data={supplierBreakdownData} />
+      {/* OpCo Load Performance with detailed breakdown - Clickable */}
+      <SupplierDetailedBreakdown 
+        data={supplierBreakdownData} 
+        selectedOpCo={selectedOpCo}
+        onOpCoSelect={handleOpCoSelect}
+      />
 
       {/* Supplier Recon Summary - All OpCos in One Table */}
       <div className="mb-8">
