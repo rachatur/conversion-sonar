@@ -1,28 +1,54 @@
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
-import { InsightsSection } from "@/components/dashboard/InsightsSection";
-import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
-
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { UserCheck, Users, XCircle, FolderOpen } from "lucide-react";
-import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
 
+// Overall Employee Stats
 const stats = [
-  { label: "Total Source Records", value: 3247, subtitle: "Employee records received", icon: Users, variant: "primary" as const },
-  { label: "Successfully Converted", value: 3102, subtitle: "", icon: UserCheck, variant: "success" as const, highlightText: "95.5% conversion rate" },
-  { label: "Fusion Error Records", value: 89, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
-  { label: "Valid Source Records", value: 3191, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" as const },
+  { label: "Total Employees in SIT", value: 382, subtitle: "Employee records in system", icon: Users, variant: "primary" as const },
+  { label: "Employees Loaded Successfully", value: 381, subtitle: "", icon: UserCheck, variant: "success" as const, highlightText: "100% load success rate" },
+  { label: "Failed Employee Records", value: 0, subtitle: "No failed records", icon: XCircle, variant: "warning" as const },
+  { label: "Total Employees Intended", value: 381, subtitle: "After omissions", icon: FolderOpen, variant: "accent" as const },
 ];
 
-
-const employeeStatusData = [
-  { name: "Active", value: 2891, color: "hsl(160, 84%, 39%)" },
-  { name: "Inactive", value: 356, color: "hsl(215, 16%, 47%)" },
+// Employee Data Load Summary
+const employeeLoadSummary = [
+  { metric: "Total Employees in SIT", value: 382 },
+  { metric: "Total No Of Lines in data file", value: 381 },
+  { metric: "Number of records Omitted for load", value: 0 },
+  { metric: "Total Employees Intended", value: 381 },
+  { metric: "Employees Loaded Successfully", value: 381 },
+  { metric: "Failed Employee Records", value: 0 },
+  { metric: "Load Success Rate", value: "100%" },
+  { metric: "Manual Implementation User extra in system", value: 1 },
 ];
 
+// Manager Assignment Data Load Summary
+const managerLoadSummary = [
+  { metric: "Total Managers Loaded in SIT", value: 286 },
+  { metric: "Total No Of Lines in data file", value: 369 },
+  { metric: "Number of records Omitted for load (Bad or Out of Scope data)", value: 12 },
+  { metric: "Total Employees Intended", value: 369 },
+  { metric: "Employees Loaded Successfully", value: 286 },
+  { metric: "Failed Employee Records", value: 83 },
+  { metric: "Load Success Rate", value: "75%" },
+  { metric: "Review Required", value: 84 },
+];
 
-
+// Source Count by OpCo
+const sourceCountByOpCo = [
+  { opCo: "Advanced Thermal Solutions, LLC", countOfEmployees: 29, countOfManager: 29 },
+  { opCo: "Air Control Concepts, LLC", countOfEmployees: 81, countOfManager: 81 },
+  { opCo: "Airetech Corporation", countOfEmployees: 63, countOfManager: 63 },
+  { opCo: "C&J Building Solutions, LLC", countOfEmployees: 23, countOfManager: 23 },
+  { opCo: "Dorse & Company, LLC", countOfEmployees: 47, countOfManager: 46 },
+  { opCo: "Engineered Products, LLC", countOfEmployees: 13, countOfManager: 13 },
+  { opCo: "Etairos HVAC JV, LLC", countOfEmployees: 57, countOfManager: 57 },
+  { opCo: "Smart Enterprises, LLC (EBS)", countOfEmployees: 68, countOfManager: 68 },
+  { opCo: "Grand Total", countOfEmployees: 381, countOfManager: 380 },
+  { opCo: "Missing record", countOfEmployees: "", countOfManager: 1 },
+];
 
 const keySteps = [
   { sNo: 1, activity: "Create Employee at Master Org (HCM)", description: "Establish employee records centrally in the Master HR Organization to serve as the source of truth.", owner: "Conversion Team", status: "Not Started" },
@@ -55,31 +81,38 @@ export default function EmployeeDashboard() {
         ))}
       </div>
 
-      {/* Charts Row */}
-      <div className="mb-8">
-        <ChartCard title="Employee Status" subtitle="Active vs Inactive">
-          <ResponsiveContainer width="100%" height={220}>
-            <PieChart>
-              <Pie
-                data={employeeStatusData}
-                cx="50%"
-                cy="50%"
-                innerRadius={45}
-                outerRadius={75}
-                paddingAngle={2}
-                dataKey="value"
-              >
-                {employeeStatusData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Legend />
-              <Tooltip formatter={(value: number) => value.toLocaleString()} />
-            </PieChart>
-          </ResponsiveContainer>
-        </ChartCard>
+      {/* Data Load Summary Tables */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <DataTable
+          title="Employee Data Load Summary Report"
+          columns={[
+            { key: "metric", header: "Metric" },
+            { key: "value", header: "Value" },
+          ]}
+          data={employeeLoadSummary}
+        />
+        <DataTable
+          title="Manager Assignment Data Load Summary Report"
+          columns={[
+            { key: "metric", header: "Metric" },
+            { key: "value", header: "Value" },
+          ]}
+          data={managerLoadSummary}
+        />
       </div>
 
+      {/* Source Count by OpCo */}
+      <div className="mb-8">
+        <DataTable
+          title="Source Count by OpCo"
+          columns={[
+            { key: "opCo", header: "OpCo" },
+            { key: "countOfEmployees", header: "Count of Employees" },
+            { key: "countOfManager", header: "Count of Manager" },
+          ]}
+          data={sourceCountByOpCo}
+        />
+      </div>
 
       {/* Key Steps Activity Tracking */}
       <div className="mt-6">
