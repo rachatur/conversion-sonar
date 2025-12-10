@@ -3,7 +3,7 @@ import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
-import { ProgressBar } from "@/components/dashboard/ProgressBar";
+
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { UserCheck, Users, XCircle, AlertTriangle, Copy, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
@@ -43,14 +43,6 @@ const employeeStatusData = [
   { name: "Inactive", value: 356, color: "hsl(215, 16%, 47%)" },
 ];
 
-const dataQualityData = [
-  { field: "Name", quality: 100 },
-  { field: "Email", quality: 98.6 },
-  { field: "Department", quality: 99.2 },
-  { field: "Manager", quality: 95.4 },
-  { field: "Phone", quality: 97.3 },
-  { field: "Start Date", quality: 99.8 },
-];
 
 const roleMapping = [
   { sourceRole: "Software Engineer", targetRole: "Engineer - Software", count: 245, status: "success" as const },
@@ -114,7 +106,7 @@ export default function EmployeeDashboard() {
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <ChartCard title="Conversion by Department" subtitle="Records by department">
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={departmentData} layout="vertical">
@@ -154,20 +146,6 @@ export default function EmployeeDashboard() {
               <Tooltip formatter={(value: number) => value.toLocaleString()} />
             </PieChart>
           </ResponsiveContainer>
-        </ChartCard>
-
-        <ChartCard title="Data Quality Score" subtitle="Field-level completeness">
-          <div className="space-y-3">
-            {dataQualityData.map((item) => (
-              <div key={item.field}>
-                <ProgressBar
-                  value={item.quality}
-                  label={item.field}
-                  variant={item.quality >= 98 ? "success" : item.quality >= 95 ? "warning" : "error"}
-                />
-              </div>
-            ))}
-          </div>
         </ChartCard>
       </div>
 
