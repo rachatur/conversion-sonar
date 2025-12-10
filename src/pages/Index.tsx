@@ -20,10 +20,10 @@ const insights = [
 ];
 
 const conversionByModule = [
-  { name: "Customer", converted: 42150, failed: 3742 },
-  { name: "Employee", converted: 3102, failed: 145 },
-  { name: "Supplier", converted: 1654, failed: 202 },
-  { name: "Items", converted: 118420, failed: 10039 },
+  { name: "Customer", converted: 38000, failed: 4500 },
+  { name: "Employee", converted: 5000, failed: 300 },
+  { name: "Supplier", converted: 4000, failed: 200 },
+  { name: "Items", converted: 117000, failed: 15000 },
 ];
 
 const statusDistribution = [
