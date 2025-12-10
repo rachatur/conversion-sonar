@@ -537,6 +537,42 @@ export default function SupplierDashboard() {
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
+      {/* Overall Supplier Upload Summary */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-4">Overall Supplier Upload Summary</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <LargeStatCard
+            label="Total Source Records"
+            value={5048}
+            subtitle="Supplier records received"
+            icon={Package}
+            variant="primary"
+          />
+          <LargeStatCard
+            label="Successfully Converted"
+            value={4781}
+            subtitle=""
+            icon={CheckCircle}
+            variant="success"
+            highlightText="94.7% conversion rate"
+          />
+          <LargeStatCard
+            label="Fusion Error Records"
+            value={137}
+            subtitle="Errors in fusion load"
+            icon={XCircle}
+            variant="warning"
+          />
+          <LargeStatCard
+            label="Valid Source Records"
+            value={4914}
+            subtitle="After deduplication"
+            icon={FolderOpen}
+            variant="accent"
+          />
+        </div>
+      </div>
+
       {/* Selected OpCo Header */}
       <div className="mb-4">
         <span className="text-sm text-muted-foreground">Showing data for: </span>
