@@ -61,32 +61,6 @@ const roleMapping = [
   { sourceRole: "Unknown", targetRole: "Pending Assignment", count: 12, status: "error" as const },
 ];
 
-const opCoBreakdown = [
-  { opCo: "OpCo-HQ", total: 856, converted: 832, failed: 24, rate: 97.2 },
-  { opCo: "OpCo-NA-01", total: 523, converted: 498, failed: 25, rate: 95.2 },
-  { opCo: "OpCo-EU-01", total: 445, converted: 426, failed: 19, rate: 95.7 },
-  { opCo: "OpCo-AP-01", total: 389, converted: 372, failed: 17, rate: 95.6 },
-  { opCo: "OpCo-LA-01", total: 312, converted: 298, failed: 14, rate: 95.5 },
-  { opCo: "OpCo-MEA-01", total: 289, converted: 267, failed: 22, rate: 92.4 },
-  { opCo: "OpCo-NA-02", total: 245, converted: 234, failed: 11, rate: 95.5 },
-  { opCo: "OpCo-EU-02", total: 188, converted: 175, failed: 13, rate: 93.1 },
-];
-
-const hierarchyValidation = [
-  { level: "Executive", total: 12, valid: 12, invalid: 0, rate: 100 },
-  { level: "Director", total: 45, valid: 44, invalid: 1, rate: 97.8 },
-  { level: "Manager", total: 312, valid: 298, invalid: 14, rate: 95.5 },
-  { level: "Senior", total: 856, valid: 832, invalid: 24, rate: 97.2 },
-  { level: "Junior", total: 2022, valid: 1967, invalid: 55, rate: 97.3 },
-];
-
-const exceptions = [
-  { id: "EMP-1001", opCo: "OpCo-MEA-01", name: "John Smith", issue: "Missing manager", status: "warning" as const },
-  { id: "EMP-1042", opCo: "OpCo-EU-02", name: "Sarah Johnson", issue: "Invalid department", status: "error" as const },
-  { id: "EMP-1089", opCo: "OpCo-LA-01", name: "Mike Brown", issue: "Duplicate entry", status: "warning" as const },
-  { id: "EMP-1156", opCo: "OpCo-NA-01", name: "Emily Davis", issue: "Terminated - still active", status: "error" as const },
-  { id: "EMP-1203", opCo: "OpCo-AP-01", name: "Robert Wilson", issue: "Review pending", status: "info" as const },
-];
 
 const keySteps = [
   { sNo: 1, activity: "Create Employee at Master Org (HCM)", description: "Establish employee records centrally in the Master HR Organization to serve as the source of truth.", owner: "Conversion Team", status: "Not Started" },
@@ -217,95 +191,6 @@ export default function EmployeeDashboard() {
         data={roleMapping}
       />
 
-      {/* OpCo Breakdown */}
-      <div className="mt-6">
-        <DataTable
-          title="OpCo-wise Breakdown"
-          columns={[
-            { key: "opCo", header: "OpCo" },
-            { key: "total", header: "Total" },
-            { key: "converted", header: "Converted" },
-            { key: "failed", header: "Failed" },
-            {
-              key: "rate",
-              header: "Rate",
-              render: (item: typeof opCoBreakdown[0]) => (
-                <StatusBadge status={item.rate >= 95 ? "success" : item.rate >= 90 ? "warning" : "error"}>
-                  {item.rate}%
-                </StatusBadge>
-              ),
-            },
-          ]}
-          data={opCoBreakdown}
-        />
-      </div>
-
-      {/* Breakdown Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        <DataTable
-          title="Hierarchy Validation"
-          columns={[
-            { key: "level", header: "Level" },
-            { key: "total", header: "Total" },
-            { key: "valid", header: "Valid" },
-            { key: "invalid", header: "Invalid" },
-            {
-              key: "rate",
-              header: "Rate",
-              render: (item: typeof hierarchyValidation[0]) => (
-                <StatusBadge status={item.rate >= 98 ? "success" : item.rate >= 95 ? "warning" : "error"}>
-                  {item.rate}%
-                </StatusBadge>
-              ),
-            },
-          ]}
-          data={hierarchyValidation}
-        />
-
-        <DataTable
-          title="OpCo-wise Exceptions & Issues"
-          columns={[
-            { key: "id", header: "ID" },
-            { key: "opCo", header: "OpCo" },
-            { key: "name", header: "Employee" },
-            {
-              key: "status",
-              header: "Status",
-              render: (item: typeof exceptions[0]) => <StatusBadge status={item.status}>{item.issue}</StatusBadge>,
-            },
-          ]}
-          data={exceptions}
-        />
-      </div>
-
-      {/* Key Steps Activity Tracking */}
-      <div className="mt-6">
-        <DataTable
-          title="Key Steps - Employee Conversion Activities"
-          columns={[
-            { key: "sNo", header: "S.No" },
-            { key: "activity", header: "Activity" },
-            { key: "description", header: "Description" },
-            { key: "owner", header: "Owner" },
-            {
-              key: "status",
-              header: "Status",
-              render: (item: typeof keySteps[0]) => (
-                <StatusBadge 
-                  status={
-                    item.status === "Completed" ? "success" : 
-                    item.status === "In Progress" ? "warning" : 
-                    "info"
-                  }
-                >
-                  {item.status}
-                </StatusBadge>
-              ),
-            },
-          ]}
-          data={keySteps}
-        />
-      </div>
     </SidebarLayout>
   );
 }
