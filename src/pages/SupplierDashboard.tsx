@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
@@ -523,17 +522,8 @@ const opCoNameMapping: Record<string, string> = {
 };
 
 export default function SupplierDashboard() {
-  const [selectedOpCo, setSelectedOpCo] = useState<string>("AIRETECH");
-  
-  // Map the selected breakdown name to the opCoData key
-  const opCoDataKey = opCoNameMapping[selectedOpCo] || selectedOpCo;
-  const currentData = opCoData[opCoDataKey] || opCoData["AIRETECH"];
-
-  const handleOpCoSelect = (opCoName: string) => {
-    setSelectedOpCo(opCoName);
-    // Scroll to top to show updated stats
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // Use AIRETECH data for insights
+  const currentData = opCoData["AIRETECH"];
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
@@ -573,24 +563,9 @@ export default function SupplierDashboard() {
         </div>
       </div>
 
-      {/* Selected OpCo Header */}
-      <div className="mb-4">
-        <span className="text-sm text-muted-foreground">Showing data for: </span>
-        <span className="text-lg font-semibold text-primary">{selectedOpCo}</span>
-      </div>
-
-      {/* Stats - Updates based on selected OpCo */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {currentData.stats.map((stat) => (
-          <LargeStatCard key={`${selectedOpCo}-${stat.label}`} {...stat} />
-        ))}
-      </div>
-
-      {/* OpCo Load Performance with detailed breakdown - Clickable */}
+      {/* OpCo Load Performance with detailed breakdown */}
       <SupplierDetailedBreakdown 
         data={supplierBreakdownData} 
-        selectedOpCo={selectedOpCo}
-        onOpCoSelect={handleOpCoSelect}
       />
 
       {/* Supplier Recon Summary - All OpCos in One Table */}
