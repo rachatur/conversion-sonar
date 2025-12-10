@@ -6,7 +6,7 @@ import { UserCheck, Users, XCircle, FolderOpen } from "lucide-react";
 
 // Overall Employee Stats
 const stats = [
-  { label: "Total Employees in SIT", value: 382, subtitle: "Employee records in system", icon: Users, variant: "primary" as const },
+  { label: "Total Employees in SIT", value: 381, subtitle: "Employee records in system", icon: Users, variant: "primary" as const },
   { label: "Employees Loaded Successfully", value: 381, subtitle: "", icon: UserCheck, variant: "success" as const, highlightText: "100% load success rate" },
   { label: "Failed Employee Records", value: 0, subtitle: "No failed records", icon: XCircle, variant: "warning" as const },
   { label: "Total Employees Intended", value: 381, subtitle: "After omissions", icon: FolderOpen, variant: "accent" as const },
@@ -14,14 +14,13 @@ const stats = [
 
 // Employee Data Load Summary
 const employeeLoadSummary = [
-  { metric: "Total Employees in SIT", value: 382 },
+  { metric: "Total Employees in SIT", value: 381 },
   { metric: "Total No Of Lines in data file", value: 381 },
   { metric: "Number of records Omitted for load", value: 0 },
   { metric: "Total Employees Intended", value: 381 },
   { metric: "Employees Loaded Successfully", value: 381 },
   { metric: "Failed Employee Records", value: 0 },
   { metric: "Load Success Rate", value: "100%" },
-  { metric: "Manual Implementation User extra in system", value: 1 },
 ];
 
 // Manager Assignment Data Load Summary
