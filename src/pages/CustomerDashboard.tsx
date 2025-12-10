@@ -279,12 +279,41 @@ export default function CustomerDashboard() {
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Customer Conversion Dashboard">
-      {/* Selected OpCo Header */}
-      <div className="mb-4">
-        <span className="text-sm text-muted-foreground">Showing data for: </span>
-        <span className="text-lg font-semibold text-primary">{selectedOpCo}</span>
+      {/* Overall Customer Upload Summary */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-4">Overall Customer Upload Summary</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <LargeStatCard
+            label="Total Source Records"
+            value={16053}
+            subtitle="Customer records received"
+            icon={Users}
+            variant="primary"
+          />
+          <LargeStatCard
+            label="Successfully Converted"
+            value={11317}
+            subtitle=""
+            icon={CheckCircle}
+            variant="success"
+            highlightText="70% conversion rate"
+          />
+          <LargeStatCard
+            label="Fusion Error Records"
+            value={0}
+            subtitle="Errors in fusion load"
+            icon={XCircle}
+            variant="warning"
+          />
+          <LargeStatCard
+            label="Valid Source Records"
+            value={11317}
+            subtitle="After deduplication"
+            icon={FolderOpen}
+            variant="accent"
+          />
+        </div>
       </div>
-
 
       {/* OpCo Load Performance - Detailed Breakdown - Clickable */}
       <CustomerDetailedBreakdown 
