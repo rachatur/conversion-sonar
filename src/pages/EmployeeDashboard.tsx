@@ -22,14 +22,6 @@ const employeeStatusData = [
 ];
 
 
-const roleMapping = [
-  { sourceRole: "Software Engineer", targetRole: "Engineer - Software", count: 245, status: "success" as const },
-  { sourceRole: "Sales Manager", targetRole: "Manager - Sales", count: 56, status: "success" as const },
-  { sourceRole: "Accountant", targetRole: "Specialist - Finance", count: 34, status: "warning" as const },
-  { sourceRole: "HR Coordinator", targetRole: "Coordinator - HR", count: 23, status: "success" as const },
-  { sourceRole: "Data Analyst", targetRole: "Analyst - Data", count: 67, status: "success" as const },
-  { sourceRole: "Unknown", targetRole: "Pending Assignment", count: 12, status: "error" as const },
-];
 
 
 const keySteps = [
@@ -88,25 +80,6 @@ export default function EmployeeDashboard() {
         </ChartCard>
       </div>
 
-      {/* Role Mapping Table */}
-      <DataTable
-        title="Role/Position Mapping"
-        columns={[
-          { key: "sourceRole", header: "Source Role" },
-          { key: "targetRole", header: "Target Role" },
-          { key: "count", header: "Count", render: (item: typeof roleMapping[0]) => item.count.toLocaleString() },
-          {
-            key: "status",
-            header: "Status",
-            render: (item: typeof roleMapping[0]) => (
-              <StatusBadge status={item.status}>
-                {item.status === "success" ? "Mapped" : item.status === "warning" ? "Review" : "Unmapped"}
-              </StatusBadge>
-            ),
-          },
-        ]}
-        data={roleMapping}
-      />
 
       {/* Key Steps Activity Tracking */}
       <div className="mt-6">
