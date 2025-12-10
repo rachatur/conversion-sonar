@@ -3,172 +3,225 @@ import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
-import { ProgressBar } from "@/components/dashboard/ProgressBar";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { Boxes, CheckCircle, XCircle, Tag, AlertTriangle, Copy, FolderOpen } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line } from "recharts";
+import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
+import { Boxes, CheckCircle, XCircle, FolderOpen, Tag, Layers } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
-const stats = [
-  { label: "Total Source Records", value: 128459, subtitle: "Item records received", icon: Boxes, variant: "primary" as const },
-  { label: "Successfully Converted", value: 118420, subtitle: "", icon: CheckCircle, variant: "success" as const, highlightText: "92.2% conversion rate" },
-  { label: "Fusion Error Records", value: 4567, subtitle: "Errors in fusion load", icon: XCircle, variant: "warning" as const },
-  { label: "Valid Source Records", value: 123892, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" as const },
+// Item Recon Branch Summary Data
+const itemReconBranchData = [
+  { 
+    name: "Manufacturer_Branch",
+    data: [
+      { metric: "Total Source File Records", value: 24945 },
+      { metric: "Records Excluded / Not Valid", value: 0 },
+      { metric: "Valid Source Records", value: 24945 },
+      { metric: "", value: 0 },
+      { metric: "Total FBDI Records for Upload", value: 24945 },
+      { metric: "Errored in FBDI Upload", value: 0 },
+      { metric: "FBDI Records loaded Successful", value: 24945 },
+    ]
+  },
+  { 
+    name: "Equipment_All_Branches",
+    data: [
+      { metric: "Total Source File Records", value: 233180 },
+      { metric: "Records Excluded / Not Valid", value: 0 },
+      { metric: "Valid Source Records", value: 233180 },
+      { metric: "", value: 0 },
+      { metric: "Total FBDI Records for Upload", value: 233180 },
+      { metric: "Errored in FBDI Upload", value: 0 },
+      { metric: "FBDI Records loaded Successful", value: 233180 },
+    ]
+  },
+  { 
+    name: "Parts_ALL_Branches",
+    data: [
+      { metric: "Total Source File Records", value: 134200 },
+      { metric: "Records Excluded / Not Valid", value: 0 },
+      { metric: "Valid Source Records", value: 134200 },
+      { metric: "", value: 0 },
+      { metric: "Total FBDI Records for Upload", value: 134200 },
+      { metric: "Errored in FBDI Upload", value: 0 },
+      { metric: "FBDI Records loaded Successful", value: 134200 },
+    ]
+  },
+  { 
+    name: "Service_All_Branches",
+    data: [
+      { metric: "Total Source File Records", value: 94000 },
+      { metric: "Records Excluded / Not Valid", value: 0 },
+      { metric: "Valid Source Records", value: 94000 },
+      { metric: "", value: 0 },
+      { metric: "Total FBDI Records for Upload", value: 94000 },
+      { metric: "Errored in FBDI Upload", value: 0 },
+      { metric: "FBDI Records loaded Successful", value: 94000 },
+    ]
+  },
 ];
 
-const summaryCards = [
-  { label: "Product Lines", value: 12, icon: Boxes },
-  { label: "Completeness Level", value: "94.5%", icon: CheckCircle },
-  { label: "Missing Fields", value: 3245, icon: AlertTriangle },
-  { label: "Missing Category", value: 2456, icon: Tag },
-  { label: "Duplicates Found", value: 876, icon: Copy },
+// Item Recon Summary Data (Category Assignments)
+const itemReconSummaryData = [
+  { 
+    name: "Category_Assignment_lob",
+    data: [
+      { metric: "Total Source File Records", value: 20719 },
+      { metric: "Records Excluded / Not Valid", value: 0 },
+      { metric: "Valid Source Records", value: 20719 },
+      { metric: "", value: 0 },
+      { metric: "Total FBDI Records for Upload", value: 20719 },
+      { metric: "Errored in FBDI Upload", value: 0 },
+      { metric: "FBDI Records loaded Successful", value: 20719 },
+    ]
+  },
+  { 
+    name: "Category_Assignment_Parent",
+    data: [
+      { metric: "Total Source File Records", value: 20719 },
+      { metric: "Records Excluded / Not Valid", value: 0 },
+      { metric: "Valid Source Records", value: 20719 },
+      { metric: "", value: 0 },
+      { metric: "Total FBDI Records for Upload", value: 20719 },
+      { metric: "Errored in FBDI Upload", value: 0 },
+      { metric: "FBDI Records loaded Successful", value: 20719 },
+    ]
+  },
+  { 
+    name: "Category_Assignment_PRO_LINE",
+    data: [
+      { metric: "Total Source File Records", value: 20719 },
+      { metric: "Records Excluded / Not Valid", value: 0 },
+      { metric: "Valid Source Records", value: 20719 },
+      { metric: "", value: 0 },
+      { metric: "Total FBDI Records for Upload", value: 20719 },
+      { metric: "Errored in FBDI Upload", value: 0 },
+      { metric: "FBDI Records loaded Successful", value: 20719 },
+    ]
+  },
+  { 
+    name: "Category_Assignment_PO",
+    data: [
+      { metric: "Total Source File Records", value: 20719 },
+      { metric: "Records Excluded / Not Valid", value: 0 },
+      { metric: "Valid Source Records", value: 20719 },
+      { metric: "", value: 0 },
+      { metric: "Total FBDI Records for Upload", value: 20719 },
+      { metric: "Errored in FBDI Upload", value: 0 },
+      { metric: "FBDI Records loaded Successful", value: 20719 },
+    ]
+  },
+  { 
+    name: "IMO_Items",
+    data: [
+      { metric: "Total Source File Records", value: 20719 },
+      { metric: "Records Excluded / Not Valid", value: 0 },
+      { metric: "Valid Source Records", value: 20719 },
+      { metric: "", value: 0 },
+      { metric: "Total FBDI Records for Upload", value: 20719 },
+      { metric: "Errored in FBDI Upload", value: 0 },
+      { metric: "FBDI Records loaded Successful", value: 20719 },
+    ]
+  },
+];
+
+// Stats from UAT Item Counts
+const stats = [
+  { label: "Total Item Count", value: 233014, subtitle: "Items in system", icon: Boxes, variant: "primary" as const },
+  { label: "Item EFF Counts", value: 17477, subtitle: "Extensible Flexfields", icon: Tag, variant: "success" as const },
+  { label: "Item Categories", value: 52334, subtitle: "Category assignments", icon: Layers, variant: "accent" as const },
+  { label: "IMO Items", value: 13060, subtitle: "Master Org items", icon: FolderOpen, variant: "warning" as const },
 ];
 
 const insights = [
-  { type: "success" as const, highlight: "Electronics product line", text: "shows highest conversion rate at 96.3% with 32,450 items across 8 branches." },
-  { type: "warning" as const, highlight: "Consumables category", text: "has lower rate (88.5%) due to UOM mapping issues across 5 branches - needs standardization." },
-  { type: "success" as const, highlight: "BOM mapping", text: "completed for 97.8% of items with proper parent-child relationships across all branches." },
-  { type: "info" as const, highlight: "Valuation method", text: "standardized to weighted average for 98.2% of inventory items in 15 branches." },
+  { type: "success" as const, highlight: "All branch uploads", text: "completed with 100% success rate - no errors in FBDI upload across all branches." },
+  { type: "success" as const, highlight: "Category assignments", text: "fully loaded with 20,719 records each for LOB, Parent, Product Line, and PO categories." },
+  { type: "info" as const, highlight: "Equipment branch", text: "has the highest record count at 233,180 items across all branches." },
+  { type: "info" as const, highlight: "31 key steps", text: "identified for item conversion process - all currently in 'Not Started' status." },
 ];
 
-const productLineData = [
-  { name: "Electronics", converted: 32450, failed: 1245 },
-  { name: "Machinery", converted: 28900, failed: 2340 },
-  { name: "Raw Materials", converted: 24560, failed: 1890 },
-  { name: "Consumables", converted: 18900, failed: 2456 },
-  { name: "Spare Parts", converted: 13610, failed: 2108 },
+// Branch-wise item distribution for chart
+const branchDistribution = [
+  { name: "Equipment", value: 233180, color: "hsl(207, 90%, 54%)" },
+  { name: "Parts", value: 134200, color: "hsl(160, 84%, 39%)" },
+  { name: "Service", value: 94000, color: "hsl(32, 95%, 60%)" },
+  { name: "Manufacturer", value: 24945, color: "hsl(280, 65%, 60%)" },
 ];
 
-const categoryDistribution = [
-  { name: "Finished Goods", value: 45230, color: "hsl(207, 90%, 54%)" },
-  { name: "Raw Materials", value: 38450, color: "hsl(160, 84%, 39%)" },
-  { name: "WIP", value: 24560, color: "hsl(32, 95%, 60%)" },
-  { name: "Services", value: 20219, color: "hsl(280, 65%, 60%)" },
+// Item counts by BU
+const itemCountsByBU = [
+  { name: "EBS", count: 56485 },
+  { name: "Etairos", count: 49178 },
+  { name: "Airetech", count: 56946 },
+  { name: "Dorse", count: 38629 },
+  { name: "ATS", count: 19654 },
+  { name: "Engineered Products", count: 12222 },
 ];
 
-const completenessData = [
-  { field: "Item Name", complete: 99.9 },
-  { field: "Description", complete: 97.8 },
-  { field: "Category", complete: 98.1 },
-  { field: "UOM", complete: 98.6 },
-  { field: "Price", complete: 96.2 },
-  { field: "Cost", complete: 94.5 },
-];
-
-const attributeIssues = [
-  { week: "W1", issues: 3450, resolved: 2890 },
-  { week: "W2", issues: 2890, resolved: 2560 },
-  { week: "W3", issues: 2340, resolved: 2180 },
-  { week: "W4", issues: 1890, resolved: 1780 },
-  { week: "W5", issues: 1469, resolved: 1320 },
-];
-
-const sourceTargetComparison = [
-  { field: "Item Code", source: 128459, target: 128459, match: true },
-  { field: "Description", source: 128459, target: 125670, match: false },
-  { field: "Category", source: 128459, target: 126003, match: false },
-  { field: "UOM", source: 128459, target: 126636, match: false },
-  { field: "List Price", source: 128459, target: 123578, match: false },
-  { field: "Cost", source: 128459, target: 121345, match: false },
-];
-
-const branchBreakdown = [
-  { branch: "Branch-HQ", region: "Headquarters", total: 15680, converted: 14890, failed: 790, rate: 95.0 },
-  { branch: "Branch-NA-01", region: "North America", total: 12450, converted: 11678, failed: 772, rate: 93.8 },
-  { branch: "Branch-NA-02", region: "North America", total: 9870, converted: 9234, failed: 636, rate: 93.6 },
-  { branch: "Branch-EU-01", region: "Europe", total: 11230, converted: 10456, failed: 774, rate: 93.1 },
-  { branch: "Branch-EU-02", region: "Europe", total: 8760, converted: 8123, failed: 637, rate: 92.7 },
-  { branch: "Branch-EU-03", region: "Europe", total: 7650, converted: 7012, failed: 638, rate: 91.7 },
-  { branch: "Branch-AP-01", region: "Asia Pacific", total: 10980, converted: 10123, failed: 857, rate: 92.2 },
-  { branch: "Branch-AP-02", region: "Asia Pacific", total: 8450, converted: 7789, failed: 661, rate: 92.2 },
-  { branch: "Branch-AP-03", region: "Asia Pacific", total: 7230, converted: 6567, failed: 663, rate: 90.8 },
-  { branch: "Branch-LA-01", region: "Latin America", total: 9870, converted: 8956, failed: 914, rate: 90.7 },
-  { branch: "Branch-LA-02", region: "Latin America", total: 7650, converted: 6890, failed: 760, rate: 90.1 },
-  { branch: "Branch-MEA-01", region: "Middle East", total: 6540, converted: 5678, failed: 862, rate: 86.8 },
-  { branch: "Branch-MEA-02", region: "Middle East", total: 5430, converted: 4623, failed: 807, rate: 85.1 },
-  { branch: "Branch-MEA-03", region: "Africa", total: 4320, converted: 3567, failed: 753, rate: 82.6 },
-  { branch: "Branch-MEA-04", region: "Africa", total: 2349, converted: 1834, failed: 515, rate: 78.1 },
-];
-
-const bomMapping = [
-  { type: "Single Level BOM", total: 45230, mapped: 43890, pending: 1340, rate: 97.0 },
-  { type: "Multi-Level BOM", total: 28450, mapped: 26780, pending: 1670, rate: 94.1 },
-  { type: "Phantom BOM", total: 12340, mapped: 11560, pending: 780, rate: 93.7 },
-  { type: "Kit/Bundle", total: 8920, mapped: 8450, pending: 470, rate: 94.7 },
-  { type: "Reference Only", total: 33519, mapped: 32890, pending: 629, rate: 98.1 },
-];
-
-const exceptions = [
-  { id: "ITM-00145", branch: "Branch-MEA-04", name: "Electronic Component A", issue: "Missing category", status: "warning" as const },
-  { id: "ITM-02389", branch: "Branch-MEA-03", name: "Machine Part B-234", issue: "Invalid UOM", status: "error" as const },
-  { id: "ITM-04567", branch: "Branch-LA-02", name: "Raw Material XY-90", issue: "Duplicate SKU", status: "warning" as const },
-  { id: "ITM-06721", branch: "Branch-AP-03", name: "Assembly Kit Z-12", issue: "BOM validation failed", status: "error" as const },
-  { id: "ITM-08934", branch: "Branch-EU-03", name: "Consumable Pack C", issue: "Price validation", status: "info" as const },
+// Key Steps for Item Conversion
+const keySteps = [
+  { sno: 1, activity: "Create Item at Master Org (IMO)", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 2, activity: "Create Catalog: Parent LOB", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 3, activity: "Create Catalog: LOB", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 4, activity: "Create Catalog: Product Line", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 5, activity: "Equipment Branch", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 6, activity: "Parts Branch", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 7, activity: "Service Branch", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 8, activity: "Turnkey Branch", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 10, activity: "Associate item to 'Manufacturer' (EFF)", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 11, activity: "Associate item to 'Manufacturer Equipment Type' (EFF)", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 12, activity: "Associate item to 'Parent LOB'", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 13, activity: "Associate item to 'LOB'", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 14, activity: "Associate item to 'Product Line'", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 15, activity: "Associate item to 'Internal Equipment Type'", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 16, activity: "Associate item to 'Champion'", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 17, activity: "Associate item to 'Pricing Category'", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 18, activity: "Assign 'Sales Account' to items at Branches", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 19, activity: "Flag Item as 'Min Max'", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 20, activity: "Assign Min/Max Order Quantity", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 21, activity: "Assign 'Lead Time' at branch level", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 22, activity: "Flag Items as 'Drop Ship enabled'", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 23, activity: "Assign service items to 'Services' LOB branches", owner: "Conversion Team", status: "not-started" as const },
+  { sno: 24, activity: "Create 'Manufacturer' (Lookup)", owner: "Functional Team", status: "not-started" as const },
+  { sno: 25, activity: "Create 'Manufacturer Equipment Type' (Lookup)", owner: "Functional Team", status: "not-started" as const },
+  { sno: 26, activity: "Create 'Manufacturer - Branch' Matrix", owner: "Functional Team", status: "not-started" as const },
+  { sno: 27, activity: "Determine logic for 'Services' LOB assignment", owner: "Functional Team", status: "not-started" as const },
+  { sno: 28, activity: "Determine logic for 'Turnkey' LOB assignment", owner: "Functional Team", status: "not-started" as const },
+  { sno: 29, activity: "Create List of Service Items at Master Org", owner: "Functional Team", status: "not-started" as const },
+  { sno: 30, activity: "Create List of Expense Items at Master Org", owner: "Functional Team", status: "not-started" as const },
+  { sno: 31, activity: "Assign Expense items to all branches", owner: "Functional Team", status: "not-started" as const },
 ];
 
 export default function ItemsDashboard() {
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Items Conversion Dashboard">
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (
           <LargeStatCard key={stat.label} {...stat} />
         ))}
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        {summaryCards.map((card) => (
-          <div key={card.label} className="stat-card p-4">
-            <div className="flex items-center gap-3">
-              <card.icon className="h-5 w-5 text-muted-foreground" />
-              <div>
-                <p className="text-xs text-muted-foreground">{card.label}</p>
-                <p className="text-xl font-bold">{typeof card.value === 'number' ? card.value.toLocaleString() : card.value}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
       {/* Insights */}
       <div className="mb-8">
-        <InsightsSection title="Key Insights & Recommendations" insights={insights} />
+        <InsightsSection title="Key Insights & Status" insights={insights} />
       </div>
 
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <ChartCard title="Conversion by Product Line" subtitle="Top 5 product lines">
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={productLineData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis type="number" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <YAxis dataKey="name" type="category" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} width={85} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "8px",
-                }}
-              />
-              <Bar dataKey="converted" fill="hsl(var(--success))" name="Converted" radius={[0, 4, 4, 0]} />
-              <Bar dataKey="failed" fill="hsl(var(--warning))" name="Failed" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
-
-        <ChartCard title="Category Distribution" subtitle="Item categories">
-          <ResponsiveContainer width="100%" height={220}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <ChartCard title="Branch Distribution" subtitle="Records by branch type">
+          <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
-                data={categoryDistribution}
+                data={branchDistribution}
                 cx="50%"
                 cy="50%"
-                innerRadius={45}
-                outerRadius={75}
+                innerRadius={60}
+                outerRadius={100}
                 paddingAngle={2}
                 dataKey="value"
+                label={({ name, value }) => `${name}: ${value.toLocaleString()}`}
               >
-                {categoryDistribution.map((entry, index) => (
+                {branchDistribution.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
@@ -178,118 +231,59 @@ export default function ItemsDashboard() {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Attribute Issues Trend" subtitle="Weekly tracking">
-          <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={attributeIssues}>
+        <ChartCard title="Item Count by Business Unit" subtitle="Distribution across BUs">
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart data={itemCountsByBU} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="week" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+              <XAxis type="number" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
+              <YAxis dataKey="name" type="category" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }} width={120} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
                   borderRadius: "8px",
                 }}
+                formatter={(value: number) => value.toLocaleString()}
               />
-              <Line type="monotone" dataKey="issues" stroke="hsl(var(--warning))" strokeWidth={2} dot={{ fill: "hsl(var(--warning))" }} />
-              <Line type="monotone" dataKey="resolved" stroke="hsl(var(--success))" strokeWidth={2} dot={{ fill: "hsl(var(--success))" }} />
-            </LineChart>
+              <Bar dataKey="count" fill="hsl(var(--primary))" name="Item Count" radius={[0, 4, 4, 0]} />
+            </BarChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
 
-      {/* Data Completeness & Comparison */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <ChartCard title="Data Completeness" subtitle="Field-level analysis">
-          <div className="space-y-3">
-            {completenessData.map((item) => (
-              <div key={item.field}>
-                <ProgressBar
-                  value={item.complete}
-                  label={item.field}
-                  variant={item.complete >= 98 ? "success" : item.complete >= 95 ? "warning" : "error"}
-                />
-              </div>
-            ))}
-          </div>
-        </ChartCard>
+      {/* Item Recon Branch Summary Table */}
+      <ConsolidatedReconTable
+        title="Item Recon Branch Summary"
+        opCoDataList={itemReconBranchData}
+        dataColumns={[{ key: "value", label: "Count" }]}
+      />
 
-        <DataTable
-          title="Source vs Target Comparison"
-          columns={[
-            { key: "field", header: "Field" },
-            { key: "source", header: "Source", render: (item: typeof sourceTargetComparison[0]) => item.source.toLocaleString() },
-            { key: "target", header: "Target", render: (item: typeof sourceTargetComparison[0]) => item.target.toLocaleString() },
-            {
-              key: "match",
-              header: "Status",
-              render: (item: typeof sourceTargetComparison[0]) => (
-                <StatusBadge status={item.match ? "success" : "warning"}>
-                  {item.match ? "Match" : "Mismatch"}
-                </StatusBadge>
-              ),
-            },
-          ]}
-          data={sourceTargetComparison}
+      {/* Item Recon Summary (Category Assignments) */}
+      <div className="mt-6">
+        <ConsolidatedReconTable
+          title="Item Recon Summary (Category Assignments)"
+          opCoDataList={itemReconSummaryData}
+          dataColumns={[{ key: "value", label: "Count" }]}
         />
       </div>
 
-      {/* Branch Breakdown */}
-      <DataTable
-        title="Branch-wise Breakdown"
-        columns={[
-          { key: "branch", header: "Branch" },
-          { key: "region", header: "Region" },
-          { key: "total", header: "Total", render: (item: typeof branchBreakdown[0]) => item.total.toLocaleString() },
-          { key: "converted", header: "Converted", render: (item: typeof branchBreakdown[0]) => item.converted.toLocaleString() },
-          { key: "failed", header: "Failed", render: (item: typeof branchBreakdown[0]) => item.failed.toLocaleString() },
-          {
-            key: "rate",
-            header: "Rate",
-            render: (item: typeof branchBreakdown[0]) => (
-              <StatusBadge status={item.rate >= 92 ? "success" : item.rate >= 85 ? "warning" : "error"}>
-                {item.rate}%
-              </StatusBadge>
-            ),
-          },
-        ]}
-        data={branchBreakdown}
-      />
-
-      {/* Breakdown Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+      {/* Key Steps Table */}
+      <div className="mt-6">
         <DataTable
-          title="BOM Mapping Status"
+          title="Key Steps - Item Conversion"
           columns={[
-            { key: "type", header: "BOM Type" },
-            { key: "total", header: "Total", render: (item: typeof bomMapping[0]) => item.total.toLocaleString() },
-            { key: "mapped", header: "Mapped", render: (item: typeof bomMapping[0]) => item.mapped.toLocaleString() },
-            {
-              key: "rate",
-              header: "Rate",
-              render: (item: typeof bomMapping[0]) => (
-                <StatusBadge status={item.rate >= 95 ? "success" : item.rate >= 90 ? "warning" : "error"}>
-                  {item.rate}%
-                </StatusBadge>
-              ),
-            },
-          ]}
-          data={bomMapping}
-        />
-
-        <DataTable
-          title="Branch-wise Exceptions & Issues"
-          columns={[
-            { key: "id", header: "ID" },
-            { key: "branch", header: "Branch" },
-            { key: "name", header: "Item" },
+            { key: "sno", header: "S.No" },
+            { key: "activity", header: "Activity" },
+            { key: "owner", header: "Owner" },
             {
               key: "status",
               header: "Status",
-              render: (item: typeof exceptions[0]) => <StatusBadge status={item.status}>{item.issue}</StatusBadge>,
+              render: (item: typeof keySteps[0]) => (
+                <StatusBadge status="warning">Not Started</StatusBadge>
+              ),
             },
           ]}
-          data={exceptions}
+          data={keySteps}
         />
       </div>
     </SidebarLayout>
