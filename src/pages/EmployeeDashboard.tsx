@@ -5,8 +5,8 @@ import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
-import { UserCheck, Users, XCircle, AlertTriangle, Copy, FolderOpen } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+import { UserCheck, Users, XCircle, FolderOpen } from "lucide-react";
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
 
 const stats = [
   { label: "Total Source Records", value: 3247, subtitle: "Employee records received", icon: Users, variant: "primary" as const },
@@ -15,28 +15,6 @@ const stats = [
   { label: "Valid Source Records", value: 3191, subtitle: "After deduplication", icon: FolderOpen, variant: "accent" as const },
 ];
 
-const summaryCards = [
-  { label: "Departments", value: 24, icon: Users },
-  { label: "Manager Mapping", value: 312, icon: UserCheck },
-  { label: "Missing Fields", value: 178, icon: AlertTriangle },
-  { label: "Duplicates Found", value: 45, icon: Copy },
-];
-
-const insights = [
-  { type: "success" as const, highlight: "Engineering department", text: "shows highest data quality with 99.2% field completeness across all OpCos." },
-  { type: "warning" as const, highlight: "Sales department", text: "has 12 employees with missing manager mappings - needs HR review across 3 OpCos." },
-  { type: "success" as const, highlight: "Role mapping", text: "completed successfully for 437 unique job titles across 8 OpCos." },
-  { type: "info" as const, highlight: "Hierarchy validation", text: "passed for 97.3% of employee records with proper reporting structure." },
-];
-
-const departmentData = [
-  { name: "Sales", converted: 485, failed: 12 },
-  { name: "Engineering", converted: 620, failed: 8 },
-  { name: "Operations", converted: 412, failed: 23 },
-  { name: "Finance", converted: 156, failed: 5 },
-  { name: "HR", converted: 89, failed: 3 },
-  { name: "Marketing", converted: 234, failed: 15 },
-];
 
 const employeeStatusData = [
   { name: "Active", value: 2891, color: "hsl(160, 84%, 39%)" },
@@ -85,47 +63,8 @@ export default function EmployeeDashboard() {
         ))}
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {summaryCards.map((card) => (
-          <div key={card.label} className="stat-card p-4">
-            <div className="flex items-center gap-3">
-              <card.icon className="h-5 w-5 text-muted-foreground" />
-              <div>
-                <p className="text-xs text-muted-foreground">{card.label}</p>
-                <p className="text-xl font-bold">{card.value.toLocaleString()}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Insights */}
-      <div className="mb-8">
-        <InsightsSection title="Key Insights & Recommendations" insights={insights} />
-      </div>
-
       {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <ChartCard title="Conversion by Department" subtitle="Records by department">
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={departmentData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis type="number" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
-              <YAxis dataKey="name" type="category" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} width={80} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "8px",
-                }}
-              />
-              <Bar dataKey="converted" fill="hsl(var(--success))" name="Converted" radius={[0, 4, 4, 0]} />
-              <Bar dataKey="failed" fill="hsl(var(--warning))" name="Failed" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </ChartCard>
-
+      <div className="mb-8">
         <ChartCard title="Employee Status" subtitle="Active vs Inactive">
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
@@ -169,6 +108,34 @@ export default function EmployeeDashboard() {
         data={roleMapping}
       />
 
+      {/* Key Steps Activity Tracking */}
+      <div className="mt-6">
+        <DataTable
+          title="Key Steps - Employee Conversion Activities"
+          columns={[
+            { key: "sNo", header: "S.No" },
+            { key: "activity", header: "Activity" },
+            { key: "description", header: "Description" },
+            { key: "owner", header: "Owner" },
+            {
+              key: "status",
+              header: "Status",
+              render: (item: typeof keySteps[0]) => (
+                <StatusBadge 
+                  status={
+                    item.status === "Completed" ? "success" : 
+                    item.status === "In Progress" ? "warning" : 
+                    "info"
+                  }
+                >
+                  {item.status}
+                </StatusBadge>
+              ),
+            },
+          ]}
+          data={keySteps}
+        />
+      </div>
     </SidebarLayout>
   );
 }
