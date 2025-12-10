@@ -252,6 +252,15 @@ const opCoData: Record<string, {
   },
 };
 
+// Calculate overall stats from all OpCos
+const overallStats = {
+  totalSourceRecords: customerBreakdownData.reduce((sum, opco) => sum + opco.customer.source, 0),
+  successfullyConverted: customerBreakdownData.reduce((sum, opco) => sum + opco.customer.loaded, 0),
+  fusionErrorRecords: 0, // All OpCos show 0 errors
+  get validSourceRecords() { return this.successfullyConverted; },
+  get conversionRate() { return Math.round((this.successfullyConverted / this.totalSourceRecords) * 100); }
+};
+
 // Mapping from breakdown names to opCoData keys
 const opCoNameMapping: Record<string, string> = {
   "AIRTECH": "AIRTECH",
@@ -278,6 +287,42 @@ export default function CustomerDashboard() {
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Customer Conversion Dashboard">
+      {/* Overall Summary Stats */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-4">Overall Customer Upload Summary</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <LargeStatCard
+            label="Total Source Records"
+            value={overallStats.totalSourceRecords}
+            subtitle="Customer records received"
+            icon={Users}
+            variant="primary"
+          />
+          <LargeStatCard
+            label="Successfully Converted"
+            value={overallStats.successfullyConverted}
+            subtitle=""
+            icon={CheckCircle}
+            variant="success"
+            highlightText={`${overallStats.conversionRate}% conversion rate`}
+          />
+          <LargeStatCard
+            label="Fusion Error Records"
+            value={overallStats.fusionErrorRecords}
+            subtitle="Errors in fusion load"
+            icon={XCircle}
+            variant="warning"
+          />
+          <LargeStatCard
+            label="Valid Source Records"
+            value={overallStats.validSourceRecords}
+            subtitle="After deduplication"
+            icon={FolderOpen}
+            variant="accent"
+          />
+        </div>
+      </div>
+
       {/* Selected OpCo Header */}
       <div className="mb-4">
         <span className="text-sm text-muted-foreground">Showing data for: </span>
