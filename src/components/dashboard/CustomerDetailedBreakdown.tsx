@@ -95,10 +95,7 @@ export function CustomerDetailedBreakdown({
           return (
             <div 
               key={opco.name} 
-              className={`bg-card rounded-lg border p-5 shadow-sm cursor-pointer transition-all hover:shadow-md hover:border-primary/50 ${
-                isSelected ? 'border-primary ring-2 ring-primary/20' : 'border-border'
-              }`}
-              onClick={() => onOpCoSelect?.(opco.name)}
+              className="bg-card rounded-lg border border-border p-5 shadow-sm"
             >
               <div className="flex items-center justify-between mb-5">
                 <h4 className="text-xl font-bold text-foreground">{opco.name}</h4>
