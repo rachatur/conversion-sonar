@@ -285,12 +285,6 @@ export default function CustomerDashboard() {
         <span className="text-lg font-semibold text-primary">{selectedOpCo}</span>
       </div>
 
-      {/* Stats - Updates based on selected OpCo */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {currentData.stats.map((stat) => (
-          <LargeStatCard key={`${selectedOpCo}-${stat.label}`} {...stat} />
-        ))}
-      </div>
 
       {/* OpCo Load Performance - Detailed Breakdown - Clickable */}
       <CustomerDetailedBreakdown 
