@@ -83,6 +83,7 @@ const airtechFileData: FileData[] = [
 export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: ConsolidatedReconTableProps) {
   const [expandedOpCo, setExpandedOpCo] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
+  const [files, setFiles] = useState<FileData[]>(airtechFileData);
   const fileDetailsRef = useRef<HTMLDivElement>(null);
 
   // Get all unique metrics from the first OpCo's data
@@ -123,6 +124,26 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
         }, 100);
       }
     }
+  };
+
+  const handleDownload = (file: FileData) => {
+    // Convert content array to CSV string
+    const csvContent = file.content.map(row => row.join(",")).join("\n");
+    
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDelete = (fileName: string) => {
+    setFiles(files.filter(f => f.fileName !== fileName));
   };
 
   return (
@@ -206,7 +227,7 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {airtechFileData.map((file, idx) => (
+                            {files.map((file, idx) => (
                               <TableRow 
                                 key={idx} 
                                 className="hover:bg-muted/20"
@@ -223,10 +244,20 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
                                 <TableCell className="text-center text-muted-foreground">{file.uploadDate}</TableCell>
                                 <TableCell className="text-center">
                                   <div className="flex items-center justify-center gap-2">
-                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                    <Button 
+                                      variant="ghost" 
+                                      size="icon" 
+                                      className="h-8 w-8"
+                                      onClick={() => handleDownload(file)}
+                                    >
                                       <Download className="h-4 w-4 text-muted-foreground hover:text-primary" />
                                     </Button>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                    <Button 
+                                      variant="ghost" 
+                                      size="icon" 
+                                      className="h-8 w-8"
+                                      onClick={() => handleDelete(file.fileName)}
+                                    >
                                       <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
                                     </Button>
                                   </div>
