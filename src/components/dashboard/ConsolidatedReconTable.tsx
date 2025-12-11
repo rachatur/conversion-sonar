@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChevronDown, ChevronRight, FileText, Download, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -83,6 +83,7 @@ const airtechFileData: FileData[] = [
 export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: ConsolidatedReconTableProps) {
   const [expandedOpCo, setExpandedOpCo] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
+  const fileDetailsRef = useRef<HTMLDivElement>(null);
 
   // Get all unique metrics from the first OpCo's data
   const metrics = opCoDataList[0]?.data.map(row => row.metric) || [];
@@ -112,7 +113,15 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
 
   const handleOpCoClick = (opCoName: string) => {
     if (opCoName === "AIRTECH") {
-      setExpandedOpCo(expandedOpCo === opCoName ? null : opCoName);
+      if (expandedOpCo === opCoName) {
+        setExpandedOpCo(null);
+      } else {
+        setExpandedOpCo(opCoName);
+        // Scroll to file details after state update
+        setTimeout(() => {
+          fileDetailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
     }
   };
 
@@ -182,7 +191,7 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
               {expandedOpCo === "AIRTECH" && (
                 <TableRow>
                   <TableCell colSpan={2 + opCoDataList.length} className="p-0">
-                    <div className="bg-muted/30 p-4 border-t border-border">
+                    <div ref={fileDetailsRef} className="bg-muted/30 p-4 border-t border-border">
                       <div className="flex items-center gap-2 mb-4">
                         <FileText className="h-5 w-5 text-primary" />
                         <h4 className="font-semibold text-foreground">AIRTECH - File Level Details</h4>
