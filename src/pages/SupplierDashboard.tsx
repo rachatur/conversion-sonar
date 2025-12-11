@@ -544,11 +544,6 @@ export default function SupplierDashboard() {
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
-      {/* File Upload Section */}
-      <div className="mb-8">
-        <SupplierFileUpload onFilesUploaded={handleFilesUploaded} />
-      </div>
-      
       {/* Overall Supplier Upload Summary */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">Overall Supplier Upload Summary</h2>
@@ -589,6 +584,11 @@ export default function SupplierDashboard() {
       <SupplierDetailedBreakdown 
         data={supplierBreakdownData} 
       />
+
+      {/* File Upload Section */}
+      <div className="mb-8">
+        <SupplierFileUpload onFilesUploaded={handleFilesUploaded} />
+      </div>
 
       {/* Supplier Recon Summary - All OpCos in One Table */}
       <div className="mb-8">

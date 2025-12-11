@@ -295,11 +295,6 @@ export default function CustomerDashboard() {
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Customer Conversion Dashboard">
-      {/* File Upload Section */}
-      <div className="mb-8">
-        <CustomerFileUpload onFilesUploaded={handleFilesUploaded} />
-      </div>
-      
       {/* Overall Customer Upload Summary */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">Overall Customer Upload Summary</h2>
@@ -342,6 +337,11 @@ export default function CustomerDashboard() {
         selectedOpCo={selectedOpCo}
         onOpCoSelect={handleOpCoSelect}
       />
+
+      {/* File Upload Section */}
+      <div className="mb-8">
+        <CustomerFileUpload onFilesUploaded={handleFilesUploaded} />
+      </div>
 
       {/* Customer Recon Summary - All OpCos in One Table */}
       <div className="mb-8">
