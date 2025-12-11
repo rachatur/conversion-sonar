@@ -86,6 +86,18 @@ const opCoFileData: Record<string, FileData[]> = {
         ["SITE001", "CUST001", "ATS HQ", "100 Commerce St", "billing@ats.com"],
       ]
     },
+    { 
+      fileName: "ATS_Supplier_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Suppliers", "583", "", "SUPPLIERS", "565"],
+        ["Supplier Address", "565", "", "SUPPLIER_ADDRESS", "533"],
+        ["Supplier Sites", "565", "", "SUPPLIER_SITES", "403"],
+        ["Supplier Contacts", "55", "", "SUPPLIER_CONTACTS", "549"],
+        ["Records Excluded / Not Valid", "7", "", "Errored in FBDI Upload", "10"],
+      ]
+    },
   ],
   "C&J": [
     { 
@@ -109,6 +121,18 @@ const opCoFileData: Record<string, FileData[]> = {
       content: [
         ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
         ["SITE001", "CUST001", "C&J HQ", "200 Main St", "billing@cj.com"],
+      ]
+    },
+    { 
+      fileName: "C_J_Supplier_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Suppliers", "482", "", "SUPPLIERS", "474"],
+        ["Supplier Address", "99", "", "SUPPLIER_ADDRESS", "97"],
+        ["Supplier Sites", "99", "", "SUPPLIER_SITES", "97"],
+        ["Supplier Contacts", "49", "", "SUPPLIER_CONTACTS", "124"],
+        ["Records Excluded / Not Valid", "6", "", "Errored in FBDI Upload", "2"],
       ]
     },
   ],
@@ -136,6 +160,18 @@ const opCoFileData: Record<string, FileData[]> = {
         ["SITE001", "CUST001", "Dorse HQ", "300 Industrial Ave", "billing@dorse.com"],
       ]
     },
+    { 
+      fileName: "Dorse_Supplier_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Suppliers", "1117", "", "SUPPLIERS", "1063"],
+        ["Supplier Address", "1055", "", "SUPPLIER_ADDRESS", "1028"],
+        ["Supplier Sites", "1048", "", "SUPPLIER_SITES", "1028"],
+        ["Supplier Contacts", "73", "", "SUPPLIER_CONTACTS", "989"],
+        ["Records Excluded / Not Valid", "8", "", "Errored in FBDI Upload", "19"],
+      ]
+    },
   ],
   EBS: [
     { 
@@ -159,6 +195,18 @@ const opCoFileData: Record<string, FileData[]> = {
       content: [
         ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
         ["SITE001", "CUST001", "EBS HQ", "400 Tech Park", "billing@ebs.com"],
+      ]
+    },
+    { 
+      fileName: "EBS_Supplier_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Suppliers", "595", "", "SUPPLIERS", "567"],
+        ["Supplier Address", "219", "", "SUPPLIER_ADDRESS", "208"],
+        ["Supplier Sites", "219", "", "SUPPLIER_SITES", "208"],
+        ["Supplier Contacts", "571", "", "SUPPLIER_CONTACTS", "552"],
+        ["Records Excluded / Not Valid", "19", "", "Errored in FBDI Upload", "9"],
       ]
     },
   ],
@@ -186,6 +234,18 @@ const opCoFileData: Record<string, FileData[]> = {
         ["SITE001", "CUST001", "EP HQ", "500 Enterprise Blvd", "billing@ep.com"],
       ]
     },
+    { 
+      fileName: "EP_Supplier_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Suppliers", "37", "", "SUPPLIERS", "30"],
+        ["Supplier Address", "30", "", "SUPPLIER_ADDRESS", "30"],
+        ["Supplier Sites", "30", "", "SUPPLIER_SITES", "30"],
+        ["Supplier Contacts", "965", "", "SUPPLIER_CONTACTS", "244"],
+        ["Records Excluded / Not Valid", "7", "", "Errored in FBDI Upload", "0"],
+      ]
+    },
   ],
   ETARIOS: [
     { 
@@ -211,7 +271,48 @@ const opCoFileData: Record<string, FileData[]> = {
         ["SITE001", "CUST001", "ETARIOS HQ", "600 Commerce Center", "billing@etarios.com"],
       ]
     },
+    { 
+      fileName: "Etarios_Supplier_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Suppliers", "1046", "", "SUPPLIERS", "981"],
+        ["Supplier Address", "992", "", "SUPPLIER_ADDRESS", "913"],
+        ["Supplier Sites", "927", "", "SUPPLIER_SITES", "913"],
+        ["Supplier Contacts", "73", "", "SUPPLIER_CONTACTS", "919"],
+        ["Records Excluded / Not Valid", "65", "", "Errored in FBDI Upload", "0"],
+      ]
+    },
   ],
+  // Supplier data for each OpCo
+  AIRETECH: [
+    { 
+      fileName: "Airtech_Supplier_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Suppliers", "1213", "", "SUPPLIERS", "1101"],
+        ["Supplier Address", "1180", "", "SUPPLIER_ADDRESS", "1150"],
+        ["Supplier Sites", "1180", "", "SUPPLIER_SITES", "1150"],
+        ["Supplier Contacts", "717", "", "SUPPLIER_CONTACTS", "1147"],
+        ["Records Excluded / Not Valid", "16", "", "Errored in FBDI Upload", "87"],
+      ]
+    },
+    { 
+      fileName: "Airtech_Supplier_Address.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["AddressID", "SupplierID", "AddressType", "StreetAddress", "City"],
+        ["ADDR001", "SUP001", "Primary", "123 Supplier Ave", "Sydney"],
+      ]
+    },
+  ],
+  // ATS Supplier data (uses same key as customer)
+  // C&J Supplier data (uses same key as customer)
+  // DORSE Supplier data (uses same key as customer)
+  // EBS Supplier data (uses same key as customer)
+  // EP Supplier data (uses same key as customer)
+  // ETARIOS Supplier data (uses same key as customer)
 };
 
 export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: ConsolidatedReconTableProps) {
