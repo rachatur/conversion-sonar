@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChevronDown, ChevronRight, FileText, Download, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -24,6 +24,7 @@ interface ConsolidatedReconTableProps {
   title: string;
   opCoDataList: OpCoReconData[];
   dataColumns: { key: string; label: string }[];
+  uploadedFiles?: Record<string, FileData[]>;
 }
 
 // File data for each OpCo
@@ -315,11 +316,35 @@ const opCoFileData: Record<string, FileData[]> = {
   // ETARIOS Supplier data (uses same key as customer)
 };
 
-export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: ConsolidatedReconTableProps) {
+export function ConsolidatedReconTable({ title, opCoDataList, dataColumns, uploadedFiles }: ConsolidatedReconTableProps) {
   const [expandedOpCo, setExpandedOpCo] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
-  const [filesState, setFilesState] = useState<Record<string, FileData[]>>(opCoFileData);
   const fileDetailsRef = useRef<HTMLDivElement>(null);
+  
+  // Merge default file data with uploaded files
+  const getMergedFiles = () => {
+    const merged = { ...opCoFileData };
+    if (uploadedFiles) {
+      Object.entries(uploadedFiles).forEach(([opCo, files]) => {
+        if (merged[opCo]) {
+          // Filter out duplicates by fileName
+          const existingNames = new Set(merged[opCo].map(f => f.fileName));
+          const newFiles = files.filter(f => !existingNames.has(f.fileName));
+          merged[opCo] = [...merged[opCo], ...newFiles];
+        } else {
+          merged[opCo] = files;
+        }
+      });
+    }
+    return merged;
+  };
+  
+  const [filesState, setFilesState] = useState<Record<string, FileData[]>>(getMergedFiles);
+  
+  // Update filesState when uploadedFiles changes
+  useEffect(() => {
+    setFilesState(getMergedFiles());
+  }, [uploadedFiles]);
 
   // Get all unique metrics from the first OpCo's data
   const metrics = opCoDataList[0]?.data.map(row => row.metric) || [];
