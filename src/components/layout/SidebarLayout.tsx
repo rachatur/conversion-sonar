@@ -69,80 +69,82 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
           {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
         </button>
 
-        {/* Navigation */}
-        <nav className="p-3 space-y-6">
-          {/* Overview Section */}
-          <div>
-            {!collapsed && (
-              <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
-                Overview
-              </p>
-            )}
-            <div className="space-y-1">
-              {overviewItems.map((item) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      "sidebar-nav-item",
-                      isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
-                    )}
-                  >
-                    <item.icon className="h-5 w-5 flex-shrink-0" />
-                    {!collapsed && <span>{item.label}</span>}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Modules Section */}
-          <div>
-            {!collapsed && (
-              <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
-                Modules
-              </p>
-            )}
-            <div className="space-y-1">
-              {moduleItems.map((item) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      "sidebar-nav-item justify-between",
-                      isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
+        {/* Navigation with Scroll */}
+        <ScrollArea className="flex-1">
+          <nav className="p-3 space-y-6">
+            {/* Overview Section */}
+            <div>
+              {!collapsed && (
+                <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
+                  Overview
+                </p>
+              )}
+              <div className="space-y-1">
+                {overviewItems.map((item) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={cn(
+                        "sidebar-nav-item",
+                        isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
+                      )}
+                    >
                       <item.icon className="h-5 w-5 flex-shrink-0" />
                       {!collapsed && <span>{item.label}</span>}
-                    </div>
-                    {!collapsed && (
-                      <div className="flex flex-col items-end">
-                        <span className={cn(
-                          "badge-count",
-                          isActive && "bg-primary-foreground/20 text-primary-foreground"
-                        )}>{formatCount(item.count)}</span>
-                        <span className={cn(
-                          "text-[10px]",
-                          isActive ? "text-primary-foreground/80" : "text-muted-foreground"
-                        )}>{item.countLabel}</span>
-                      </div>
-                    )}
-                  </Link>
-                );
-              })}
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </nav>
 
-        {/* Footer - directly after nav */}
+            {/* Modules Section */}
+            <div>
+              {!collapsed && (
+                <p className="px-4 text-xs font-semibold uppercase text-muted-foreground tracking-wider mb-2">
+                  Modules
+                </p>
+              )}
+              <div className="space-y-1">
+                {moduleItems.map((item) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={cn(
+                        "sidebar-nav-item justify-between",
+                        isActive ? "bg-primary text-primary-foreground" : "sidebar-nav-item-inactive"
+                      )}
+                    >
+                      <div className="flex items-center gap-3">
+                        <item.icon className="h-5 w-5 flex-shrink-0" />
+                        {!collapsed && <span>{item.label}</span>}
+                      </div>
+                      {!collapsed && (
+                        <div className="flex flex-col items-end">
+                          <span className={cn(
+                            "badge-count",
+                            isActive && "bg-primary-foreground/20 text-primary-foreground"
+                          )}>{formatCount(item.count)}</span>
+                          <span className={cn(
+                            "text-[10px]",
+                            isActive ? "text-primary-foreground/80" : "text-muted-foreground"
+                          )}>{item.countLabel}</span>
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </nav>
+        </ScrollArea>
+
+        {/* Footer - fixed at bottom */}
         {!collapsed && (
-          <div className="p-4 border-t border-sidebar-border">
+          <div className="p-4 border-t border-sidebar-border mt-auto">
             <p className="text-xs text-muted-foreground">Air Control Concepts • UAT</p>
             <p className="text-xs text-muted-foreground">Last Updated: {currentDate}</p>
           </div>
