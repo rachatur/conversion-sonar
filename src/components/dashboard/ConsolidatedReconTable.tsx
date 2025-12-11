@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChevronDown, ChevronRight, FileText, X } from "lucide-react";
+import { ChevronDown, ChevronRight, FileText, Download, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface ReconRow {
   metric: string;
@@ -192,22 +193,35 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
                             <TableRow className="bg-muted/50">
                               <TableHead className="font-semibold text-foreground">File Name</TableHead>
                               <TableHead className="font-semibold text-foreground text-center">Upload Date</TableHead>
+                              <TableHead className="font-semibold text-foreground text-center">Actions</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {airtechFileData.map((file, idx) => (
                               <TableRow 
                                 key={idx} 
-                                className="hover:bg-muted/20 cursor-pointer"
-                                onClick={() => setSelectedFile(file)}
+                                className="hover:bg-muted/20"
                               >
-                                <TableCell className="font-medium text-primary hover:underline">
+                                <TableCell 
+                                  className="font-medium text-primary hover:underline cursor-pointer"
+                                  onClick={() => setSelectedFile(file)}
+                                >
                                   <div className="flex items-center gap-2">
                                     <FileText className="h-4 w-4 text-muted-foreground" />
                                     {file.fileName}
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-center text-muted-foreground">{file.uploadDate}</TableCell>
+                                <TableCell className="text-center">
+                                  <div className="flex items-center justify-center gap-2">
+                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                      <Download className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                      <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
