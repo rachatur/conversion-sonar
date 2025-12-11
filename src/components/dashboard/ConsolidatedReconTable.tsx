@@ -187,6 +187,31 @@ const opCoFileData: Record<string, FileData[]> = {
       ]
     },
   ],
+  ETAIROS: [
+    { 
+      fileName: "Etairos_Customer_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Customers", "2172", "", "CUSTOMER", "2052"],
+        ["Total customer Sites", "2474", "", "CUSTOMER_SITES(BILL_TO)", "2052"],
+        ["", "", "", "CUSTOMER_SITES(SHIP_TO)", "302"],
+        ["Total Sales Order Customer", "166", "", "Total Sales Order Customer", "144"],
+        ["Total Sales Order Customer(SHIP_TO)", "166", "", "Sales_Order-CUSTOMER_SITES(SHIP_TO)", "144"],
+        ["", "", "", "CUSTOMER_CONTACTS_POINT", "597"],
+        ["", "", "", "CUSTOMER_PROFILE_CLASS", "1979"],
+        ["", "", "", "CUSTOMER_CONTACTS", "1095"],
+      ]
+    },
+    { 
+      fileName: "Etairos_BillTo_Sites.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
+        ["SITE001", "CUST001", "ETAIROS HQ", "600 Commerce Center", "billing@etairos.com"],
+      ]
+    },
+  ],
 };
 
 export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: ConsolidatedReconTableProps) {
