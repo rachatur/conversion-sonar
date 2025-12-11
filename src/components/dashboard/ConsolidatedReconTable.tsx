@@ -26,64 +26,173 @@ interface ConsolidatedReconTableProps {
   dataColumns: { key: string; label: string }[];
 }
 
-// Mock file data for AIRTECH OpCo with CSV content
-const airtechFileData: FileData[] = [
-  { 
-    fileName: "AIRTECH_Customer_Master_20240115.csv", 
-    uploadDate: "2024-01-15",
-    content: [
-      ["CustomerID", "CustomerName", "Address", "City", "Country", "Status"],
-      ["CUST001", "ABC Industries", "123 Main St", "Sydney", "Australia", "Active"],
-      ["CUST002", "XYZ Corp", "456 Oak Ave", "Melbourne", "Australia", "Active"],
-      ["CUST003", "Tech Solutions", "789 Pine Rd", "Brisbane", "Australia", "Active"],
-      ["CUST004", "Global Trading", "321 Elm St", "Perth", "Australia", "Inactive"],
-      ["CUST005", "Premier Services", "654 Maple Dr", "Adelaide", "Australia", "Active"],
-    ]
-  },
-  { 
-    fileName: "AIRTECH_Customer_Master_20240116.csv", 
-    uploadDate: "2024-01-16",
-    content: [
-      ["CustomerID", "CustomerName", "Address", "City", "Country", "Status"],
-      ["CUST006", "Metro Supplies", "111 King St", "Sydney", "Australia", "Active"],
-      ["CUST007", "City Logistics", "222 Queen Ave", "Melbourne", "Australia", "Active"],
-      ["CUST008", "Regional Parts", "333 Duke Rd", "Brisbane", "Australia", "Active"],
-    ]
-  },
-  { 
-    fileName: "AIRTECH_BillTo_Sites_20240115.csv", 
-    uploadDate: "2024-01-15",
-    content: [
-      ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
-      ["SITE001", "CUST001", "ABC HQ", "123 Main St, Sydney", "billing@abc.com"],
-      ["SITE002", "CUST001", "ABC Branch", "456 Side St, Sydney", "branch@abc.com"],
-      ["SITE003", "CUST002", "XYZ Main", "456 Oak Ave, Melbourne", "accounts@xyz.com"],
-    ]
-  },
-  { 
-    fileName: "AIRTECH_BillTo_Sites_20240116.csv", 
-    uploadDate: "2024-01-16",
-    content: [
-      ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
-      ["SITE004", "CUST003", "Tech HQ", "789 Pine Rd, Brisbane", "finance@tech.com"],
-      ["SITE005", "CUST004", "Global Office", "321 Elm St, Perth", "pay@global.com"],
-    ]
-  },
-  { 
-    fileName: "AIRTECH_ShipTo_Sites_20240115.csv", 
-    uploadDate: "2024-01-15",
-    content: [
-      ["ShipToID", "CustomerID", "ShipToName", "ShippingAddress", "DeliveryNotes"],
-      ["SHIP001", "CUST001", "ABC Warehouse", "100 Industrial Rd", "Dock 3"],
-      ["SHIP002", "CUST002", "XYZ Distribution", "200 Logistics Ave", "Gate B"],
-    ]
-  },
-];
+// File data for each OpCo
+const opCoFileData: Record<string, FileData[]> = {
+  AIRTECH: [
+    { 
+      fileName: "AIRTECH_Customer_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Customers", "450", "", "CUSTOMER", "442"],
+        ["Total customer Sites", "515", "", "CUSTOMER_SITES(BILL_TO)", "442"],
+        ["", "", "", "CUSTOMER_SITES(SHIP_TO)", "73"],
+        ["Total Sales Order Customer", "90", "", "Total Sales Order Customer", "75"],
+        ["Total Sales Order Customer(SHIP_TO)", "90", "", "Sales_Order-CUSTOMER_SITES(SHIP_TO)", "75"],
+        ["", "", "", "CUSTOMER_CONTACTS_POINT", "573"],
+        ["", "", "", "CUSTOMER_PROFILE_CLASS", "442"],
+        ["", "", "", "CUSTOMER_CONTACTS", "382"],
+      ]
+    },
+    { 
+      fileName: "AIRTECH_BillTo_Sites.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
+        ["SITE001", "CUST001", "AIRTECH HQ", "123 Main St, Sydney", "billing@airtech.com"],
+        ["SITE002", "CUST001", "AIRTECH Branch", "456 Side St, Sydney", "branch@airtech.com"],
+      ]
+    },
+    { 
+      fileName: "AIRTECH_ShipTo_Sites.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["ShipToID", "CustomerID", "ShipToName", "ShippingAddress", "DeliveryNotes"],
+        ["SHIP001", "CUST001", "AIRTECH Warehouse", "100 Industrial Rd", "Dock 3"],
+      ]
+    },
+  ],
+  ATS: [
+    { 
+      fileName: "ATS_Customer_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Customers", "1935", "", "CUSTOMER", "1843"],
+        ["Total customer Sites", "2602", "", "CUSTOMER_SITES(BILL_TO)", "1843"],
+        ["", "", "", "CUSTOMER_SITES(SHIP_TO)", "669"],
+        ["Total Sales Order Customer", "438", "", "Total Sales Order Customer", "354"],
+        ["Total Sales Order Customer(SHIP_TO)", "438", "", "Sales_Order-CUSTOMER_SITES(SHIP_TO)", "354"],
+        ["", "", "", "CUSTOMER_CONTACTS_POINT", "2797"],
+        ["", "", "", "CUSTOMER_PROFILE_CLASS", "1843"],
+        ["", "", "", "CUSTOMER_CONTACTS", "1544"],
+      ]
+    },
+    { 
+      fileName: "ATS_BillTo_Sites.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
+        ["SITE001", "CUST001", "ATS HQ", "100 Commerce St", "billing@ats.com"],
+      ]
+    },
+  ],
+  "C&J": [
+    { 
+      fileName: "C_J_Customer_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Customers", "124", "", "CUSTOMER", "119"],
+        ["Total customer Sites", "124", "", "CUSTOMER_SITES(BILL_TO)", "119"],
+        ["", "", "", "CUSTOMER_SITES(SHIP_TO)", "84"],
+        ["Total Sales Order Customer", "0", "", "Total Sales Order Customer", "0"],
+        ["Total Sales Order Customer(SHIP_TO)", "0", "", "Sales_Order-CUSTOMER_SITES(SHIP_TO)", "0"],
+        ["", "", "", "CUSTOMER_CONTACTS_POINT", "178"],
+        ["", "", "", "CUSTOMER_PROFILE_CLASS", "119"],
+        ["", "", "", "CUSTOMER_CONTACTS", "119"],
+      ]
+    },
+    { 
+      fileName: "C_J_BillTo_Sites.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
+        ["SITE001", "CUST001", "C&J HQ", "200 Main St", "billing@cj.com"],
+      ]
+    },
+  ],
+  DORSE: [
+    { 
+      fileName: "Dorse_Customer_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Customers", "7572", "", "CUSTOMER", "3194"],
+        ["Total customer Sites", "7572", "", "CUSTOMER_SITES(BILL_TO)", "2304"],
+        ["", "", "", "CUSTOMER_SITES(SHIP_TO)", "890"],
+        ["Total Sales Order Customer", "458", "", "Total Sales Order Customer", "331"],
+        ["Total Sales Order Customer(SHIP_TO)", "458", "", "Sales_Order-CUSTOMER_SITES(SHIP_TO)", "331"],
+        ["", "", "", "CUSTOMER_CONTACTS_POINT", "849"],
+        ["", "", "", "CUSTOMER_PROFILE_CLASS", "2304"],
+        ["", "", "", "CUSTOMER_CONTACTS", "819"],
+      ]
+    },
+    { 
+      fileName: "Dorse_BillTo_Sites.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
+        ["SITE001", "CUST001", "Dorse HQ", "300 Industrial Ave", "billing@dorse.com"],
+      ]
+    },
+  ],
+  EBS: [
+    { 
+      fileName: "EBS_Customer_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Customers", "1362", "", "CUSTOMER", "1330"],
+        ["Total customer Sites", "1362", "", "CUSTOMER_SITES(BILL_TO)", "1330"],
+        ["", "", "", "CUSTOMER_SITES(SHIP_TO)", "0"],
+        ["Total Sales Order Customer", "3018", "", "Total Sales Order Customer", "1620"],
+        ["Total Sales Order Customer(SHIP_TO)", "3018", "", "Sales_Order-CUSTOMER_SITES(SHIP_TO)", "1620"],
+        ["", "", "", "CUSTOMER_CONTACTS_POINT", "597"],
+        ["", "", "", "CUSTOMER_PROFILE_CLASS", "1326"],
+        ["", "", "", "CUSTOMER_CONTACTS", "398"],
+      ]
+    },
+    { 
+      fileName: "EBS_BillTo_Sites.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
+        ["SITE001", "CUST001", "EBS HQ", "400 Tech Park", "billing@ebs.com"],
+      ]
+    },
+  ],
+  EP: [
+    { 
+      fileName: "EP_Customer_Master.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
+        ["Total Customers", "639", "", "CUSTOMER", "621"],
+        ["Total customer Sites", "744", "", "CUSTOMER_SITES(BILL_TO)", "621"],
+        ["", "", "", "CUSTOMER_SITES(SHIP_TO)", "106"],
+        ["Total Sales Order Customer", "72", "", "Total Sales Order Customer", "66"],
+        ["Total Sales Order Customer(SHIP_TO)", "72", "", "Sales_Order-CUSTOMER_SITES(SHIP_TO)", "66"],
+        ["", "", "", "CUSTOMER_CONTACTS_POINT", "891"],
+        ["", "", "", "CUSTOMER_PROFILE_CLASS", "621"],
+        ["", "", "", "CUSTOMER_CONTACTS", "594"],
+      ]
+    },
+    { 
+      fileName: "EP_BillTo_Sites.csv", 
+      uploadDate: "2024-01-15",
+      content: [
+        ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
+        ["SITE001", "CUST001", "EP HQ", "500 Enterprise Blvd", "billing@ep.com"],
+      ]
+    },
+  ],
+};
 
 export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: ConsolidatedReconTableProps) {
   const [expandedOpCo, setExpandedOpCo] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
-  const [files, setFiles] = useState<FileData[]>(airtechFileData);
+  const [filesState, setFilesState] = useState<Record<string, FileData[]>>(opCoFileData);
   const fileDetailsRef = useRef<HTMLDivElement>(null);
 
   // Get all unique metrics from the first OpCo's data
@@ -113,12 +222,11 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
   };
 
   const handleOpCoClick = (opCoName: string) => {
-    if (opCoName === "AIRTECH") {
+    if (filesState[opCoName]) {
       if (expandedOpCo === opCoName) {
         setExpandedOpCo(null);
       } else {
         setExpandedOpCo(opCoName);
-        // Scroll to file details after state update
         setTimeout(() => {
           fileDetailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 100);
@@ -127,10 +235,7 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
   };
 
   const handleDownload = (file: FileData) => {
-    // Convert content array to CSV string
     const csvContent = file.content.map(row => row.join(",")).join("\n");
-    
-    // Create blob and download
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -142,8 +247,11 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
     URL.revokeObjectURL(url);
   };
 
-  const handleDelete = (fileName: string) => {
-    setFiles(files.filter(f => f.fileName !== fileName));
+  const handleDelete = (opCoName: string, fileName: string) => {
+    setFilesState(prev => ({
+      ...prev,
+      [opCoName]: prev[opCoName].filter(f => f.fileName !== fileName)
+    }));
   };
 
   return (
@@ -161,11 +269,11 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
                 {opCoDataList.map((opCo) => (
                   <TableHead 
                     key={opCo.name} 
-                    className={`font-semibold text-foreground text-center min-w-[100px] ${opCo.name === "AIRTECH" ? "cursor-pointer hover:bg-primary/10 transition-colors" : ""}`}
+                    className={`font-semibold text-foreground text-center min-w-[100px] ${filesState[opCo.name] ? "cursor-pointer hover:bg-primary/10 transition-colors" : ""}`}
                     onClick={() => handleOpCoClick(opCo.name)}
                   >
                     <div className="flex items-center justify-center gap-1">
-                      {opCo.name === "AIRTECH" && (
+                      {filesState[opCo.name] && (
                         expandedOpCo === opCo.name ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />
                       )}
                       {opCo.name}
@@ -208,14 +316,14 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
                 ))
               ))}
               
-              {/* Expanded File Details for AIRTECH */}
-              {expandedOpCo === "AIRTECH" && (
+              {/* Expanded File Details for any OpCo */}
+              {expandedOpCo && filesState[expandedOpCo] && (
                 <TableRow>
                   <TableCell colSpan={2 + opCoDataList.length} className="p-0">
                     <div ref={fileDetailsRef} className="bg-muted/30 p-4 border-t border-border">
                       <div className="flex items-center gap-2 mb-4">
                         <FileText className="h-5 w-5 text-primary" />
-                        <h4 className="font-semibold text-foreground">AIRTECH - File Level Details</h4>
+                        <h4 className="font-semibold text-foreground">{expandedOpCo} - File Level Details</h4>
                       </div>
                       <div className="overflow-x-auto">
                         <Table>
@@ -227,7 +335,7 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {files.map((file, idx) => (
+                            {filesState[expandedOpCo].map((file, idx) => (
                               <TableRow 
                                 key={idx} 
                                 className="hover:bg-muted/20"
@@ -256,7 +364,7 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns }: Con
                                       variant="ghost" 
                                       size="icon" 
                                       className="h-8 w-8"
-                                      onClick={() => handleDelete(file.fileName)}
+                                      onClick={() => handleDelete(expandedOpCo, file.fileName)}
                                     >
                                       <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
                                     </Button>
