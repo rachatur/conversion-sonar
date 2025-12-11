@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { CustomerDetailedBreakdown } from "@/components/dashboard/CustomerDetailedBreakdown";
 import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
+import { CustomerFileUpload } from "@/components/dashboard/CustomerFileUpload";
 import { Users, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 
 // Customer OpCo detailed breakdown data
@@ -267,6 +268,21 @@ const opCoNameMapping: Record<string, string> = {
 export default function CustomerDashboard() {
   const [selectedOpCo, setSelectedOpCo] = useState<string>("AIRTECH");
   
+  // State for uploaded files from localStorage
+  const [uploadedFiles, setUploadedFiles] = useState<Record<string, { fileName: string; uploadDate: string; content: string[][] }[]>>({});
+  
+  // Load uploaded files from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("customerUploadedFiles");
+    if (stored) {
+      setUploadedFiles(JSON.parse(stored));
+    }
+  }, []);
+  
+  const handleFilesUploaded = (files: Record<string, { fileName: string; uploadDate: string; content: string[][] }[]>) => {
+    setUploadedFiles(files);
+  };
+  
   // Map the selected breakdown name to the opCoData key
   const opCoDataKey = opCoNameMapping[selectedOpCo] || selectedOpCo;
   const currentData = opCoData[opCoDataKey] || opCoData["AIRTECH"];
@@ -279,6 +295,11 @@ export default function CustomerDashboard() {
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Customer Conversion Dashboard">
+      {/* File Upload Section */}
+      <div className="mb-8">
+        <CustomerFileUpload onFilesUploaded={handleFilesUploaded} />
+      </div>
+      
       {/* Overall Customer Upload Summary */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">Overall Customer Upload Summary</h2>
@@ -335,6 +356,7 @@ export default function CustomerDashboard() {
             { key: "customerSitesBillTo", label: "Customer Sites (Bill To)" },
             { key: "customerSitesShipTo", label: "Customer Sites (Ship To)" },
           ]}
+          uploadedFiles={uploadedFiles}
         />
       </div>
 
