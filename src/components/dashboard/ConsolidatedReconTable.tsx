@@ -187,9 +187,9 @@ const opCoFileData: Record<string, FileData[]> = {
       ]
     },
   ],
-  ETAIROS: [
+  ETARIOS: [
     { 
-      fileName: "Etairos_Customer_Master.csv", 
+      fileName: "Etarios_Customer_Master.csv", 
       uploadDate: "2024-01-15",
       content: [
         ["Source File Records", "Total_Count", "", "FBDI File Records", "TOTAL_COUNT"],
@@ -204,11 +204,11 @@ const opCoFileData: Record<string, FileData[]> = {
       ]
     },
     { 
-      fileName: "Etairos_BillTo_Sites.csv", 
+      fileName: "Etarios_BillTo_Sites.csv", 
       uploadDate: "2024-01-15",
       content: [
         ["SiteID", "CustomerID", "SiteName", "BillingAddress", "ContactEmail"],
-        ["SITE001", "CUST001", "ETAIROS HQ", "600 Commerce Center", "billing@etairos.com"],
+        ["SITE001", "CUST001", "ETARIOS HQ", "600 Commerce Center", "billing@etarios.com"],
       ]
     },
   ],
