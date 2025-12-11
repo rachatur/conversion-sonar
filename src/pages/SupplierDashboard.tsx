@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
@@ -8,6 +9,7 @@ import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { SupplierDetailedBreakdown } from "@/components/dashboard/SupplierDetailedBreakdown";
 import { ReconSummaryTable } from "@/components/dashboard/ReconSummaryTable";
 import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
+import { SupplierFileUpload } from "@/components/dashboard/SupplierFileUpload";
 import { Package, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 
@@ -524,9 +526,29 @@ const opCoNameMapping: Record<string, string> = {
 export default function SupplierDashboard() {
   // Use AIRETECH data for insights
   const currentData = opCoData["AIRETECH"];
+  
+  // State for uploaded files from localStorage
+  const [uploadedFiles, setUploadedFiles] = useState<Record<string, { fileName: string; uploadDate: string; content: string[][] }[]>>({});
+  
+  // Load uploaded files from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("supplierUploadedFiles");
+    if (stored) {
+      setUploadedFiles(JSON.parse(stored));
+    }
+  }, []);
+  
+  const handleFilesUploaded = (files: Record<string, { fileName: string; uploadDate: string; content: string[][] }[]>) => {
+    setUploadedFiles(files);
+  };
 
   return (
     <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
+      {/* File Upload Section */}
+      <div className="mb-8">
+        <SupplierFileUpload onFilesUploaded={handleFilesUploaded} />
+      </div>
+      
       {/* Overall Supplier Upload Summary */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">Overall Supplier Upload Summary</h2>
@@ -582,6 +604,7 @@ export default function SupplierDashboard() {
             { key: "supplierSites", label: "Supplier Sites" },
             { key: "supplierContacts", label: "Supplier Contacts" },
           ]}
+          uploadedFiles={uploadedFiles}
         />
       </div>
 
