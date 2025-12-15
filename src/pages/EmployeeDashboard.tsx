@@ -2,6 +2,7 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
+import { useFileUpload } from "@/hooks/useFileUpload";
 import { UserCheck, Users, XCircle, FolderOpen } from "lucide-react";
 
 // Overall Employee Stats
@@ -70,9 +71,31 @@ const keySteps = [
   { sNo: 18, activity: "Create Employee Type Classification", description: "Categorize employees as full-time, part-time, contractor, etc.", owner: "Functional Team", status: "Not Started" },
 ];
 
+const opCoMappings: Record<string, string> = {
+  "ats": "ATS",
+  "airetech": "AIRETECH",
+  "c&j": "C&J",
+  "cj": "C&J",
+  "dorse": "DORSE",
+  "ep": "EP",
+  "etairos": "ETAIROS",
+  "ebs": "EBS",
+};
+
 export default function EmployeeDashboard() {
+  const { fileInputRef, handleFileSelect } = useFileUpload({
+    storageKey: "employeeUploadedFiles",
+    opCoMappings,
+  });
+
   return (
-    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Employee Conversion Dashboard">
+    <SidebarLayout 
+      pageTitle="Air Control Concepts Data Reconciliation (UAT)" 
+      pageSubtitle="Employee Conversion Dashboard"
+      showUpload={true}
+      fileInputRef={fileInputRef}
+      onFileSelect={handleFileSelect}
+    >
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {stats.map((stat) => (

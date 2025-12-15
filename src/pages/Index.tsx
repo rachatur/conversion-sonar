@@ -2,6 +2,7 @@ import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { ChartCard } from "@/components/dashboard/ChartCard";
+import { useFileUpload } from "@/hooks/useFileUpload";
 import { Database, TrendingUp, AlertCircle, Activity } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
@@ -31,9 +32,33 @@ const statusDistribution = [
   { name: "Failed", value: 14128, color: "hsl(32, 95%, 60%)" },
 ];
 
+const opCoMappings: Record<string, string> = {
+  "airtech": "AIRTECH",
+  "airetech": "AIRETECH",
+  "ats": "ATS",
+  "c&j": "C&J",
+  "cj": "C&J",
+  "dorse": "DORSE",
+  "ebs": "EBS",
+  "ep": "EP",
+  "etarios": "ETARIOS",
+  "etairos": "ETARIOS",
+};
+
 const Index = () => {
+  const { fileInputRef, handleFileSelect } = useFileUpload({
+    storageKey: "dashboardUploadedFiles",
+    opCoMappings,
+  });
+
   return (
-    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Data Reconciliation Dashboard">
+    <SidebarLayout 
+      pageTitle="Air Control Concepts Data Reconciliation (UAT)" 
+      pageSubtitle="Data Reconciliation Dashboard"
+      showUpload={true}
+      fileInputRef={fileInputRef}
+      onFileSelect={handleFileSelect}
+    >
       {/* Large Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {overallStats.map((stat) => (
