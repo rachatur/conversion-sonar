@@ -5,6 +5,7 @@ import { ChartCard } from "@/components/dashboard/ChartCard";
 import { DataTable } from "@/components/dashboard/DataTable";
 import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
+import { useFileUpload } from "@/hooks/useFileUpload";
 import { Boxes, CheckCircle, XCircle, FolderOpen, Tag, Layers } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
@@ -191,9 +192,32 @@ const keySteps = [
   { sno: 31, activity: "Assign Expense items to all branches", owner: "Functional Team", status: "not-started" as const },
 ];
 
+const opCoMappings: Record<string, string> = {
+  "manufacturer": "Manufacturer_Branch",
+  "equipment": "Equipment_All_Branches",
+  "parts": "Parts_ALL_Branches",
+  "service": "Service_All_Branches",
+  "ebs": "EBS",
+  "etairos": "Etairos",
+  "airetech": "Airetech",
+  "dorse": "Dorse",
+  "ats": "ATS",
+};
+
 export default function ItemsDashboard() {
+  const { fileInputRef, handleFileSelect } = useFileUpload({
+    storageKey: "itemsUploadedFiles",
+    opCoMappings,
+  });
+
   return (
-    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Items Conversion Dashboard">
+    <SidebarLayout 
+      pageTitle="Air Control Concepts Data Reconciliation (UAT)" 
+      pageSubtitle="Items Conversion Dashboard"
+      showUpload={true}
+      fileInputRef={fileInputRef}
+      onFileSelect={handleFileSelect}
+    >
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (
