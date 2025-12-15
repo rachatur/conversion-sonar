@@ -533,9 +533,6 @@ export function ConsolidatedReconTable({ title, opCoDataList, dataColumns, uploa
             </TableBody>
           </Table>
         </div>
-        <div className="px-4 py-2 bg-muted/30 text-xs text-muted-foreground">
-          💡 Click on <strong>AIRTECH</strong> column header to view file-level details
-        </div>
       </div>
 
       {/* File Content Dialog */}
