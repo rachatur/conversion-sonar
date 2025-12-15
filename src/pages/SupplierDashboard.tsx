@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
@@ -9,6 +9,8 @@ import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { SupplierDetailedBreakdown } from "@/components/dashboard/SupplierDetailedBreakdown";
 import { ReconSummaryTable } from "@/components/dashboard/ReconSummaryTable";
 import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
+import { useToast } from "@/hooks/use-toast";
+import * as XLSX from "xlsx";
 
 import { Package, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
@@ -526,6 +528,8 @@ const opCoNameMapping: Record<string, string> = {
 export default function SupplierDashboard() {
   // Use AIRETECH data for insights
   const currentData = opCoData["AIRETECH"];
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
   
   // State for uploaded files from localStorage
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, { fileName: string; uploadDate: string; content: string[][] }[]>>({});
@@ -542,8 +546,99 @@ export default function SupplierDashboard() {
     setUploadedFiles(files);
   };
 
+  const opCoMappings: Record<string, string> = {
+    "airetech": "AIRETECH",
+    "ats": "ATS",
+    "ebs": "EBS",
+    "ep": "EP (Eng. Products)",
+    "etairos": "Etairos",
+    "dorse": "Dorse",
+    "c&j": "C&J",
+    "cj": "C&J",
+  };
+
+  const detectOpCo = (fileName: string): string | null => {
+    const lowerName = fileName.toLowerCase();
+    for (const [key, value] of Object.entries(opCoMappings)) {
+      if (lowerName.includes(key)) return value;
+    }
+    return null;
+  };
+
+  const parseExcelFile = (file: File): Promise<string[][]> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as string[][];
+          resolve(jsonData);
+        } catch {
+          reject(new Error("Failed to parse Excel file"));
+        }
+      };
+      reader.onerror = () => reject(new Error("Failed to read file"));
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const processedFiles: { opCoName: string; fileData: { fileName: string; uploadDate: string; content: string[][] } }[] = [];
+
+    for (const file of Array.from(files)) {
+      if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
+        toast({ title: "Invalid file type", description: `${file.name} is not an Excel file`, variant: "destructive" });
+        continue;
+      }
+
+      const opCo = detectOpCo(file.name);
+      if (!opCo) {
+        toast({ title: "OpCo not detected", description: `Could not detect OpCo from ${file.name}`, variant: "destructive" });
+        continue;
+      }
+
+      try {
+        const content = await parseExcelFile(file);
+        processedFiles.push({
+          opCoName: opCo,
+          fileData: { fileName: file.name, uploadDate: new Date().toISOString(), content }
+        });
+      } catch {
+        toast({ title: "Parse error", description: `Failed to parse ${file.name}`, variant: "destructive" });
+      }
+    }
+
+    if (processedFiles.length > 0) {
+      const stored = localStorage.getItem("supplierUploadedFiles");
+      const existing: Record<string, { fileName: string; uploadDate: string; content: string[][] }[]> = stored ? JSON.parse(stored) : {};
+
+      processedFiles.forEach(({ opCoName, fileData }) => {
+        if (!existing[opCoName]) existing[opCoName] = [];
+        existing[opCoName].push(fileData);
+      });
+
+      localStorage.setItem("supplierUploadedFiles", JSON.stringify(existing));
+      handleFilesUploaded(existing);
+      toast({ title: "Files uploaded", description: `${processedFiles.length} file(s) uploaded successfully` });
+    }
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   return (
-    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Supplier Conversion Dashboard">
+    <SidebarLayout 
+      pageTitle="Air Control Concepts Data Reconciliation (UAT)" 
+      pageSubtitle="Supplier Conversion Dashboard"
+      showUpload={true}
+      fileInputRef={fileInputRef}
+      onFileSelect={handleFileSelect}
+    >
       {/* Overall Supplier Upload Summary */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">Overall Supplier Upload Summary</h2>
@@ -583,7 +678,6 @@ export default function SupplierDashboard() {
       {/* OpCo Load Performance with detailed breakdown */}
       <SupplierDetailedBreakdown 
         data={supplierBreakdownData}
-        onFilesUploaded={handleFilesUploaded}
       />
 
       {/* Supplier Recon Summary - All OpCos in One Table */}

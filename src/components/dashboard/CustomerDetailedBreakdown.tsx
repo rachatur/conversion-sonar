@@ -1,8 +1,4 @@
-import { CheckCircle, AlertTriangle, XCircle, FileUp } from "lucide-react";
-import { useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import * as XLSX from "xlsx";
+import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 
 interface CustomerBreakdownData {
   name: string;
@@ -19,7 +15,6 @@ interface CustomerDetailedBreakdownProps {
   title?: string;
   selectedOpCo?: string;
   onOpCoSelect?: (opCoName: string) => void;
-  onFilesUploaded?: (files: Record<string, { fileName: string; uploadDate: string; content: string[][] }[]>) => void;
 }
 
 const getStatusBadge = (avgLoad: number) => {
@@ -87,121 +82,12 @@ export function CustomerDetailedBreakdown({
   data, 
   title = "OpCo Load Performance",
   selectedOpCo,
-  onOpCoSelect,
-  onFilesUploaded 
+  onOpCoSelect
 }: CustomerDetailedBreakdownProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { toast } = useToast();
-
-  const opCoMappings: Record<string, string> = {
-    "airtech": "AIRTECH",
-    "ats": "ATS",
-    "c&j": "C&J",
-    "cj": "C&J",
-    "dorse": "DORSE",
-    "ebs": "EBS",
-    "ep": "EP",
-    "etarios": "ETARIOS",
-  };
-
-  const detectOpCo = (fileName: string): string | null => {
-    const lowerName = fileName.toLowerCase();
-    for (const [key, value] of Object.entries(opCoMappings)) {
-      if (lowerName.includes(key)) return value;
-    }
-    return null;
-  };
-
-  const parseExcelFile = (file: File): Promise<string[][]> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const data = new Uint8Array(e.target?.result as ArrayBuffer);
-          const workbook = XLSX.read(data, { type: "array" });
-          const sheetName = workbook.SheetNames[0];
-          const sheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as string[][];
-          resolve(jsonData);
-        } catch {
-          reject(new Error("Failed to parse Excel file"));
-        }
-      };
-      reader.onerror = () => reject(new Error("Failed to read file"));
-      reader.readAsArrayBuffer(file);
-    });
-  };
-
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
-
-    const processedFiles: { opCoName: string; fileData: { fileName: string; uploadDate: string; content: string[][] } }[] = [];
-
-    for (const file of Array.from(files)) {
-      if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
-        toast({ title: "Invalid file type", description: `${file.name} is not an Excel file`, variant: "destructive" });
-        continue;
-      }
-
-      const opCo = detectOpCo(file.name);
-      if (!opCo) {
-        toast({ title: "OpCo not detected", description: `Could not detect OpCo from ${file.name}`, variant: "destructive" });
-        continue;
-      }
-
-      try {
-        const content = await parseExcelFile(file);
-        processedFiles.push({
-          opCoName: opCo,
-          fileData: { fileName: file.name, uploadDate: new Date().toISOString(), content }
-        });
-      } catch {
-        toast({ title: "Parse error", description: `Failed to parse ${file.name}`, variant: "destructive" });
-      }
-    }
-
-    if (processedFiles.length > 0) {
-      const stored = localStorage.getItem("customerUploadedFiles");
-      const existing: Record<string, { fileName: string; uploadDate: string; content: string[][] }[]> = stored ? JSON.parse(stored) : {};
-
-      processedFiles.forEach(({ opCoName, fileData }) => {
-        if (!existing[opCoName]) existing[opCoName] = [];
-        existing[opCoName].push(fileData);
-      });
-
-      localStorage.setItem("customerUploadedFiles", JSON.stringify(existing));
-      onFilesUploaded?.(existing);
-      toast({ title: "Files uploaded", description: `${processedFiles.length} file(s) uploaded successfully` });
-    }
-
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
 
   return (
     <div className="mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-        <div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".xlsx,.xls"
-            multiple
-            className="hidden"
-            onChange={handleFileSelect}
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => fileInputRef.current?.click()}
-            className="gap-2"
-          >
-            <FileUp className="h-4 w-4" />
-            Share a file
-          </Button>
-        </div>
-      </div>
+      <h3 className="text-lg font-semibold text-foreground mb-4">{title}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {data.map((opco) => {
           const avgLoad = (opco.customerLoad + opco.billToLoad + opco.shipToLoad) / 3;

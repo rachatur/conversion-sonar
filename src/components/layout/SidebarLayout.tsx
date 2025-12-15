@@ -1,14 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
-import { Database, Home, Users, UserCheck, Package, Boxes, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { Database, Home, Users, UserCheck, Package, Boxes, ChevronLeft, ChevronRight, FileUp } from "lucide-react";
+import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { Button } from "@/components/ui/button";
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
   pageTitle: string;
   pageSubtitle: string;
+  onFileSelect?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  fileInputRef?: React.RefObject<HTMLInputElement>;
+  showUpload?: boolean;
 }
 
 const overviewItems = [
@@ -22,7 +26,7 @@ const moduleItems = [
   { path: "/items", label: "Items", icon: Boxes, count: 128459, countLabel: "Branches: 15" },
 ];
 
-export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayoutProps) {
+export function SidebarLayout({ children, pageTitle, pageSubtitle, onFileSelect, fileInputRef, showUpload = false }: SidebarLayoutProps) {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   
@@ -160,14 +164,37 @@ export function SidebarLayout({ children, pageTitle, pageSubtitle }: SidebarLayo
 
         {/* Page Header */}
         <div className="px-8 pb-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
-              <Database className="h-6 w-6 text-primary-foreground" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
+                <Database className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">{pageTitle}</h1>
+                <p className="text-sm text-muted-foreground">{pageSubtitle}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">{pageTitle}</h1>
-              <p className="text-sm text-muted-foreground">{pageSubtitle}</p>
-            </div>
+            {showUpload && onFileSelect && fileInputRef && (
+              <div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".xlsx,.xls"
+                  multiple
+                  className="hidden"
+                  onChange={onFileSelect}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="gap-2"
+                >
+                  <FileUp className="h-4 w-4" />
+                  Share a file
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 
