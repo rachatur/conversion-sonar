@@ -4,7 +4,7 @@ import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { CustomerDetailedBreakdown } from "@/components/dashboard/CustomerDetailedBreakdown";
 import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
-import { CustomerFileUpload } from "@/components/dashboard/CustomerFileUpload";
+
 import { Users, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 
 // Customer OpCo detailed breakdown data
@@ -336,12 +336,8 @@ export default function CustomerDashboard() {
         data={customerBreakdownData}
         selectedOpCo={selectedOpCo}
         onOpCoSelect={handleOpCoSelect}
+        onFilesUploaded={handleFilesUploaded}
       />
-
-      {/* File Upload Section */}
-      <div className="mb-8">
-        <CustomerFileUpload onFilesUploaded={handleFilesUploaded} />
-      </div>
 
       {/* Customer Recon Summary - All OpCos in One Table */}
       <div className="mb-8">
