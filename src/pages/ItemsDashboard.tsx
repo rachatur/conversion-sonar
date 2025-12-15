@@ -61,70 +61,6 @@ const itemReconBranchData = [
   },
 ];
 
-// Item Recon Summary Data (Category Assignments)
-const itemReconSummaryData = [
-  { 
-    name: "Category_Assignment_lob",
-    data: [
-      { metric: "Total Source File Records", value: 20719 },
-      { metric: "Records Excluded / Not Valid", value: 0 },
-      { metric: "Valid Source Records", value: 20719 },
-      { metric: "", value: 0 },
-      { metric: "Total FBDI Records for Upload", value: 20719 },
-      { metric: "Errored in FBDI Upload", value: 0 },
-      { metric: "FBDI Records loaded Successful", value: 20719 },
-    ]
-  },
-  { 
-    name: "Category_Assignment_Parent",
-    data: [
-      { metric: "Total Source File Records", value: 20719 },
-      { metric: "Records Excluded / Not Valid", value: 0 },
-      { metric: "Valid Source Records", value: 20719 },
-      { metric: "", value: 0 },
-      { metric: "Total FBDI Records for Upload", value: 20719 },
-      { metric: "Errored in FBDI Upload", value: 0 },
-      { metric: "FBDI Records loaded Successful", value: 20719 },
-    ]
-  },
-  { 
-    name: "Category_Assignment_PRO_LINE",
-    data: [
-      { metric: "Total Source File Records", value: 20719 },
-      { metric: "Records Excluded / Not Valid", value: 0 },
-      { metric: "Valid Source Records", value: 20719 },
-      { metric: "", value: 0 },
-      { metric: "Total FBDI Records for Upload", value: 20719 },
-      { metric: "Errored in FBDI Upload", value: 0 },
-      { metric: "FBDI Records loaded Successful", value: 20719 },
-    ]
-  },
-  { 
-    name: "Category_Assignment_PO",
-    data: [
-      { metric: "Total Source File Records", value: 20719 },
-      { metric: "Records Excluded / Not Valid", value: 0 },
-      { metric: "Valid Source Records", value: 20719 },
-      { metric: "", value: 0 },
-      { metric: "Total FBDI Records for Upload", value: 20719 },
-      { metric: "Errored in FBDI Upload", value: 0 },
-      { metric: "FBDI Records loaded Successful", value: 20719 },
-    ]
-  },
-  { 
-    name: "IMO_Items",
-    data: [
-      { metric: "Total Source File Records", value: 20719 },
-      { metric: "Records Excluded / Not Valid", value: 0 },
-      { metric: "Valid Source Records", value: 20719 },
-      { metric: "", value: 0 },
-      { metric: "Total FBDI Records for Upload", value: 20719 },
-      { metric: "Errored in FBDI Upload", value: 0 },
-      { metric: "FBDI Records loaded Successful", value: 20719 },
-    ]
-  },
-];
-
 // Stats from UAT Item Counts
 const stats = [
   { label: "Total Item Count", value: 233014, subtitle: "Items in system", icon: Boxes, variant: "primary" as const },
@@ -281,15 +217,6 @@ export default function ItemsDashboard() {
         opCoDataList={itemReconBranchData}
         dataColumns={[{ key: "value", label: "Count" }]}
       />
-
-      {/* Item Recon Summary (Category Assignments) */}
-      <div className="mt-6">
-        <ConsolidatedReconTable
-          title="Item Recon Summary (Category Assignments)"
-          opCoDataList={itemReconSummaryData}
-          dataColumns={[{ key: "value", label: "Count" }]}
-        />
-      </div>
 
       {/* Key Steps Table */}
       <div className="mt-6">
