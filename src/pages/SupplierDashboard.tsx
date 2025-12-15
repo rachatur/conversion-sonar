@@ -9,7 +9,7 @@ import { StatusBadge } from "@/components/dashboard/StatusBadge";
 import { SupplierDetailedBreakdown } from "@/components/dashboard/SupplierDetailedBreakdown";
 import { ReconSummaryTable } from "@/components/dashboard/ReconSummaryTable";
 import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
-import { SupplierFileUpload } from "@/components/dashboard/SupplierFileUpload";
+
 import { Package, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 
@@ -582,13 +582,9 @@ export default function SupplierDashboard() {
 
       {/* OpCo Load Performance with detailed breakdown */}
       <SupplierDetailedBreakdown 
-        data={supplierBreakdownData} 
+        data={supplierBreakdownData}
+        onFilesUploaded={handleFilesUploaded}
       />
-
-      {/* File Upload Section */}
-      <div className="mb-8">
-        <SupplierFileUpload onFilesUploaded={handleFilesUploaded} />
-      </div>
 
       {/* Supplier Recon Summary - All OpCos in One Table */}
       <div className="mb-8">
