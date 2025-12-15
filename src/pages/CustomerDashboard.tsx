@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SidebarLayout } from "@/components/layout/SidebarLayout";
 import { LargeStatCard } from "@/components/dashboard/LargeStatCard";
 import { InsightsSection } from "@/components/dashboard/InsightsSection";
 import { CustomerDetailedBreakdown } from "@/components/dashboard/CustomerDetailedBreakdown";
 import { ConsolidatedReconTable } from "@/components/dashboard/ConsolidatedReconTable";
+import { useToast } from "@/hooks/use-toast";
+import * as XLSX from "xlsx";
 
 import { Users, CheckCircle, XCircle, FolderOpen } from "lucide-react";
 
@@ -267,6 +269,8 @@ const opCoNameMapping: Record<string, string> = {
 
 export default function CustomerDashboard() {
   const [selectedOpCo, setSelectedOpCo] = useState<string>("AIRTECH");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
   
   // State for uploaded files from localStorage
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, { fileName: string; uploadDate: string; content: string[][] }[]>>({});
@@ -282,6 +286,91 @@ export default function CustomerDashboard() {
   const handleFilesUploaded = (files: Record<string, { fileName: string; uploadDate: string; content: string[][] }[]>) => {
     setUploadedFiles(files);
   };
+
+  const opCoMappings: Record<string, string> = {
+    "airtech": "AIRTECH",
+    "ats": "ATS",
+    "c&j": "C&J",
+    "cj": "C&J",
+    "dorse": "DORSE",
+    "ebs": "EBS",
+    "ep": "EP",
+    "etarios": "ETARIOS",
+  };
+
+  const detectOpCo = (fileName: string): string | null => {
+    const lowerName = fileName.toLowerCase();
+    for (const [key, value] of Object.entries(opCoMappings)) {
+      if (lowerName.includes(key)) return value;
+    }
+    return null;
+  };
+
+  const parseExcelFile = (file: File): Promise<string[][]> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as string[][];
+          resolve(jsonData);
+        } catch {
+          reject(new Error("Failed to parse Excel file"));
+        }
+      };
+      reader.onerror = () => reject(new Error("Failed to read file"));
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const processedFiles: { opCoName: string; fileData: { fileName: string; uploadDate: string; content: string[][] } }[] = [];
+
+    for (const file of Array.from(files)) {
+      if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
+        toast({ title: "Invalid file type", description: `${file.name} is not an Excel file`, variant: "destructive" });
+        continue;
+      }
+
+      const opCo = detectOpCo(file.name);
+      if (!opCo) {
+        toast({ title: "OpCo not detected", description: `Could not detect OpCo from ${file.name}`, variant: "destructive" });
+        continue;
+      }
+
+      try {
+        const content = await parseExcelFile(file);
+        processedFiles.push({
+          opCoName: opCo,
+          fileData: { fileName: file.name, uploadDate: new Date().toISOString(), content }
+        });
+      } catch {
+        toast({ title: "Parse error", description: `Failed to parse ${file.name}`, variant: "destructive" });
+      }
+    }
+
+    if (processedFiles.length > 0) {
+      const stored = localStorage.getItem("customerUploadedFiles");
+      const existing: Record<string, { fileName: string; uploadDate: string; content: string[][] }[]> = stored ? JSON.parse(stored) : {};
+
+      processedFiles.forEach(({ opCoName, fileData }) => {
+        if (!existing[opCoName]) existing[opCoName] = [];
+        existing[opCoName].push(fileData);
+      });
+
+      localStorage.setItem("customerUploadedFiles", JSON.stringify(existing));
+      handleFilesUploaded(existing);
+      toast({ title: "Files uploaded", description: `${processedFiles.length} file(s) uploaded successfully` });
+    }
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
   
   // Map the selected breakdown name to the opCoData key
   const opCoDataKey = opCoNameMapping[selectedOpCo] || selectedOpCo;
@@ -294,7 +383,13 @@ export default function CustomerDashboard() {
   };
 
   return (
-    <SidebarLayout pageTitle="Air Control Concepts Data Reconciliation (UAT)" pageSubtitle="Customer Conversion Dashboard">
+    <SidebarLayout 
+      pageTitle="Air Control Concepts Data Reconciliation (UAT)" 
+      pageSubtitle="Customer Conversion Dashboard"
+      showUpload={true}
+      fileInputRef={fileInputRef}
+      onFileSelect={handleFileSelect}
+    >
       {/* Overall Customer Upload Summary */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">Overall Customer Upload Summary</h2>
@@ -336,7 +431,6 @@ export default function CustomerDashboard() {
         data={customerBreakdownData}
         selectedOpCo={selectedOpCo}
         onOpCoSelect={handleOpCoSelect}
-        onFilesUploaded={handleFilesUploaded}
       />
 
       {/* Customer Recon Summary - All OpCos in One Table */}
