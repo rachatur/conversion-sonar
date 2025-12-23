@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import { Upload, FileSpreadsheet } from "lucide-react";
+import { Upload, X, FileSpreadsheet, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import * as XLSX from "xlsx";
 
@@ -68,6 +69,7 @@ const parseExcelFile = (file: File): Promise<string[][]> => {
 
 export function CustomerFileUpload({ onFilesUploaded }: CustomerFileUploadProps) {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFileInfo[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -111,35 +113,11 @@ export function CustomerFileUpload({ onFilesUploaded }: CustomerFileUploadProps)
       });
     }
 
-    // Auto-upload immediately if files were processed
     if (newFiles.length > 0) {
-      // Group files by OpCo
-      const groupedFiles: Record<string, FileData[]> = {};
-      newFiles.forEach(({ opCoName, fileData }) => {
-        if (!groupedFiles[opCoName]) {
-          groupedFiles[opCoName] = [];
-        }
-        groupedFiles[opCoName].push(fileData);
-      });
-
-      // Save to localStorage
-      const existingData = localStorage.getItem("customerUploadedFiles");
-      const existing: Record<string, FileData[]> = existingData ? JSON.parse(existingData) : {};
-      
-      // Merge with existing data
-      Object.entries(groupedFiles).forEach(([opCo, filesData]) => {
-        if (!existing[opCo]) {
-          existing[opCo] = [];
-        }
-        existing[opCo] = [...existing[opCo], ...filesData];
-      });
-
-      localStorage.setItem("customerUploadedFiles", JSON.stringify(existing));
-      onFilesUploaded(existing);
-
+      setUploadedFiles(prev => [...prev, ...newFiles]);
       toast({
-        title: "Files uploaded successfully",
-        description: `Dashboard updated with ${newFiles.length} file(s)`,
+        title: "Files processed successfully",
+        description: `${newFiles.length} file(s) ready to upload`,
       });
     }
 
@@ -147,6 +125,45 @@ export function CustomerFileUpload({ onFilesUploaded }: CustomerFileUploadProps)
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleConfirmUpload = () => {
+    if (uploadedFiles.length === 0) return;
+
+    // Group files by OpCo
+    const groupedFiles: Record<string, FileData[]> = {};
+    uploadedFiles.forEach(({ opCoName, fileData }) => {
+      if (!groupedFiles[opCoName]) {
+        groupedFiles[opCoName] = [];
+      }
+      groupedFiles[opCoName].push(fileData);
+    });
+
+    // Save to localStorage
+    const existingData = localStorage.getItem("customerUploadedFiles");
+    const existing: Record<string, FileData[]> = existingData ? JSON.parse(existingData) : {};
+    
+    // Merge with existing data
+    Object.entries(groupedFiles).forEach(([opCo, files]) => {
+      if (!existing[opCo]) {
+        existing[opCo] = [];
+      }
+      existing[opCo] = [...existing[opCo], ...files];
+    });
+
+    localStorage.setItem("customerUploadedFiles", JSON.stringify(existing));
+    onFilesUploaded(existing);
+
+    toast({
+      title: "Files uploaded successfully",
+      description: `Dashboard updated with ${uploadedFiles.length} file(s)`,
+    });
+
+    setUploadedFiles([]);
   };
 
   return (
@@ -175,13 +192,43 @@ export function CustomerFileUpload({ onFilesUploaded }: CustomerFileUploadProps)
         >
           <FileSpreadsheet className="h-10 w-10 text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
-            {isProcessing ? "Processing & uploading files..." : "Click to select or drag & drop OpCo Excel files"}
+            {isProcessing ? "Processing files..." : "Click to select or drag & drop OpCo Excel files"}
           </p>
           <p className="text-xs text-muted-foreground">
             File names should contain OpCo name (e.g., Airtech_ReconCustomer.xlsx)
           </p>
         </label>
       </div>
+
+      {uploadedFiles.length > 0 && (
+        <div className="mt-4 space-y-2">
+          <p className="text-sm font-medium text-foreground">Files ready to upload:</p>
+          {uploadedFiles.map((file, idx) => (
+            <div 
+              key={idx} 
+              className="flex items-center justify-between bg-muted/50 rounded-md px-3 py-2"
+            >
+              <div className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-green-500" />
+                <span className="text-sm text-foreground">{file.fileData.fileName}</span>
+                <span className="text-xs text-muted-foreground">→ {file.opCoName}</span>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-6 w-6"
+                onClick={() => handleRemoveFile(idx)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+          <Button onClick={handleConfirmUpload} className="w-full mt-2">
+            <Upload className="h-4 w-4 mr-2" />
+            Upload {uploadedFiles.length} File(s) & Update Dashboard
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
