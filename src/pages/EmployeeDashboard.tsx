@@ -7,33 +7,32 @@ import { UserCheck, Users, XCircle, FolderOpen } from "lucide-react";
 
 // Overall Employee Stats
 const stats = [
-  { label: "Total Employees in SIT", value: 425, subtitle: "Employee records in system", icon: Users, variant: "primary" as const },
-  { label: "Employees Loaded Successfully", value: 425, subtitle: "", icon: UserCheck, variant: "success" as const, highlightText: "100% load success rate" },
+  { label: "Total Employees in DEV2", value: 415, subtitle: "Employee records in system", icon: Users, variant: "primary" as const },
+  { label: "Employees Loaded Successfully", value: 415, subtitle: "", icon: UserCheck, variant: "success" as const, highlightText: "100% load success rate" },
   { label: "Failed Employee Records", value: 0, subtitle: "No failed records", icon: XCircle, variant: "warning" as const },
-  { label: "Total Employees Intended", value: 425, subtitle: "After omissions", icon: FolderOpen, variant: "accent" as const },
+  { label: "Total Employees Intended", value: 415, subtitle: "After omissions", icon: FolderOpen, variant: "accent" as const },
 ];
 
 // Employee Data Load Summary
 const employeeLoadSummary = [
-  { metric: "Total Employees in SIT", value: 425 },
-  { metric: "Total No Of Lines in data file", value: 425 },
+  { metric: "Total Employees in DEV2", value: 415 },
+  { metric: "Total No Of Lines in data file", value: 415 },
   { metric: "Number of records Omitted for load", value: 0 },
-  { metric: "Total Employees Intended", value: 425 },
-  { metric: "Employees Loaded Successfully", value: 425 },
+  { metric: "Total Employees Intended", value: 415 },
+  { metric: "Employees Loaded Successfully", value: 415 },
   { metric: "Failed Employee Records", value: 0 },
   { metric: "Load Success Rate", value: "100%" },
 ];
 
 // Manager Assignment Data Load Summary
 const managerLoadSummary = [
-  { metric: "Total Managers Loaded in SIT", value: 286 },
-  { metric: "Total No Of Lines in data file", value: 369 },
-  { metric: "Number of records Omitted for load (Bad or Out of Scope data)", value: 12 },
-  { metric: "Total Employees Intended", value: 369 },
-  { metric: "Employees Loaded Successfully", value: 286 },
-  { metric: "Failed Employee Records", value: 83 },
-  { metric: "Load Success Rate", value: "75%" },
-  { metric: "Review Required", value: 84 },
+  { metric: "Total Managers in DEV2", value: 415 },
+  { metric: "Total No Of Lines in data file", value: 409 },
+  { metric: "Number of records Omitted for load (Bad or Out of Scope data)", value: 6 },
+  { metric: "Total Managers Intended", value: 409 },
+  { metric: "Employees Loaded Successfully", value: 303 },
+  { metric: "Failed Employee Records", value: 106 },
+  { metric: "Load Success Rate", value: "73%" },
 ];
 
 // Source Count by OpCo
@@ -46,8 +45,8 @@ const sourceCountByOpCo = [
   { opCo: "Engineered Products, LLC", countOfEmployees: 13, countOfManager: 13 },
   { opCo: "Etairos HVAC JV, LLC", countOfEmployees: 57, countOfManager: 57 },
   { opCo: "Smart Enterprises, LLC (EBS)", countOfEmployees: 68, countOfManager: 68 },
-  { opCo: "Grand Total", countOfEmployees: 425, countOfManager: 424 },
-  { opCo: "Missing record", countOfEmployees: "", countOfManager: 1 },
+  { opCo: "Grand Total", countOfEmployees: 415, countOfManager: 303 },
+  { opCo: "Missing/Failed Records", countOfEmployees: 0, countOfManager: 106 },
 ];
 
 const keySteps = [
